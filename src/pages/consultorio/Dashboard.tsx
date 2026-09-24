@@ -8,11 +8,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/misc'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { diasHasta, fechaCorta, semaforoEquipo } from '@/lib/format'
+import { useTiempoEnPagina } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
 export function ConsultorioDashboard() {
   const { consultorio, equipos, servicios, documentos, planes, calificaciones } = useData()
+  useTiempoEnPagina('portal_consultorio', { rol: 'consultorio' })
   const plan = planes.find((p) => p.id === consultorio.planId)
 
   const conSemaforo = equipos.map((equipo) => ({ equipo, semaforo: semaforoEquipo(equipo) }))

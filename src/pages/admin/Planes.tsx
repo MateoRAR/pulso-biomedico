@@ -49,15 +49,19 @@ export function AdminPlanes() {
                   <p className="text-sm font-semibold">{plan.nombre}</p>
                   <p className="text-xs text-muted-foreground">{plan.rangoEquipos}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    className="w-32"
-                    value={precios[plan.id]}
-                    onChange={(event) => setPrecios({ ...precios, [plan.id]: Number(event.target.value) })}
-                  />
-                  <span className="text-xs text-muted-foreground">{cop(precios[plan.id] ?? 0)}</span>
-                </div>
+                {plan.precioTexto ? (
+                  <span className="text-sm font-semibold text-primary">{plan.precioTexto}</span>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      className="w-32"
+                      value={precios[plan.id]}
+                      onChange={(event) => setPrecios({ ...precios, [plan.id]: Number(event.target.value) })}
+                    />
+                    <span className="text-xs text-muted-foreground">{cop(precios[plan.id] ?? 0)}</span>
+                  </div>
+                )}
               </div>
             ))}
           </CardContent>

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
 import { NOMBRE_CRITICIDAD, SLA, type Criticidad, type Servicio } from '@/lib/mock/data'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 
 const tipos: Servicio['tipo'][] = ['Correctivo', 'Preventivo', 'Calibración', 'Diagnóstico exprés', 'Capacitación']
@@ -61,6 +62,7 @@ export function ConsultorioSolicitudNueva() {
       ],
     }
     agregarServicio(servicio)
+    track(EVENTOS.solicitudCreada, { tipo, criticidad, zona: consultorio.zona, asignado: Boolean(candidatos[0]) })
     toast.success('Solicitud creada', {
       description: `Asignada a ${candidatos[0]?.nombre ?? 'la red'} · ${SLA[criticidad]}.`,
     })

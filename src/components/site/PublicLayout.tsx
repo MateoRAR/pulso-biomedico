@@ -1,4 +1,4 @@
-import { ArrowRight, HeartPulse, LogOut, Menu, X } from 'lucide-react'
+import { ArrowRight, LogOut, Menu, X } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -6,19 +6,20 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { rutaInicioPorRol, useSession } from '@/lib/session'
 
-// Secciones del landing (anclas), no rutas aparte: el landing integra todo.
+// Secciones del landing (anclas), en el mismo orden en que aparecen.
+// Cubren los dos lados de la plataforma: consultorios (demanda) e ingenieros (oferta).
 export const enlacesPublicos = [
   { href: '/#como-funciona', label: 'Cómo funciona' },
-  { href: '/#planes', label: 'Planes y precios' },
+  { href: '/#consultorios', label: 'Para consultorios' },
   { href: '/#profesionales', label: 'Para ingenieros' },
+  { href: '/#planes', label: 'Planes y precios' },
+  { href: '/#preguntas', label: 'Preguntas frecuentes' },
 ]
 
 export function Brand({ className }: { className?: string }) {
   return (
     <Link to="/" className={cn('flex items-center gap-2.5', className)} aria-label="Pulso Biomédico, inicio">
-      <span className="brand-mark">
-        <HeartPulse aria-hidden="true" />
-      </span>
+      <img src="/logo.png" alt="Pulso Biomédico" className="size-9 rounded-md object-contain" />
       <span className="font-display text-lg font-bold text-foreground">
         Pulso <span className="text-primary">Biomédico</span>
       </span>
@@ -34,14 +35,14 @@ export function PublicHeader() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
         <Brand />
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Navegación principal">
+        <nav className="hidden items-center gap-6 xl:flex" aria-label="Navegación principal">
           {enlacesPublicos.map((enlace) => (
             <a key={enlace.href} href={enlace.href} className="nav-link">
               {enlace.label}
             </a>
           ))}
         </nav>
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2 xl:flex">
           {sesion ? (
             <>
               <Link to={rutaInicioPorRol[sesion.rol]} className={buttonVariants({ variant: 'ghost' })}>
@@ -65,7 +66,7 @@ export function PublicHeader() {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="xl:hidden"
           aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           onClick={() => setMenuOpen((open) => !open)}
         >
@@ -73,7 +74,7 @@ export function PublicHeader() {
         </Button>
       </div>
       {menuOpen && (
-        <nav className="animate-fade-in border-t border-border bg-background px-5 py-5 md:hidden" aria-label="Navegación móvil">
+        <nav className="animate-fade-in border-t border-border bg-background px-5 py-5 xl:hidden" aria-label="Navegación móvil">
           <div className="flex flex-col gap-1">
             {enlacesPublicos.map((enlace) => (
               <a

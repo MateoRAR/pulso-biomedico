@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input, Label } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
+import { EVENTOS, track, useTiempoEnPagina } from '@/lib/analytics'
 import { etiquetaRol, rutaInicioPorRol, useSession } from '@/lib/session'
 import type { Rol } from '@/lib/mock/data'
 import { cn } from '@/lib/utils'
@@ -35,11 +36,13 @@ export function Registro() {
   const [organizacion, setOrganizacion] = useState('')
   const { iniciarSesion } = useSession()
   const navigate = useNavigate()
+  useTiempoEnPagina('registro')
 
   function crearCuenta(event: React.FormEvent) {
     event.preventDefault()
     if (!rol) return
     iniciarSesion({ nombre, email, rol, organizacion: organizacion || undefined })
+    track(EVENTOS.registro, { rol })
     toast.success('Cuenta creada', {
       description: `Correo de bienvenida enviado a ${email} (simulado).`,
     })

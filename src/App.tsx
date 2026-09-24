@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 
 import { AppShell } from '@/components/app/AppShell'
 import { Toaster } from '@/components/ui/toast'
@@ -89,8 +90,18 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
+          <AnalyticsRutas />
         </BrowserRouter>
       </SessionProvider>
     </DataProvider>
   )
+}
+
+/**
+ * Vercel Analytics para un SPA con react-router: al pasar `route`/`path` se
+ * desactiva el auto-track y se emite un pageview en cada cambio de ruta.
+ */
+function AnalyticsRutas() {
+  const location = useLocation()
+  return <Analytics route={location.pathname} path={`${location.pathname}${location.search}`} />
 }

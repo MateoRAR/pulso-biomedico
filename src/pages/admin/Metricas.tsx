@@ -4,6 +4,7 @@ import { PageHeader, StatCard } from '@/components/shared/ui'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { cop } from '@/lib/format'
+import { useTiempoEnPagina } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 
 const CANALES = [
@@ -15,6 +16,7 @@ const CANALES = [
 
 export function AdminMetricas() {
   const { metricas, ingenieros, equipos, servicios, aliados } = useData()
+  useTiempoEnPagina('portal_admin', { rol: 'admin' })
 
   return (
     <div className="space-y-8">

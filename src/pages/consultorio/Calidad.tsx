@@ -10,6 +10,7 @@ import { Label, Select, Textarea } from '@/components/ui/field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
 import { fechaCorta } from '@/lib/format'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import type { Reclamo, Servicio } from '@/lib/mock/data'
 import { cn } from '@/lib/utils'
@@ -39,6 +40,7 @@ export function ConsultorioCalidad() {
       fecha: new Date().toISOString().slice(0, 10),
     })
     toast.success('Calificación enviada', { description: 'Alimenta el perfil público del ingeniero.' })
+    track(EVENTOS.calificacionEnviada, { estrellas, servicio: calificar.tipo })
     setCalificar(null)
     setComentario('')
     setEstrellas(5)
@@ -61,6 +63,7 @@ export function ConsultorioCalidad() {
       fecha: new Date().toISOString().slice(0, 10),
     }
     agregarReclamo(nuevo)
+    track(EVENTOS.reclamoRadicado, { servicio: reclamar.tipo })
     toast.success('Reclamo radicado', { description: `Plazo de respuesta: ${fechaCorta(plazo)}.` })
     setReclamar(null)
     setMotivo('')

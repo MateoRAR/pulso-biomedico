@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label, Select } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
 import { cop, semaforoEquipo } from '@/lib/format'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
@@ -34,7 +35,7 @@ export function ConsultorioOnboarding() {
 
   const planRecomendado = useMemo(() => {
     if (equipos.length > 15) return planes.find((p) => p.id === 'custom')
-    return planes.find((p) => p.id === 'pulso')
+    return planes.find((p) => p.id === 'basico')
   }, [equipos.length, planes])
 
   function contratar() {
@@ -57,6 +58,7 @@ export function ConsultorioOnboarding() {
       historial: [{ estado: 'Programada', fecha: hoy }],
     })
     toast.success('Plan contratado', { description: 'Generamos tu cronograma anual y el expediente inicial (simulado).' })
+    track(EVENTOS.planContratado, { plan: planRecomendado?.id ?? 'ninguno', equipos: equipos.length })
     navigate('/consultorio')
   }
 

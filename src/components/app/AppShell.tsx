@@ -6,7 +6,6 @@ import {
   ClipboardList,
   FolderOpen,
   Handshake,
-  HeartPulse,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -83,8 +82,8 @@ export function AppShell({ rol, children }: { rol: Rol; children?: ReactNode }) 
   const sidebar = (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex h-16 items-center gap-2.5 px-5">
-        <span className="grid size-8 place-items-center rounded-full bg-primary text-primary-foreground">
-          <HeartPulse className="size-4" />
+        <span className="grid size-9 place-items-center rounded-md bg-white">
+          <img src="/logo.png" alt="Pulso Biomédico" className="size-8 rounded-md object-contain" />
         </span>
         <span className="font-display text-base font-bold">
           Pulso <span className="text-seafoam">Biomédico</span>

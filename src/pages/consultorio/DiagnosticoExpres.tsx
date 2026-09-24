@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
 import { cop } from '@/lib/format'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import type { Servicio } from '@/lib/mock/data'
 
@@ -47,6 +48,7 @@ export function ConsultorioDiagnosticoExpres() {
     }
     agregarServicio(servicio)
     setEnviado(true)
+    track(EVENTOS.diagnosticoExpres, { equipo: equipo.nombre, tipo: equipo.tipo })
     toast.success('Diagnóstico exprés agendado', { description: `Visita corta para ${equipo.nombre}.` })
   }
 

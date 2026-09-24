@@ -61,14 +61,37 @@ capacitación), `/repuestos`, `/historial`, `/perfil`.
 **Admin:** `/admin` (métricas de canal), `/verificacion`, `/calidad`, `/aliados`,
 `/planes`.
 
+## Analítica (Vercel Web Analytics)
+
+Este proyecto es **Vite + React**, no Next.js, así que se usa el entry
+`@vercel/analytics/react` (el `/next` es exclusivo de Next). Ya está instalado.
+
+- **Pageviews:** `<AnalyticsRutas />` en `src/App.tsx` (dentro del `BrowserRouter`)
+  pasa `route`/`path` para emitir un pageview en cada navegación del SPA.
+- **Eventos personalizados:** helper `track` y hook `useTiempoEnPagina` en
+  `src/lib/analytics.ts` (best-effort: nunca rompe la app).
+- **Tiempo en página:** el hook mide solo el tiempo con la pestaña visible y
+  emite `tiempo_en_pagina` con `{ pagina, segundos }` al navegar, al ocultar la
+  pestaña y al cerrar. Instrumentado en: `landing`, `login`, `registro`,
+  `portal_consultorio`, `portal_ingeniero`, `portal_admin`, `red_ingenieros`.
+- **Eventos de negocio:** `login`, `registro`, `plan_contratado`,
+  `solicitud_creada`, `diagnostico_expres_solicitado`, `servicio_aceptado`,
+  `servicio_rechazado`, `servicio_cerrado`, `calificacion_enviada`,
+  `reclamo_radicado`, `repuesto_solicitado`, `cta_ver_planes`,
+  `cta_solicitar_diagnostico`.
+
+Para que los datos aparezcan, habilita **Web Analytics** en el proyecto de
+Vercel y despliega. En desarrollo (`npm run dev`) los eventos se registran en la
+consola con el script de debug.
+
 ## Modelo de cobro
 
 - **Acuerdo directo con el ingeniero:** el mantenimiento se acuerda entre el
   consultorio y el ingeniero; Pulso media y cobra una **comisión por servicio**.
 - **Plan mensual (opcional):** toda la logística de ordenamiento y las
   esquemáticas de seguimiento. Es la **única cuota mensual**. Dos planes:
-  **Plan Pulso** (consultorios) y **Plan Custom** (organizaciones más grandes,
-  cotización a medida).
+  **Plan Básico** (consultorios pequeños) y **Plan Custom** (organizaciones más
+  grandes, condiciones **a convenir** con el equipo).
 
 ## Aterrizaje al contexto colombiano
 

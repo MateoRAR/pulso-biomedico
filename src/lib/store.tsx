@@ -59,13 +59,26 @@ function inicial(): DataState {
 }
 
 function cargar(): DataState {
-  if (typeof window === 'undefined') return inicial()
+  const base = inicial()
+  if (typeof window === 'undefined') return base
   try {
     const crudo = window.localStorage.getItem(CLAVE)
-    if (!crudo) return inicial()
-    return { ...inicial(), ...(JSON.parse(crudo) as Partial<DataState>) }
+    if (!crudo) return base
+    const guardado = JSON.parse(crudo) as Partial<DataState>
+    // Los catálogos (consultorio, planes, aliados, métricas) vienen SIEMPRE de
+    // la semilla: así los cambios de planes se reflejan aunque el navegador
+    // tenga datos guardados de una versión anterior. Lo dinámico (equipos,
+    // servicios, calificaciones, pedidos…) sí se conserva.
+    return {
+      ...base,
+      ...guardado,
+      consultorio: base.consultorio,
+      planes: base.planes,
+      aliados: base.aliados,
+      metricas: base.metricas,
+    }
   } catch {
-    return inicial()
+    return base
   }
 }
 

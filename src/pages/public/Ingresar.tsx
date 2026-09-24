@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input, Label } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
+import { EVENTOS, track, useTiempoEnPagina } from '@/lib/analytics'
 import { buscarCuenta, CUENTAS_DEMO, etiquetaRol, rutaInicioPorRol, useSession } from '@/lib/session'
 
 export function Ingresar() {
@@ -14,6 +15,7 @@ export function Ingresar() {
   const [password, setPassword] = useState('')
   const { iniciarSesion } = useSession()
   const navigate = useNavigate()
+  useTiempoEnPagina('login')
 
   function entrar(correo: string, clave: string) {
     const cuenta = buscarCuenta(correo)
@@ -28,6 +30,7 @@ export function Ingresar() {
       return
     }
     iniciarSesion({ rol: cuenta.rol, nombre: cuenta.nombre, email: cuenta.email, organizacion: cuenta.organizacion })
+    track(EVENTOS.login, { rol: cuenta.rol, portal: rutaInicioPorRol[cuenta.rol] })
     toast.success(`Bienvenido, ${cuenta.nombre}`, { description: `Entraste como ${etiquetaRol[cuenta.rol]}.` })
     navigate(rutaInicioPorRol[cuenta.rol])
   }

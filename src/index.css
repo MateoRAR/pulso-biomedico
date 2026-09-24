@@ -165,19 +165,6 @@
   }
 }
 
-.brand-mark {
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--primary-foreground);
-  background: var(--primary);
-  box-shadow: 0 7px 20px color-mix(in oklab, var(--primary) 30%, transparent);
-}
-.brand-mark svg {
-  width: 1.15rem;
-}
 .nav-link {
   position: relative;
   font-size: 0.875rem;

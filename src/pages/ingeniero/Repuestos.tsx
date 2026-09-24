@@ -10,6 +10,7 @@ import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
 import { cop, fechaCorta } from '@/lib/format'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useSession } from '@/lib/session'
 import { useData } from '@/lib/store'
 
@@ -44,6 +45,7 @@ export function IngenieroRepuestos() {
       fecha: new Date().toISOString().slice(0, 10),
     })
     toast.success('Repuesto solicitado', { description: 'La plataforma lo enrutó al distribuidor autorizado.' })
+    track(EVENTOS.repuestoSolicitado, { origen: 'ingeniero', repuesto: repuesto.trim(), cantidad })
     setDialogo(false)
     setRepuesto('')
   }

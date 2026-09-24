@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cop } from '@/lib/format'
+import { EVENTOS, track, useTiempoEnPagina } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
@@ -46,6 +47,7 @@ const criticidad = [
 
 export function Home() {
   const { planes } = useData()
+  useTiempoEnPagina('landing')
 
   useEffect(() => {
     const hash = window.location.hash.replace('#', '')
@@ -76,11 +78,16 @@ export function Home() {
               logística y el seguimiento, un único plan mensual lo resuelve.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link to="/registro" className={cn(buttonVariants({ size: 'lg' }), 'h-12 px-6 text-base shadow-ocean')}>
+              <Link
+                to="/registro"
+                onClick={() => track(EVENTOS.ctaDiagnostico, { origen: 'hero' })}
+                className={cn(buttonVariants({ size: 'lg' }), 'h-12 px-6 text-base shadow-ocean')}
+              >
                 Solicitar diagnóstico <ArrowRight />
               </Link>
               <a
                 href="#planes"
+                onClick={() => track(EVENTOS.ctaVerPlanes, { origen: 'hero' })}
                 className={cn(buttonVariants({ size: 'lg', variant: 'outline' }), 'glass-button h-12 px-6 text-base')}
               >
                 Ver planes
@@ -113,11 +120,49 @@ export function Home() {
         </div>
       </section>
 
-      {/* Diferenciación: mediación vs plan */}
-      <section className="section-space wave-grid scroll-mt-20">
+      {/* Cómo funciona */}
+      <section id="como-funciona" className="section-space scroll-mt-20 bg-secondary/55">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="max-w-2xl">
-            <span className="eyebrow">Dos formas de trabajar con Pulso</span>
+            <span className="eyebrow">Cómo funciona</span>
+            <h2 className="section-title mt-4">Nos ocupamos del proceso completo.</h2>
+            <p className="section-copy mt-5">
+              Del inventario inicial al expediente listo para la visita de habilitación, sin que tengas que coordinar
+              nada por tu cuenta.
+            </p>
+          </div>
+
+          <div className="relative mt-14 grid gap-8 md:grid-cols-4">
+            <div className="step-rail" aria-hidden="true" />
+            {pasos.map(([number, title, description]) => (
+              <div key={number} className="relative text-center md:text-left">
+                <span className="step-number">{number}</span>
+                <h3 className="font-display mt-5 text-lg font-bold">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-14 rounded-lg border border-border bg-card/90 p-6">
+            <p className="eyebrow">Triage por criticidad</p>
+            <div className="mt-4 divide-y divide-border">
+              {criticidad.map(([nivel, descripcion, tiempo]) => (
+                <div key={nivel} className="grid gap-1 py-3 sm:grid-cols-[8rem_1fr_9rem] sm:items-center">
+                  <span className="font-display text-sm font-bold text-primary">{nivel}</span>
+                  <span className="text-sm text-muted-foreground">{descripcion}</span>
+                  <span className="text-sm font-semibold">{tiempo}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Para consultorios: mediación vs plan */}
+      <section id="consultorios" className="section-space wave-grid scroll-mt-20">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <div className="max-w-2xl">
+            <span className="eyebrow">Para consultorios y prestadores</span>
             <h2 className="section-title mt-4">Tú decides cuánto delegar.</h2>
             <p className="section-copy mt-5">
               El mantenimiento normalmente se acuerda entre el ingeniero y el consultorio; Pulso media entre ambos. El
@@ -182,40 +227,40 @@ export function Home() {
         </div>
       </section>
 
-      {/* Cómo funciona */}
-      <section id="como-funciona" className="section-space scroll-mt-20 bg-secondary/55">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="max-w-2xl">
-            <span className="eyebrow">Cómo funciona</span>
-            <h2 className="section-title mt-4">Nos ocupamos del proceso completo.</h2>
-            <p className="section-copy mt-5">
-              Del inventario inicial al expediente listo para la visita de habilitación, sin que tengas que coordinar
-              nada por tu cuenta.
+      {/* Para ingenieros */}
+      <section id="profesionales" className="section-space ocean-band relative scroll-mt-20">
+        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2 lg:px-8">
+          <div>
+            <Badge className="glass-badge border-glass-border bg-glass text-hero-foreground hover:bg-glass">
+              <Users /> Red profesional
+            </Badge>
+            <h2 className="font-display mt-5 text-4xl font-bold leading-tight text-hero-foreground sm:text-5xl">
+              Más ingeniería. Menos tareas administrativas.
+            </h2>
+            <p className="mt-5 max-w-xl text-lg leading-8 text-hero-muted">
+              Pulso agrega la demanda de consultorios cercanos, organiza rutas por zona y se encarga de la facturación
+              y los informes para que concentres tu tiempo en el trabajo técnico.
             </p>
+            <Link to="/registro" className={cn(buttonVariants({ size: 'lg' }), 'mt-8 h-12')}>
+              Unirme a la red <ArrowRight />
+            </Link>
           </div>
-
-          <div className="relative mt-14 grid gap-8 md:grid-cols-4">
-            <div className="step-rail" aria-hidden="true" />
-            {pasos.map(([number, title, description]) => (
-              <div key={number} className="relative text-center md:text-left">
-                <span className="step-number">{number}</span>
-                <h3 className="font-display mt-5 text-lg font-bold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-14 rounded-lg border border-border bg-card/90 p-6">
-            <p className="eyebrow">Triage por criticidad</p>
-            <div className="mt-4 divide-y divide-border">
-              {criticidad.map(([nivel, descripcion, tiempo]) => (
-                <div key={nivel} className="grid gap-1 py-3 sm:grid-cols-[8rem_1fr_9rem] sm:items-center">
-                  <span className="font-display text-sm font-bold text-primary">{nivel}</span>
-                  <span className="text-sm text-muted-foreground">{descripcion}</span>
-                  <span className="text-sm font-semibold">{tiempo}</span>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              [MapPin, 'Rutas eficientes', 'Servicios agrupados por zona para reducir desplazamientos.'],
+              [CalendarCheck, 'Agenda predecible', 'Franjas horarias claras que se adaptan a tu disponibilidad.'],
+              [BadgeCheck, 'Reputación visible', 'Inscripción INVIMA y tarjeta COPNIA verificadas por la red.'],
+              [Wrench, 'Demanda estable', 'Más horas efectivas y menos tiempo buscando clientes.'],
+            ].map(([Icon, title, description]) => {
+              const FeatureIcon = Icon as typeof MapPin
+              return (
+                <div key={title as string} className="glass-panel">
+                  <FeatureIcon />
+                  <h3 className="font-display mt-5 text-lg font-bold text-hero-foreground">{title as string}</h3>
+                  <p className="mt-2 text-sm leading-6 text-hero-muted">{description as string}</p>
                 </div>
-              ))}
-            </div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -266,7 +311,7 @@ export function Home() {
                     ))}
                   </ul>
                   <Link to="/registro" className={buttonVariants({ variant: plan.destacado ? 'default' : 'outline', size: 'lg' })}>
-                    {plan.id === 'custom' ? 'Hablar con el equipo' : `Elegir ${plan.nombre}`} <ArrowRight />
+                    {plan.id === 'custom' ? 'Acordar con el equipo' : `Elegir ${plan.nombre}`} <ArrowRight />
                   </Link>
                 </div>
               </Card>
@@ -275,46 +320,8 @@ export function Home() {
         </div>
       </section>
 
-      {/* Para ingenieros */}
-      <section id="profesionales" className="section-space ocean-band relative scroll-mt-20">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2 lg:px-8">
-          <div>
-            <Badge className="glass-badge border-glass-border bg-glass text-hero-foreground hover:bg-glass">
-              <Users /> Red profesional
-            </Badge>
-            <h2 className="font-display mt-5 text-4xl font-bold leading-tight text-hero-foreground sm:text-5xl">
-              Más ingeniería. Menos tareas administrativas.
-            </h2>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-hero-muted">
-              Pulso agrega la demanda de consultorios cercanos, organiza rutas por zona y se encarga de la facturación
-              y los informes para que concentres tu tiempo en el trabajo técnico.
-            </p>
-            <Link to="/registro" className={cn(buttonVariants({ size: 'lg' }), 'mt-8 h-12')}>
-              Unirme a la red <ArrowRight />
-            </Link>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              [MapPin, 'Rutas eficientes', 'Servicios agrupados por zona para reducir desplazamientos.'],
-              [CalendarCheck, 'Agenda predecible', 'Franjas horarias claras que se adaptan a tu disponibilidad.'],
-              [BadgeCheck, 'Reputación visible', 'Inscripción INVIMA y tarjeta COPNIA verificadas por la red.'],
-              [Wrench, 'Demanda estable', 'Más horas efectivas y menos tiempo buscando clientes.'],
-            ].map(([Icon, title, description]) => {
-              const FeatureIcon = Icon as typeof MapPin
-              return (
-                <div key={title as string} className="glass-panel">
-                  <FeatureIcon />
-                  <h3 className="font-display mt-5 text-lg font-bold text-hero-foreground">{title as string}</h3>
-                  <p className="mt-2 text-sm leading-6 text-hero-muted">{description as string}</p>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Preguntas */}
-      <section className="section-space">
+      <section id="preguntas" className="section-space scroll-mt-20">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-[0.75fr_1.25fr] lg:px-8">
           <div>
             <span className="eyebrow">Preguntas frecuentes</span>
@@ -330,11 +337,15 @@ export function Home() {
               El servicio se acuerda con el ingeniero y se paga por comisión cuando se ejecuta. El plan mensual es
               opcional y solo cubre la logística y el seguimiento.
             </AccordionItem>
-            <AccordionItem value="tres" title="¿Qué pasa con la Resolución 1732 de 2026?">
+            <AccordionItem value="tres" title="¿Qué planes existen?">
+              El Plan Básico es la única cuota mensual y cubre la logística y el seguimiento para consultorios
+              pequeños. Para organizaciones más grandes, el Plan Custom se acuerda con el equipo.
+            </AccordionItem>
+            <AccordionItem value="cuatro" title="¿Qué pasa con la Resolución 1732 de 2026?">
               La norma derogó la Resolución 3100 de 2019 y actualizó el manual de habilitación, con un periodo de
               transición de doce meses. Pulso mantiene tu expediente alineado a los nuevos estándares.
             </AccordionItem>
-            <AccordionItem value="cuatro" title="¿Qué recibo después de cada visita?">
+            <AccordionItem value="cinco" title="¿Qué recibo después de cada visita?">
               La intervención queda registrada en la hoja de vida del equipo y se incorporan automáticamente los
               informes y certificados con trazabilidad metrológica.
             </AccordionItem>
@@ -353,10 +364,18 @@ export function Home() {
             Empieza con un diagnóstico de tu dotación y descubre una forma más simple de mantener todo al día.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link to="/registro" className={cn(buttonVariants({ size: 'lg' }), 'h-12 px-7 text-base')}>
+            <Link
+              to="/registro"
+              onClick={() => track(EVENTOS.ctaDiagnostico, { origen: 'cta_final' })}
+              className={cn(buttonVariants({ size: 'lg' }), 'h-12 px-7 text-base')}
+            >
               Empezar diagnóstico <ArrowRight />
             </Link>
-            <a href="#planes" className={cn(buttonVariants({ size: 'lg', variant: 'outline' }), 'glass-button h-12 px-7 text-base')}>
+            <a
+              href="#planes"
+              onClick={() => track(EVENTOS.ctaVerPlanes, { origen: 'cta_final' })}
+              className={cn(buttonVariants({ size: 'lg', variant: 'outline' }), 'glass-button h-12 px-7 text-base')}
+            >
               Ver planes
             </a>
           </div>

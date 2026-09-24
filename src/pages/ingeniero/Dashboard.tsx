@@ -6,6 +6,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { comisionIngeniero, cop, diasHasta, fechaCorta } from '@/lib/format'
+import { useTiempoEnPagina } from '@/lib/analytics'
 import { useSession } from '@/lib/session'
 import { useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -15,6 +16,7 @@ const ORDEN_TRIAGE = { Crítica: 0, Alta: 1, Media: 2, Programada: 3 } as const
 export function IngenieroDashboard() {
   const { sesion } = useSession()
   const { ingenieros, servicios, equipos, consultorio, calificaciones } = useData()
+  useTiempoEnPagina('portal_ingeniero', { rol: 'ingeniero' })
   const yo = ingenieros.find((i) => i.nombre === sesion?.nombre) ?? ingenieros[0]
 
   const mios = servicios.filter((s) => s.ingenieroId === yo.id)

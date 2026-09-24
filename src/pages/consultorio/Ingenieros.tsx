@@ -1,7 +1,9 @@
 import { DirectorioIngenieros } from '@/components/shared/DirectorioIngenieros'
 import { PageHeader } from '@/components/shared/ui'
+import { useTiempoEnPagina } from '@/lib/analytics'
 
 export function ConsultorioIngenieros() {
+  useTiempoEnPagina('red_ingenieros', { rol: 'consultorio' })
   return (
     <div className="space-y-8">
       <PageHeader

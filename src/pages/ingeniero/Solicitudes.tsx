@@ -10,6 +10,7 @@ import { Select } from '@/components/ui/field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
 import { fechaCorta } from '@/lib/format'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useSession } from '@/lib/session'
 import { useData } from '@/lib/store'
 import type { Servicio } from '@/lib/mock/data'
@@ -41,11 +42,13 @@ export function IngenieroSolicitudes() {
       historial: [...s.historial, { estado: 'Confirmada', fecha: new Date().toISOString().slice(0, 10) }],
     })
     toast.success('Servicio aceptado', { description: `Confirmado para el ${fechaCorta(s.fecha)}.` })
+    track(EVENTOS.servicioAceptado, { tipo: s.tipo, criticidad: s.criticidad })
     setDetalle(null)
   }
 
   function rechazar(s: Servicio) {
     actualizarServicio(s.id, { ingenieroId: null, estado: 'Programada' })
+    track(EVENTOS.servicioRechazado, { tipo: s.tipo, criticidad: s.criticidad })
     toast.info('Asignación rechazada', { description: 'La plataforma reasignará a otro ingeniero de la zona.' })
     setDetalle(null)
   }

@@ -10,6 +10,7 @@ import { Input, Label, Select } from '@/components/ui/field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
 import { cop, fechaCorta } from '@/lib/format'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import type { PedidoRepuesto } from '@/lib/mock/data'
 
@@ -40,6 +41,7 @@ export function ConsultorioRepuestos() {
       fecha: new Date().toISOString().slice(0, 10),
     }
     agregarPedido(pedido)
+    track(EVENTOS.repuestoSolicitado, { repuesto: item.repuesto, valor: item.precio })
     toast.success('Repuesto solicitado', {
       description: `Se enrutó a ${item.distribuidor} con precio negociado por volumen.`,
     })

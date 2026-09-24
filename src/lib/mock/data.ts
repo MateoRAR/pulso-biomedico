@@ -238,7 +238,7 @@ export const CONSULTORIO_SEED: Consultorio = {
   cargoContacto: 'Administradora',
   telefono: '318 265 9719',
   email: 'consultorio@pulso.co',
-  planId: 'pulso',
+  planId: 'basico',
   codigoHabilitacion: '760010012345',
 }
 
@@ -500,14 +500,14 @@ export const INGENIEROS_SEED: Ingeniero[] = [
 
 export const PLANES_SEED: Plan[] = [
   {
-    id: 'pulso',
-    nombre: 'Plan Pulso',
+    id: 'basico',
+    nombre: 'Plan Básico',
     precioCOP: 249000,
     periodo: '/ mes',
-    rangoEquipos: 'Consultorios y prestadores de baja complejidad',
+    rangoEquipos: 'Consultorios y prestadores pequeños',
     segmento: 'Única cuota mensual',
     resumen:
-      'Toda la logística de ordenamiento y las esquemáticas de seguimiento: tú acuerdas el mantenimiento con el ingeniero y nosotros nos encargamos de la coordinación.',
+      'La logística de ordenamiento y las funciones de seguimiento que nos competen: tú acuerdas el mantenimiento con el ingeniero y nosotros coordinamos el resto.',
     incluye: [
       'Inventario digital y hoja de vida por equipo',
       'Cronograma anual y rutas por zona',
@@ -522,16 +522,16 @@ export const PLANES_SEED: Plan[] = [
     id: 'custom',
     nombre: 'Plan Custom',
     precioCOP: 0,
-    precioTexto: 'A medida',
+    precioTexto: 'A convenir',
     periodo: '',
     rangoEquipos: 'Organizaciones con varias sedes o mayor dotación',
-    segmento: 'Cotización a medida',
+    segmento: 'Condiciones acordadas con el equipo',
     resumen:
-      'Para organizaciones más grandes que necesitan cubrir varias sedes, SLA propios y reportes de indicadores.',
+      'Para organizaciones más grandes: cobertura de varias sedes, SLA propios y reportes, con condiciones acordadas caso a caso.',
     incluye: [
-      'Todo lo del Plan Pulso',
+      'Todo lo del Plan Básico',
       'Cobertura para múltiples sedes',
-      'SLA y condiciones a medida',
+      'SLA y condiciones a convenir',
       'Informe de indicadores de cumplimiento',
       'Acompañamiento dedicado',
     ],

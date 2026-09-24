@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
 import { fechaCorta } from '@/lib/format'
+import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
@@ -76,6 +77,7 @@ export function IngenieroServicioDetalle() {
       vigencia: garantia,
     })
     toast.success('Servicio cerrado', { description: 'Se generó el documento y quedó en el expediente.' })
+    track(EVENTOS.servicioCerrado, { tipo: servicio.tipo, resultado, evidencias: evidencias.length })
   }
 
   return (
