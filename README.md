@@ -64,15 +64,15 @@ capacitación), `/repuestos`, `/historial`, `/perfil`.
 ## Analítica (Vercel Web Analytics)
 
 Este proyecto es **Vite + React**, no Next.js, así que se usa el entry
-`@vercel/analytics/react` (el `/next` es exclusivo de Next). Ya está instalado.
+`@vercel/analytics/react` (el `/next` es exclusivo de Next y rompe el build de
+Vite). Ya está instalado.
 
-- **Pageviews:** `<AnalyticsRutas />` en `src/App.tsx` (dentro del `BrowserRouter`)
-  pasa `route`/`path` para emitir un pageview en cada navegación del SPA.
+- **Pageviews:** `<Analytics />` en `src/App.tsx` (raíz de la app). El script
+  detecta los cambios de ruta del SPA (react-router usa `pushState`).
 - **Eventos personalizados:** helper `track` y hook `useTiempoEnPagina` en
   `src/lib/analytics.ts` (best-effort: nunca rompe la app).
-- **Tiempo en página:** el hook mide solo el tiempo con la pestaña visible y
-  emite `tiempo_en_pagina` con `{ pagina, segundos }` al navegar, al ocultar la
-  pestaña y al cerrar. Instrumentado en: `landing`, `login`, `registro`,
+- **Tiempo en página:** `tiempo_en_pagina` con `{ pagina, segundos }`, medido
+  solo con la pestaña visible. Instrumentado en: `landing`, `login`, `registro`,
   `portal_consultorio`, `portal_ingeniero`, `portal_admin`, `red_ingenieros`.
 - **Eventos de negocio:** `login`, `registro`, `plan_contratado`,
   `solicitud_creada`, `diagnostico_expres_solicitado`, `servicio_aceptado`,
@@ -80,9 +80,26 @@ Este proyecto es **Vite + React**, no Next.js, así que se usa el entry
   `reclamo_radicado`, `repuesto_solicitado`, `cta_ver_planes`,
   `cta_solicitar_diagnostico`.
 
-Para que los datos aparezcan, habilita **Web Analytics** en el proyecto de
-Vercel y despliega. En desarrollo (`npm run dev`) los eventos se registran en la
-consola con el script de debug.
+### Checklist para que salgan los datos
+
+1. **Habilita Web Analytics** en el dashboard de Vercel (proyecto → Analytics →
+   Enable). Esto agrega las rutas `/_vercel/insights/*` **en el próximo deploy**.
+2. **Vuelve a desplegar y promueve a producción** después de habilitarlo. Si
+   desplegaste antes de habilitarlo, `/_vercel/insights/script.js` da **404** y
+   no se registra nada (es la causa más común).
+3. **Verifica** en la pestaña Network una petición a `/_vercel/insights/view`
+   (o `/<unique-path>/view`) al navegar. Si no aparece, revisa el paso 2.
+4. **Root Directory**: si despliegas desde la raíz del repo, configura
+   `pulso-biomedico` como Root Directory; Vercel detecta Vite y usa `dist`.
+5. **Eventos personalizados**: los `track(...)` (incluido `tiempo_en_pagina`)
+   requieren plan **Pro o Enterprise**. En Hobby solo verás pageviews.
+6. **Ad blockers**: uBlock/AdBlock pueden bloquear `/_vercel/insights/script.js`.
+   Si es tu caso, prueba en incógnito sin extensiones.
+7. En `npm run dev` los eventos se registran en la consola con el script de
+   debug; **no** se envían al dashboard.
+
+`vercel.json` incluye rewrites explícitos para las rutas del SPA (deep links
+como `/consultorio` sirven `index.html`) sin tocar `/_vercel/*`.
 
 ## Modelo de cobro
 
