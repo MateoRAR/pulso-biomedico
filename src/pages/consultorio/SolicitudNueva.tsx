@@ -1,13 +1,13 @@
 import { ArrowLeft, Send } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { PageHeader, TriageBadge } from '@/components/shared/ui'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
-import { NOMBRE_CRITICIDAD, SLA, type Criticidad, type Servicio } from '@/lib/mock/data'
+import { NOMBRE_CRITICIDAD, SLA, type Criticidad, type Servicio } from '@/data/tipos'
 import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 
@@ -17,6 +17,7 @@ const criticidades: Criticidad[] = ['Crítica', 'Alta', 'Media', 'Programada']
 export function ConsultorioSolicitudNueva() {
   const { equipos, consultorio, ingenieros, agregarServicio } = useData()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
 
   const [equipoId, setEquipoId] = useState(equipos[0]?.id ?? '')
   const [tipo, setTipo] = useState<Servicio['tipo']>('Correctivo')
@@ -25,12 +26,18 @@ export function ConsultorioSolicitudNueva() {
   const [evidencia, setEvidencia] = useState('')
 
   const equipo = equipos.find((e) => e.id === equipoId)
+  // '' = que Pulso asigne al más cercano; si no, el id del ingeniero elegido.
+  const [ingenieroElegido, setIngenieroElegido] = useState(params.get('ingeniero') ?? '')
 
   const candidatos = useMemo(() => {
-    if (!equipo) return ingenieros.filter((i) => i.verificado)
-    const porZona = ingenieros.filter((i) => i.verificado && i.zonas.includes(consultorio.zona))
-    return (porZona.length ? porZona : ingenieros.filter((i) => i.verificado)).slice(0, 3)
-  }, [ingenieros, equipo, consultorio.zona])
+    const verificados = ingenieros.filter((i) => i.verificado && i.disponible)
+    const enCiudad = verificados.filter((i) => i.ciudadId === consultorio.ciudadId)
+    const lista = enCiudad.length ? enCiudad : verificados
+    // los de su zona primero
+    return [...lista].sort((a, b) => Number(b.zonas.includes(consultorio.zona)) - Number(a.zonas.includes(consultorio.zona)))
+  }, [ingenieros, consultorio.ciudadId, consultorio.zona])
+
+  const elegido = candidatos.find((i) => i.id === ingenieroElegido) ?? null
 
   function enviar(event: React.FormEvent) {
     event.preventDefault()
@@ -46,25 +53,27 @@ export function ConsultorioSolicitudNueva() {
       id: `ser-${Date.now()}`,
       consultorioId: consultorio.id,
       equipoId: equipo.id,
-      ingenieroId: candidatos[0]?.id ?? null,
+      ingenieroId: elegido?.id ?? null,
       tipo,
       criticidad,
-      estado: 'Asignada',
+      estado: elegido ? 'Asignada' : 'Programada',
       fecha,
       franja: '08:00 - 10:00',
       zona: consultorio.zona,
       descripcion: descripcion.trim(),
       evidencia: evidencia.trim() ? [evidencia.trim()] : [],
       creado: hoy,
-      historial: [
-        { estado: 'Programada', fecha: hoy },
-        { estado: 'Asignada', fecha: hoy },
-      ],
+      historial: elegido
+        ? [
+            { estado: 'Programada', fecha: hoy },
+            { estado: 'Asignada', fecha: hoy },
+          ]
+        : [{ estado: 'Programada', fecha: hoy }],
     }
     agregarServicio(servicio)
-    track(EVENTOS.solicitudCreada, { tipo, criticidad, zona: consultorio.zona, asignado: Boolean(candidatos[0]) })
+    track(EVENTOS.solicitudCreada, { tipo, criticidad, zona: consultorio.zona, asignado: Boolean(elegido) })
     toast.success('Solicitud creada', {
-      description: `Asignada a ${candidatos[0]?.nombre ?? 'la red'} · ${SLA[criticidad]}.`,
+      description: `${elegido ? `Enviada a ${elegido.nombre}` : 'Buscaremos al ingeniero más cercano'} · ${SLA[criticidad]}.`,
     })
     navigate('/consultorio/solicitudes')
   }
@@ -112,7 +121,7 @@ export function ConsultorioSolicitudNueva() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="criticidad">Criticidad</Label>
+              <Label htmlFor="criticidad">¿Qué tan urgente es?</Label>
               <Select id="criticidad" value={criticidad} onChange={(event) => setCriticidad(event.target.value as Criticidad)}>
                 {criticidades.map((c) => (
                   <option key={c} value={c}>
@@ -145,7 +154,7 @@ export function ConsultorioSolicitudNueva() {
         <div className="space-y-6">
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle className="font-display text-xl">Triage y SLA</CardTitle>
+              <CardTitle className="font-display text-xl">Urgencia y tiempo de respuesta</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <TriageBadge criticidad={criticidad} conSla />
@@ -155,19 +164,34 @@ export function ConsultorioSolicitudNueva() {
 
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle className="font-display text-xl">Asignación sugerida</CardTitle>
-              <CardDescription>Ingenieros verificados por cercanía a la zona {consultorio.zona}.</CardDescription>
+              <CardTitle className="font-display text-xl">¿Con qué ingeniero?</CardTitle>
+              <CardDescription>
+                Ingenieros verificados de {consultorio.ciudad}. Puedes elegir uno o dejar que Pulso busque al más cercano.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
+              <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md border border-border bg-background p-3 has-[:checked]:border-primary has-[:checked]:bg-accent">
+                <input type="radio" name="ingeniero" className="size-5 accent-[var(--primary)]" checked={!ingenieroElegido} onChange={() => setIngenieroElegido('')} />
+                <span>
+                  <span className="block text-sm font-semibold">Que Pulso elija al más cercano</span>
+                  <span className="text-xs text-muted-foreground">Recomendado si no tienes preferencia</span>
+                </span>
+              </label>
               {candidatos.map((ing) => (
-                <div key={ing.id} className="rounded-md border border-border bg-background p-3">
-                  <p className="text-sm font-semibold">{ing.nombre}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {ing.zonas.join(', ')} · ★ {ing.calificacion.toFixed(1)}
-                  </p>
-                </div>
+                <label key={ing.id} className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md border border-border bg-background p-3 has-[:checked]:border-primary has-[:checked]:bg-accent">
+                  <input type="radio" name="ingeniero" className="size-5 accent-[var(--primary)]" checked={ingenieroElegido === ing.id} onChange={() => setIngenieroElegido(ing.id)} />
+                  <span>
+                    <span className="block text-sm font-semibold">{ing.nombre}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {ing.zonas.join(', ')} · {ing.opiniones.length ? `★ ${ing.calificacion.toFixed(1)}` : 'Sin calificaciones'}
+                    </span>
+                  </span>
+                </label>
               ))}
-              {candidatos.length === 0 && <p className="text-sm text-muted-foreground">No hay ingenieros disponibles.</p>}
+              {candidatos.length === 0 && <p className="text-sm text-muted-foreground">No hay ingenieros disponibles por ahora.</p>}
+              <Link to="/consultorio/ingenieros" className="inline-block text-sm font-semibold text-primary hover:underline">
+                Ver toda la red de ingenieros
+              </Link>
             </CardContent>
           </Card>
 

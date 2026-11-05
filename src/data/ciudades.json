@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cali",
+    "nombre": "Santiago de Cali",
+    "corto": "Cali",
+    "lat": 3.4516,
+    "lng": -76.532,
+    "zoom": 12.2
+  },
+  {
+    "id": "yumbo",
+    "nombre": "Yumbo",
+    "corto": "Yumbo",
+    "lat": 3.5853,
+    "lng": -76.4944,
+    "zoom": 13
+  },
+  {
+    "id": "palmira",
+    "nombre": "Palmira",
+    "corto": "Palmira",
+    "lat": 3.5394,
+    "lng": -76.3036,
+    "zoom": 12.5
+  },
+  {
+    "id": "pereira",
+    "nombre": "Pereira",
+    "corto": "Pereira",
+    "lat": 4.8133,
+    "lng": -75.6961,
+    "zoom": 12.5
+  },
+  {
+    "id": "bogota",
+    "nombre": "Bogotá D.C.",
+    "corto": "Bogotá",
+    "lat": 4.711,
+    "lng": -74.0721,
+    "zoom": 11.2
+  },
+  {
+    "id": "medellin",
+    "nombre": "Medellín",
+    "corto": "Medellín",
+    "lat": 6.2442,
+    "lng": -75.5812,
+    "zoom": 12
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "not-1",
+    "para": "consultorio",
+    "tipo": "Visita",
+    "mensaje": "Visita de calibración del autoclave confirmada para esta semana.",
+    "fecha": "-1d",
+    "leida": false,
+    "refId": "con-1"
+  },
+  {
+    "id": "not-2",
+    "para": "consultorio",
+    "tipo": "Vencimiento",
+    "mensaje": "La calibración del autoclave venció hace 10 días. Agenda la visita para evitar hallazgos.",
+    "fecha": "-2d",
+    "leida": false,
+    "refId": "con-1"
+  },
+  {
+    "id": "not-3",
+    "para": "consultorio",
+    "tipo": "Certificado",
+    "mensaje": "Certificado de calibración del monitor uMEC 12 disponible en tu expediente.",
+    "fecha": "-34d",
+    "leida": true,
+    "refId": "con-1"
+  },
+  {
+    "id": "not-4",
+    "para": "ingeniero",
+    "tipo": "Visita",
+    "mensaje": "Nueva solicitud asignada: correctivo de compresor dental (Sur, Cali).",
+    "fecha": "-1d",
+    "leida": false,
+    "refId": "ing-1"
+  },
+  {
+    "id": "not-5",
+    "para": "ingeniero",
+    "tipo": "Sistema",
+    "mensaje": "Tu registro INVIMA sigue vigente. Próxima renovación: mar 2027.",
+    "fecha": "-5d",
+    "leida": true,
+    "refId": "ing-1"
+  }
+]

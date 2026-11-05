@@ -1,0 +1,37 @@
+[
+  {
+    "id": "basico",
+    "nombre": "Plan Básico",
+    "precioCOP": 249000,
+    "periodo": "/ mes",
+    "rangoEquipos": "Consultorios y prestadores pequeños",
+    "segmento": "Única cuota mensual",
+    "resumen": "La logística de ordenamiento y las funciones de seguimiento que nos competen: tú acuerdas el mantenimiento con el ingeniero y nosotros coordinamos el resto.",
+    "incluye": [
+      "Inventario digital y hoja de vida por equipo",
+      "Cronograma anual y rutas por zona",
+      "Semáforo de habilitación con alertas de vencimiento",
+      "Recordatorios y confirmación de cada visita por correo",
+      "Expediente documental auditable generado automáticamente",
+      "Soporte y gestión de garantías"
+    ],
+    "destacado": true
+  },
+  {
+    "id": "custom",
+    "nombre": "Plan Custom",
+    "precioCOP": 0,
+    "precioTexto": "A convenir",
+    "periodo": "",
+    "rangoEquipos": "Organizaciones con varias sedes o mayor dotación",
+    "segmento": "Condiciones acordadas con el equipo",
+    "resumen": "Para organizaciones más grandes: cobertura de varias sedes, SLA propios y reportes, con condiciones acordadas caso a caso.",
+    "incluye": [
+      "Todo lo del Plan Básico",
+      "Cobertura para múltiples sedes",
+      "SLA y condiciones a convenir",
+      "Informe de indicadores de cumplimiento",
+      "Acompañamiento dedicado"
+    ]
+  }
+]

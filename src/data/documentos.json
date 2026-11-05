@@ -1,0 +1,242 @@
+[
+  {
+    "id": "doc-1",
+    "equipoId": "eq-3",
+    "tipo": "Informe de mantenimiento",
+    "nombre": "Informe preventivo rayos X — sep 2026",
+    "fecha": "-12d",
+    "vigencia": "+353d"
+  },
+  {
+    "id": "doc-2",
+    "equipoId": "eq-4",
+    "tipo": "Certificado de calibración",
+    "nombre": "Certificado de calibración monitor uMEC 12",
+    "fecha": "-35d",
+    "vigencia": "+330d",
+    "laboratorio": "Lab. Metrológico Andino (ONAC)"
+  },
+  {
+    "id": "doc-3",
+    "equipoId": "eq-2",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración autoclave 3870M — mar 2026",
+    "fecha": "-190d",
+    "vigencia": "-10d",
+    "laboratorio": "Lab. Metrológico Andino (ONAC)"
+  },
+  {
+    "id": "doc-4",
+    "equipoId": "eq-1",
+    "tipo": "Hoja de vida",
+    "nombre": "Hoja de vida unidad odontológica Intego",
+    "fecha": "-200d",
+    "vigencia": ""
+  },
+  {
+    "id": "doc-5",
+    "equipoId": "eq-3",
+    "tipo": "Registro sanitario",
+    "nombre": "Registro sanitario Carestream CS 2100",
+    "fecha": "-400d",
+    "vigencia": "+900d"
+  },
+  {
+    "id": "doc-eq-2-1",
+    "equipoId": "eq-2-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Unidad odontológica completa",
+    "fecha": "-100d",
+    "vigencia": "+150d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-2-3",
+    "equipoId": "eq-2-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Equipo de rayos X periapical",
+    "fecha": "-100d",
+    "vigencia": "-12d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-3-1",
+    "equipoId": "eq-3-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Ecógrafo portátil",
+    "fecha": "-100d",
+    "vigencia": "+90d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-3-3",
+    "equipoId": "eq-3-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Monitor de signos vitales",
+    "fecha": "-100d",
+    "vigencia": "+45d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-4-1",
+    "equipoId": "eq-4-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Centrífuga de laboratorio",
+    "fecha": "-100d",
+    "vigencia": "+300d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-4-3",
+    "equipoId": "eq-4-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Balanza analítica",
+    "fecha": "-100d",
+    "vigencia": "+8d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-5-1",
+    "equipoId": "eq-5-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Equipo de ultrasonido terapéutico",
+    "fecha": "-100d",
+    "vigencia": "-12d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-5-3",
+    "equipoId": "eq-5-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Electroestimulador TENS",
+    "fecha": "-100d",
+    "vigencia": "+200d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-6-1",
+    "equipoId": "eq-6-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Monitor de signos vitales",
+    "fecha": "-100d",
+    "vigencia": "+45d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-6-3",
+    "equipoId": "eq-6-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Autoclave de mesa",
+    "fecha": "-100d",
+    "vigencia": "+150d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-7-1",
+    "equipoId": "eq-7-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Unidad odontológica completa",
+    "fecha": "-100d",
+    "vigencia": "+8d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-7-3",
+    "equipoId": "eq-7-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Equipo de rayos X periapical",
+    "fecha": "-100d",
+    "vigencia": "+90d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-8-1",
+    "equipoId": "eq-8-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Dermatoscopio",
+    "fecha": "-100d",
+    "vigencia": "+200d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-8-3",
+    "equipoId": "eq-8-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Equipo de luz pulsada",
+    "fecha": "-100d",
+    "vigencia": "+300d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-9-1",
+    "equipoId": "eq-9-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Monitor de signos vitales",
+    "fecha": "-100d",
+    "vigencia": "+150d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-9-3",
+    "equipoId": "eq-9-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Autoclave de mesa",
+    "fecha": "-100d",
+    "vigencia": "-12d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-10-1",
+    "equipoId": "eq-10-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Unidad odontológica completa",
+    "fecha": "-100d",
+    "vigencia": "+90d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-10-3",
+    "equipoId": "eq-10-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Equipo de rayos X periapical",
+    "fecha": "-100d",
+    "vigencia": "+45d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-11-1",
+    "equipoId": "eq-11-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Centrífuga de laboratorio",
+    "fecha": "-100d",
+    "vigencia": "+300d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-11-3",
+    "equipoId": "eq-11-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Balanza analítica",
+    "fecha": "-100d",
+    "vigencia": "+8d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-12-1",
+    "equipoId": "eq-12-1",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Dermatoscopio",
+    "fecha": "-100d",
+    "vigencia": "-12d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  },
+  {
+    "id": "doc-eq-12-3",
+    "equipoId": "eq-12-3",
+    "tipo": "Certificado de calibración",
+    "nombre": "Calibración Equipo de luz pulsada",
+    "fecha": "-100d",
+    "vigencia": "+200d",
+    "laboratorio": "Laboratorio metrológico acreditado"
+  }
+]

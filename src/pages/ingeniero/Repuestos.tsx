@@ -11,13 +11,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/components/ui/toast'
 import { cop, fechaCorta } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
-import { useSession } from '@/lib/session'
-import { useData } from '@/lib/store'
+import { useData, useIngenieroActual } from '@/lib/store'
 
 export function IngenieroRepuestos() {
-  const { sesion } = useSession()
-  const { ingenieros, servicios, equipos, repuestos, agregarPedido } = useData()
-  const yo = ingenieros.find((i) => i.nombre === sesion?.nombre) ?? ingenieros[0]
+  const { servicios, equipos, repuestos, agregarPedido } = useData()
+  const yo = useIngenieroActual()
 
   const ordenes = servicios.filter((s) => s.ingenieroId === yo.id && s.estado !== 'Cancelada')
 

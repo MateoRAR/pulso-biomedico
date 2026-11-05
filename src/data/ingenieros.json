@@ -1,0 +1,305 @@
+[
+  {
+    "id": "ing-1",
+    "slug": "laura-medina",
+    "nombre": "Laura Medina",
+    "titulo": "Ingeniera biomédica · Equipos odontológicos y esterilización",
+    "ciudad": "Santiago de Cali",
+    "zonas": [
+      "Sur",
+      "Centro",
+      "Oeste"
+    ],
+    "especialidades": [
+      "Odontología",
+      "Esterilización"
+    ],
+    "equipos": [
+      "Unidad odontológica",
+      "Autoclave",
+      "Compresor dental",
+      "Lámpara de fotocurado"
+    ],
+    "experiencia": 7,
+    "verificado": true,
+    "estadoVerificacion": "Verificado",
+    "registroInvima": "INVIMA-ING-2026-04417",
+    "tarjetaCopnia": "COPNIA 05123-274918 CAL",
+    "resena": "Ingeniera biomédica con énfasis en equipos odontológicos y ciclos de esterilización. Acompaña a consultorios pequeños en la organización de su cronograma de mantenimiento y calibración.",
+    "certificaciones": [
+      {
+        "nombre": "Mantenimiento de equipos odontológicos",
+        "entidad": "ACIB · Asoc. Colombiana de Ing. Biomédica",
+        "vigencia": "2027-03"
+      },
+      {
+        "nombre": "Calibración de autoclaves",
+        "entidad": "Laboratorio acreditado ONAC",
+        "vigencia": "2026-11"
+      }
+    ],
+    "segmento": "B1",
+    "disponible": true,
+    "ciudadId": "cali",
+    "activo": true
+  },
+  {
+    "id": "ing-2",
+    "slug": "andres-bueno",
+    "nombre": "Andrés Bueno",
+    "titulo": "Ingeniero biomédico · Imágenes diagnósticas",
+    "ciudad": "Santiago de Cali",
+    "zonas": [
+      "Sur",
+      "Este"
+    ],
+    "especialidades": [
+      "Imágenes diagnósticas"
+    ],
+    "equipos": [
+      "Rayos X",
+      "Ecógrafo",
+      "Reveladora",
+      "Densitómetro"
+    ],
+    "experiencia": 5,
+    "verificado": true,
+    "estadoVerificacion": "Verificado",
+    "registroInvima": "INVIMA-ING-2026-03982",
+    "tarjetaCopnia": "COPNIA 05123-274102 CAL",
+    "resena": "Especialista en rayos X odontológico y control de calidad de imagen. Trabaja con laboratorios acreditados ONAC para las calibraciones que lo requieren.",
+    "certificaciones": [
+      {
+        "nombre": "Protección radiológica",
+        "entidad": "Secretaría de Salud del Valle",
+        "vigencia": "2027-01"
+      },
+      {
+        "nombre": "Control de calidad en radiología",
+        "entidad": "ACIB",
+        "vigencia": "2026-12"
+      }
+    ],
+    "segmento": "B1",
+    "disponible": true,
+    "ciudadId": "cali",
+    "activo": true
+  },
+  {
+    "id": "ing-3",
+    "slug": "carolina-restrepo",
+    "nombre": "Carolina Restrepo",
+    "titulo": "Ingeniera biomédica · Laboratorio clínico",
+    "ciudad": "Yumbo",
+    "zonas": [
+      "Norte",
+      "Centro",
+      "Yumbo"
+    ],
+    "especialidades": [
+      "Laboratorio clínico"
+    ],
+    "equipos": [
+      "Centrífuga",
+      "Incubadora",
+      "Microscopio",
+      "Analizador de química"
+    ],
+    "experiencia": 4,
+    "verificado": true,
+    "estadoVerificacion": "Verificado",
+    "registroInvima": "INVIMA-ING-2026-04551",
+    "tarjetaCopnia": "COPNIA 05123-275033 VAL",
+    "resena": "Enfocada en laboratorios de toma de muestras y centros de diagnóstico básico. Organiza hojas de vida de equipos y verifica patrones trazables.",
+    "certificaciones": [
+      {
+        "nombre": "Metrología aplicada a laboratorios",
+        "entidad": "ONAC · curso avalado",
+        "vigencia": "2027-06"
+      }
+    ],
+    "segmento": "B1",
+    "disponible": true,
+    "ciudadId": "yumbo",
+    "activo": true
+  },
+  {
+    "id": "ing-4",
+    "slug": "juan-camilo-melo",
+    "nombre": "Juan Camilo Melo",
+    "titulo": "Ingeniero biomédico · Rehabilitación y consulta externa",
+    "ciudad": "Palmira",
+    "zonas": [
+      "Sur",
+      "Palmira"
+    ],
+    "especialidades": [
+      "Rehabilitación",
+      "Consulta externa"
+    ],
+    "equipos": [
+      "Equipo de terapia física",
+      "Monitor de signos vitales",
+      "Electroestimulador",
+      "Báscula"
+    ],
+    "experiencia": 3,
+    "verificado": true,
+    "estadoVerificacion": "Verificado",
+    "registroInvima": "INVIMA-ING-2026-04710",
+    "tarjetaCopnia": "COPNIA 05123-275998 VAL",
+    "resena": "Acompaña unidades de rehabilitación y consulta externa. Ofrece capacitación breve al personal administrativo en cada visita.",
+    "certificaciones": [
+      {
+        "nombre": "Seguridad eléctrica en equipos médicos",
+        "entidad": "ACIB",
+        "vigencia": "2027-02"
+      }
+    ],
+    "segmento": "B1",
+    "disponible": true,
+    "ciudadId": "palmira",
+    "activo": true
+  },
+  {
+    "id": "ing-5",
+    "slug": "sofia-ortiz",
+    "nombre": "Sofía Ortiz",
+    "titulo": "Ingeniera biomédica en etapa inicial",
+    "ciudad": "Santiago de Cali",
+    "zonas": [
+      "Norte",
+      "Centro"
+    ],
+    "especialidades": [
+      "Odontología"
+    ],
+    "equipos": [
+      "Unidad odontológica",
+      "Lámpara de fotocurado"
+    ],
+    "experiencia": 1,
+    "verificado": false,
+    "estadoVerificacion": "En revisión",
+    "registroInvima": "En trámite",
+    "tarjetaCopnia": "COPNIA 05123-276441 CAL",
+    "resena": "Profesional en etapa inicial que realiza diagnósticos de dotación e inventarios bajo supervisión, y acompaña visitas de capacitación.",
+    "certificaciones": [
+      {
+        "nombre": "Inventario y hoja de vida de equipos",
+        "entidad": "Programa universitario",
+        "vigencia": "2026-12"
+      }
+    ],
+    "segmento": "B2",
+    "disponible": true,
+    "ciudadId": "cali",
+    "activo": true
+  },
+  {
+    "id": "ing-6",
+    "slug": "camilo-arango",
+    "nombre": "Camilo Arango",
+    "titulo": "Ingeniero biomédico · Consulta externa y dermatología",
+    "ciudad": "Pereira",
+    "zonas": [
+      "Centro",
+      "Norte",
+      "Oeste"
+    ],
+    "especialidades": [
+      "Consulta externa",
+      "Estética y dermatología"
+    ],
+    "equipos": [
+      "Monitor de signos vitales",
+      "Dermatoscopio",
+      "Equipos de luz pulsada"
+    ],
+    "experiencia": 6,
+    "verificado": true,
+    "estadoVerificacion": "Verificado",
+    "registroInvima": "INVIMA-ING-2026-05108",
+    "tarjetaCopnia": "COPNIA 05123-281530 CAL",
+    "resena": "Ingeniero biomédico que acompaña consultorios de Pereira y Dosquebradas con mantenimiento preventivo y calibración de equipos de consulta externa.",
+    "certificaciones": [
+      {
+        "nombre": "Gestión de tecnología biomédica",
+        "entidad": "ACIB · Asoc. Colombiana de Ing. Biomédica",
+        "vigencia": "2027-06"
+      }
+    ],
+    "segmento": "B2",
+    "disponible": true,
+    "ciudadId": "pereira",
+    "activo": true
+  },
+  {
+    "id": "ing-7",
+    "slug": "natalia-pardo",
+    "nombre": "Natalia Pardo",
+    "titulo": "Ingeniera biomédica · Odontología e imágenes diagnósticas",
+    "ciudad": "Bogotá D.C.",
+    "zonas": [
+      "Norte",
+      "Centro"
+    ],
+    "especialidades": [
+      "Odontología",
+      "Imágenes diagnósticas"
+    ],
+    "equipos": [
+      "Unidad odontológica",
+      "Rayos X periapical",
+      "Autoclave"
+    ],
+    "experiencia": 9,
+    "verificado": true,
+    "estadoVerificacion": "Verificado",
+    "registroInvima": "INVIMA-ING-2026-05221",
+    "tarjetaCopnia": "COPNIA 05123-263377 CAL",
+    "resena": "Ingeniera biomédica con experiencia en consultorios odontológicos y de imágenes del norte de Bogotá.",
+    "certificaciones": [
+      {
+        "nombre": "Protección radiológica",
+        "entidad": "Entidad acreditada",
+        "vigencia": "2027-02"
+      }
+    ],
+    "segmento": "B1",
+    "disponible": true,
+    "ciudadId": "bogota",
+    "activo": true
+  },
+  {
+    "id": "ing-8",
+    "slug": "sergio-londono",
+    "nombre": "Sergio Londoño",
+    "titulo": "Ingeniero biomédico · Laboratorio clínico",
+    "ciudad": "Medellín",
+    "zonas": [
+      "Sur",
+      "Centro"
+    ],
+    "especialidades": [
+      "Laboratorio clínico",
+      "Consulta externa"
+    ],
+    "equipos": [
+      "Centrífuga",
+      "Microscopio",
+      "Balanza analítica"
+    ],
+    "experiencia": 3,
+    "verificado": false,
+    "estadoVerificacion": "Pendiente",
+    "registroInvima": "Pendiente de carga",
+    "tarjetaCopnia": "COPNIA en trámite",
+    "resena": "",
+    "certificaciones": [],
+    "segmento": "B2",
+    "disponible": true,
+    "ciudadId": "medellin",
+    "activo": true
+  }
+]

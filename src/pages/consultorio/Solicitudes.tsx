@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { fechaCorta } from '@/lib/format'
 import { useData } from '@/lib/store'
-import type { Servicio } from '@/lib/mock/data'
+import type { Servicio } from '@/data/tipos'
 
 export function ConsultorioSolicitudes() {
   const { servicios, equipos, ingenieros, actualizarServicio } = useData()
@@ -25,9 +25,14 @@ export function ConsultorioSolicitudes() {
         titulo="Solicitudes de servicio"
         descripcion="Cada solicitud queda trazada desde su creación hasta el cierre, con el ingeniero asignado y su tiempo de respuesta."
         acciones={
-          <Link to="/consultorio/solicitudes/nueva" className={`${buttonVariants()} shadow-ocean`}>
-            <Plus /> Nueva solicitud
-          </Link>
+          <>
+            <Link to="/consultorio/diagnostico-expres" className={buttonVariants({ variant: 'ghost' })}>
+              Revisión rápida de un equipo
+            </Link>
+            <Link to="/consultorio/solicitudes/nueva" className={buttonVariants()}>
+              <Plus /> Pedir un servicio
+            </Link>
+          </>
         }
       />
 
@@ -40,7 +45,7 @@ export function ConsultorioSolicitudes() {
               <TableRow>
                 <TableHead>Solicitud</TableHead>
                 <TableHead>Equipo</TableHead>
-                <TableHead>Triage</TableHead>
+                <TableHead>Urgencia</TableHead>
                 <TableHead>Estado</TableHead>
                 <TableHead>Ingeniero</TableHead>
                 <TableHead />

@@ -11,23 +11,21 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/components/ui/toast'
 import { fechaCorta } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
-import { useSession } from '@/lib/session'
-import { useData } from '@/lib/store'
-import type { Servicio } from '@/lib/mock/data'
-import { SLA as SLA_MAP } from '@/lib/mock/data'
+import { useData, useIngenieroActual } from '@/lib/store'
+import type { Servicio } from '@/data/tipos'
+import { SLA as SLA_MAP } from '@/data/tipos'
 
 const ORDEN = { Crítica: 0, Alta: 1, Media: 2, Programada: 3 } as const
 
 export function IngenieroSolicitudes() {
-  const { sesion } = useSession()
-  const { ingenieros, servicios, equipos, consultorio, actualizarServicio } = useData()
-  const yo = ingenieros.find((i) => i.nombre === sesion?.nombre) ?? ingenieros[0]
+  const { servicios, equipos, consultorios, actualizarServicio } = useData()
+  const yo = useIngenieroActual()
 
   const [filtro, setFiltro] = useState('pendientes')
   const [detalle, setDetalle] = useState<Servicio | null>(null)
 
   const lista = servicios
-    .filter((s) => s.ingenieroId === yo.id || (s.ingenieroId === null && yo.zonas.includes(s.zona)))
+    .filter((s) => s.ingenieroId === yo.id || (s.ingenieroId === null && yo.zonas.includes(s.zona) && consultorios.find((c) => c.id === s.consultorioId)?.ciudadId === yo.ciudadId))
     .filter((s) => {
       if (filtro === 'pendientes') return ['Asignada', 'Programada'].includes(s.estado)
       if (filtro === 'activos') return ['Confirmada', 'En ejecución'].includes(s.estado)
@@ -58,7 +56,7 @@ export function IngenieroSolicitudes() {
       <PageHeader
         eyebrow="Solicitudes"
         titulo="Cola de servicios"
-        descripcion="Ordenada por criticidad y cercanía, no por orden de llegada. Revisa el SLA comprometido antes de aceptar."
+        descripcion="Ordenados por urgencia y cercanía, no por orden de llegada. Revisa el plazo de respuesta antes de aceptar."
         acciones={
           <Select value={filtro} onChange={(event) => setFiltro(event.target.value)} className="w-48">
             <option value="pendientes">Pendientes</option>
@@ -77,7 +75,7 @@ export function IngenieroSolicitudes() {
               <TableRow>
                 <TableHead>Servicio</TableHead>
                 <TableHead>Consultorio</TableHead>
-                <TableHead>Triage / SLA</TableHead>
+                <TableHead>Urgencia y plazo</TableHead>
                 <TableHead>Fecha</TableHead>
                 <TableHead />
               </TableRow>
@@ -90,7 +88,7 @@ export function IngenieroSolicitudes() {
                     <p className="text-xs text-muted-foreground">{equipos.find((e) => e.id === s.equipoId)?.nombre}</p>
                   </TableCell>
                   <TableCell className="text-sm">
-                    {consultorio.nombre}
+                    {consultorios.find((c) => c.id === s.consultorioId)?.nombre}
                     <span className="block text-xs text-muted-foreground">Zona {s.zona}</span>
                   </TableCell>
                   <TableCell>

@@ -4,14 +4,11 @@ import { PageHeader, VerificadoBadge } from '@/components/shared/ui'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/components/ui/toast'
-import { useSession } from '@/lib/session'
-import { useData } from '@/lib/store'
+import { useIngenieroActual } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
 export function IngenieroVerificacion() {
-  const { sesion } = useSession()
-  const { ingenieros } = useData()
-  const yo = ingenieros.find((i) => i.nombre === sesion?.nombre) ?? ingenieros[0]
+  const yo = useIngenieroActual()
 
   const requisitos = [
     { nombre: 'Cédula y RUT', cumple: true },
@@ -61,7 +58,7 @@ export function IngenieroVerificacion() {
                 <span className="font-semibold">{yo.tarjetaCopnia}</span>
               </p>
               <p className="flex justify-between gap-4">
-                <span className="text-muted-foreground">Segmento</span>
+                <span className="text-muted-foreground">Tipo de trabajo</span>
                 <span className="font-semibold">{yo.segmento}</span>
               </p>
             </div>

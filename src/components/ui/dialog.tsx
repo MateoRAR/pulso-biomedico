@@ -29,12 +29,12 @@ export function Dialog({
 
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[90] flex items-end justify-center sm:items-center sm:p-4">
       <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
         aria-modal="true"
-        className="animate-fade-in relative z-10 w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-2xl"
+        className="animate-fade-in relative z-10 max-h-[92svh] w-full max-w-lg overflow-y-auto rounded-t-2xl border border-border bg-card p-5 shadow-2xl sm:rounded-xl sm:p-6"
       >
         <div className="flex items-start justify-between gap-4">
           <div>

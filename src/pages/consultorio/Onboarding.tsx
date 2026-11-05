@@ -10,13 +10,14 @@ import { Input, Label, Select } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
 import { cop, semaforoEquipo } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
+import { inventarioEjemplo } from '@/lib/registro'
 import { useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
 const PASOS = ['Sede', 'Dotación', 'Resultado']
 
 export function ConsultorioOnboarding() {
-  const { consultorio, equipos, documentos, planes, agregarServicio } = useData()
+  const { consultorio, equipos, documentos, planes, agregarServicio, agregarEquipos, actualizarConsultorio } = useData()
   const navigate = useNavigate()
   const [paso, setPaso] = useState(0)
   const [datos, setDatos] = useState(consultorio)
@@ -39,12 +40,13 @@ export function ConsultorioOnboarding() {
   }, [equipos.length, planes])
 
   function contratar() {
+    if (planRecomendado) actualizarConsultorio({ planId: planRecomendado.id })
     const hoy = new Date().toISOString().slice(0, 10)
     const proximo = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10)
-    agregarServicio({
+    if (equipos[0]) agregarServicio({
       id: `ser-${Date.now()}`,
       consultorioId: consultorio.id,
-      equipoId: equipos[0]?.id ?? '',
+      equipoId: equipos[0].id,
       ingenieroId: null,
       tipo: 'Preventivo',
       criticidad: 'Programada',
@@ -57,7 +59,7 @@ export function ConsultorioOnboarding() {
       creado: hoy,
       historial: [{ estado: 'Programada', fecha: hoy }],
     })
-    toast.success('Plan contratado', { description: 'Generamos tu cronograma anual y el expediente inicial (simulado).' })
+    toast.success('Plan contratado', { description: 'Armamos tu calendario del año y tu carpeta de documentos (simulado).' })
     track(EVENTOS.planContratado, { plan: planRecomendado?.id ?? 'ninguno', equipos: equipos.length })
     navigate('/consultorio')
   }
@@ -65,9 +67,9 @@ export function ConsultorioOnboarding() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Onboarding"
-        titulo="Diagnóstico inicial de dotación"
-        descripcion="Al vincularte levantamos tu inventario real y calculamos las brechas frente a los estándares de habilitación."
+        eyebrow="Primeros pasos"
+        titulo="Revisión inicial de tus equipos"
+        descripcion="Registramos los equipos que tienes y vemos qué te falta para estar al día con la habilitación."
       />
 
       <div className="flex items-center gap-3">
@@ -105,10 +107,10 @@ export function ConsultorioOnboarding() {
               <Input id="onb-tipo" value={datos.tipo} onChange={(e) => setDatos({ ...datos, tipo: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="onb-segmento">Segmento</Label>
+              <Label htmlFor="onb-segmento">Tamaño del consultorio</Label>
               <Select id="onb-segmento" value={datos.segmento} onChange={(e) => setDatos({ ...datos, segmento: e.target.value as 'A1' | 'A2' })}>
-                <option value="A1">A1 · Microprestador unipersonal</option>
-                <option value="A2">A2 · Dotación intensiva</option>
+                <option value="A1">Pequeño (una sola persona)</option>
+                <option value="A2">Más equipos o más personal</option>
               </Select>
             </div>
             <div className="space-y-2">
@@ -126,7 +128,12 @@ export function ConsultorioOnboarding() {
               </Select>
             </div>
             <div className="sm:col-span-2 flex justify-end">
-              <Button onClick={() => setPaso(1)}>
+              <Button
+                onClick={() => {
+                  actualizarConsultorio(datos)
+                  setPaso(1)
+                }}
+              >
                 Continuar <ArrowRight />
               </Button>
             </div>
@@ -140,7 +147,7 @@ export function ConsultorioOnboarding() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="font-display text-xl">Inventario de equipos ({equipos.length})</CardTitle>
-                <CardDescription>Estos equipos forman la línea base de tu expediente.</CardDescription>
+                <CardDescription>Estos equipos forman la base de tus documentos.</CardDescription>
               </div>
               <Link to="/consultorio/equipos" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
                 Agregar equipos
@@ -148,6 +155,24 @@ export function ConsultorioOnboarding() {
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
+            {equipos.length === 0 && (
+              <div className="rounded-md border border-dashed border-border bg-background p-6 text-center">
+                <p className="font-semibold">Aún no registras equipos.</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Agrégalos uno a uno, o carga cinco equipos típicos de consultorio para ver cómo se ve el estado de tus equipos.
+                </p>
+                <Button
+                  className="mt-4"
+                  variant="outline"
+                  onClick={() => {
+                    agregarEquipos(inventarioEjemplo(consultorio.id))
+                    toast.success('Inventario de ejemplo cargado', { description: 'Cinco equipos con vencimientos variados.' })
+                  }}
+                >
+                  <ClipboardList /> Cargar inventario de ejemplo
+                </Button>
+              </div>
+            )}
             {equipos.map((e) => (
               <div key={e.id} className="flex items-center justify-between rounded-md border border-border bg-background p-3">
                 <div>
@@ -190,7 +215,7 @@ export function ConsultorioOnboarding() {
 
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle className="font-display text-xl">Brechas frente a la habilitación</CardTitle>
+              <CardTitle className="font-display text-xl">Lo que te falta para estar al día</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <p className="flex items-center gap-2">

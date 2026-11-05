@@ -1,6 +1,7 @@
-import { ArrowLeft, Package, Wrench } from 'lucide-react'
+import { ArrowLeft, Box, Package, Wrench } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 
+import { tipoModeloDe } from '@/components/consultorio3d/catalogo'
 import { EstadoBadge, PageHeader, SemaforoBadge, TriageBadge } from '@/components/shared/ui'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -46,19 +47,22 @@ export function ConsultorioEquipoDetalle() {
             <Link to="/consultorio/repuestos" className={buttonVariants({ variant: 'outline' })}>
               <Package /> Pedir repuesto
             </Link>
+            <Link to={`/consultorio/biblioteca/${tipoModeloDe(equipo)}?equipo=${equipo.id}`} className={buttonVariants({ variant: 'outline' })}>
+              <Box /> Ver en 3D
+            </Link>
           </>
         }
       />
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="p-5">
-          <p className="text-sm text-muted-foreground">Semáforo</p>
+          <p className="text-sm text-muted-foreground">Estado</p>
           <div className="mt-3">
             <SemaforoBadge semaforo={semaforoEquipo(equipo)} />
           </div>
         </Card>
         <Card className="p-5">
-          <p className="text-sm text-muted-foreground">Criticidad</p>
+          <p className="text-sm text-muted-foreground">Importancia del equipo</p>
           <div className="mt-3">
             <TriageBadge criticidad={equipo.criticidad} />
           </div>

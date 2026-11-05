@@ -1,0 +1,12 @@
+[
+  {
+    "id": "rep-1",
+    "equipoId": "eq-6",
+    "consultorioId": "con-1",
+    "repuesto": "Kit de válvula reguladora de presión",
+    "distribuidor": "Dental Supply Colombia (distribuidor autorizado)",
+    "estado": "En tránsito",
+    "precio": 185000,
+    "fecha": "-1d"
+  }
+]

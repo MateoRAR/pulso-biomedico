@@ -1,10 +1,12 @@
-import { Analytics } from '@vercel/analytics/react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import { AppShell } from '@/components/app/AppShell'
+import { MotorVivo } from '@/components/app/MotorVivo'
+import { AnalyticsConRespaldo } from '@/components/shared/AnalyticsConRespaldo'
 import { Toaster } from '@/components/ui/toast'
 import { DataProvider } from '@/lib/store'
 import { SessionProvider } from '@/lib/session'
+import { TemaProvider } from '@/lib/tema'
 import { NotFound } from '@/pages/NotFound'
 
 import { Home } from '@/pages/public/Home'
@@ -25,6 +27,10 @@ import { ConsultorioRepuestos } from '@/pages/consultorio/Repuestos'
 import { ConsultorioCalidad } from '@/pages/consultorio/Calidad'
 import { ConsultorioPerfil } from '@/pages/consultorio/Perfil'
 import { ConsultorioIngenieros } from '@/pages/consultorio/Ingenieros'
+import { ConsultorioIngenieroPerfil } from '@/pages/consultorio/IngenieroPerfil'
+import { ConsultorioMiConsultorio3D } from '@/pages/consultorio/MiConsultorio3D'
+import { ConsultorioBiblioteca } from '@/pages/consultorio/Biblioteca'
+import { ConsultorioBibliotecaEquipo } from '@/pages/consultorio/BibliotecaEquipo'
 
 import { IngenieroDashboard } from '@/pages/ingeniero/Dashboard'
 import { IngenieroVerificacion } from '@/pages/ingeniero/Verificacion'
@@ -37,14 +43,17 @@ import { IngenieroPerfil } from '@/pages/ingeniero/Perfil'
 
 import { AdminMetricas } from '@/pages/admin/Metricas'
 import { AdminVerificacion } from '@/pages/admin/Verificacion'
+import { AdminMapa } from '@/pages/admin/MapaConsultorios'
+import { AdminIngenieros } from '@/pages/admin/Ingenieros'
 import { AdminCalidad } from '@/pages/admin/Calidad'
 import { AdminAliados } from '@/pages/admin/Aliados'
 import { AdminPlanes } from '@/pages/admin/Planes'
 
 export default function App() {
   return (
-    <DataProvider>
-      <SessionProvider>
+    <TemaProvider>
+    <SessionProvider>
+      <DataProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -63,6 +72,10 @@ export default function App() {
               <Route path="solicitudes/nueva" element={<ConsultorioSolicitudNueva />} />
               <Route path="diagnostico-expres" element={<ConsultorioDiagnosticoExpres />} />
               <Route path="ingenieros" element={<ConsultorioIngenieros />} />
+              <Route path="ingenieros/:slug" element={<ConsultorioIngenieroPerfil />} />
+              <Route path="mi-consultorio" element={<ConsultorioMiConsultorio3D />} />
+              <Route path="biblioteca" element={<ConsultorioBiblioteca />} />
+              <Route path="biblioteca/:tipo" element={<ConsultorioBibliotecaEquipo />} />
               <Route path="repuestos" element={<ConsultorioRepuestos />} />
               <Route path="calidad" element={<ConsultorioCalidad />} />
               <Route path="perfil" element={<ConsultorioPerfil />} />
@@ -81,6 +94,8 @@ export default function App() {
 
             <Route path="/admin" element={<AppShell rol="admin" />}>
               <Route index element={<AdminMetricas />} />
+              <Route path="mapa" element={<AdminMapa />} />
+              <Route path="ingenieros" element={<AdminIngenieros />} />
               <Route path="verificacion" element={<AdminVerificacion />} />
               <Route path="calidad" element={<AdminCalidad />} />
               <Route path="aliados" element={<AdminAliados />} />
@@ -90,9 +105,11 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
-          <Analytics />
+          <MotorVivo />
+          <AnalyticsConRespaldo />
         </BrowserRouter>
-      </SessionProvider>
-    </DataProvider>
+      </DataProvider>
+    </SessionProvider>
+    </TemaProvider>
   )
 }

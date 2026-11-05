@@ -8,15 +8,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/components/ui/toast'
 import { fechaCorta } from '@/lib/format'
-import { useSession } from '@/lib/session'
-import { useData } from '@/lib/store'
+import { useData, useIngenieroActual } from '@/lib/store'
 
 const FRANJAS = ['08:00 - 10:00', '10:00 - 12:00', '14:00 - 16:00', '16:00 - 17:00']
 
 export function IngenieroAgenda() {
-  const { sesion } = useSession()
-  const { ingenieros, servicios, equipos, consultorio } = useData()
-  const yo = ingenieros.find((i) => i.nombre === sesion?.nombre) ?? ingenieros[0]
+  const { servicios, equipos, consultorios } = useData()
+  const nombreConsultorio = (id: string) => consultorios.find((c) => c.id === id)?.nombre ?? 'Consultorio'
+  const yo = useIngenieroActual()
   const [vista, setVista] = useState<'lista' | 'calendario'>('lista')
 
   const mios = useMemo(
@@ -36,7 +35,7 @@ export function IngenieroAgenda() {
     id: s.id,
     fecha: s.fecha,
     titulo: `${s.tipo} · ${equipos.find((e) => e.id === s.equipoId)?.nombre ?? ''}`,
-    subtitulo: `${s.franja} · ${consultorio.nombre} · Zona ${s.zona}`,
+    subtitulo: `${s.franja} · ${nombreConsultorio(s.consultorioId)} · Zona ${s.zona}`,
     criticidad: s.criticidad,
   }))
 
@@ -104,7 +103,7 @@ export function IngenieroAgenda() {
                           <Clock className="size-3.5" /> {s.franja}
                         </span>
                         <span className="flex items-center gap-1">
-                          <MapPin className="size-3.5" /> {consultorio.nombre} · Zona {s.zona}
+                          <MapPin className="size-3.5" /> {nombreConsultorio(s.consultorioId)} · Zona {s.zona}
                         </span>
                       </p>
                     </div>

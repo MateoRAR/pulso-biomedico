@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/components/ui/toast'
 import { fechaCorta } from '@/lib/format'
 import { useData } from '@/lib/store'
-import type { Reclamo } from '@/lib/mock/data'
+import type { Reclamo } from '@/data/tipos'
 
 export function AdminCalidad() {
   const { reclamos, calificaciones, ingenieros, servicios } = useData()
@@ -96,7 +96,7 @@ export function AdminCalidad() {
               {ranking.map((ing) => (
                 <TableRow key={ing.id}>
                   <TableCell className="font-medium">{ing.nombre}</TableCell>
-                  <TableCell className="text-sm">★ {ing.calificacion.toFixed(1)}</TableCell>
+                  <TableCell className="text-sm">{ing.opiniones.length ? `★ ${ing.calificacion.toFixed(1)}` : 'Sin calificaciones'}</TableCell>
                   <TableCell className="text-sm">{ing.servicios}</TableCell>
                   <TableCell className="text-sm">{ing.estadoVerificacion}</TableCell>
                 </TableRow>

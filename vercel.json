@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/medicion/:match*", "destination": "/_vercel/insights/:match*" },
     { "source": "/consultorio", "destination": "/index.html" },
     { "source": "/consultorio/(.*)", "destination": "/index.html" },
     { "source": "/ingeniero", "destination": "/index.html" },

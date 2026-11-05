@@ -4,8 +4,8 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { ETIQUETA_SEMAFORO } from '@/lib/format'
-import type { Criticidad, EstadoEquipo, EstadoServicio, Semaforo } from '@/lib/mock/data'
-import { SLA } from '@/lib/mock/data'
+import type { Criticidad, EstadoEquipo, EstadoServicio, Semaforo } from '@/data/tipos'
+import { SLA } from '@/data/tipos'
 
 export function SemaforoBadge({ semaforo, className }: { semaforo: Semaforo; className?: string }) {
   const variante = semaforo === 'verde' ? 'good' : semaforo === 'amarillo' ? 'warning' : 'alert'
@@ -54,11 +54,11 @@ export function PageHeader({
   acciones?: ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-3 pb-1 sm:flex-row sm:items-end sm:justify-between">
       <div>
         {eyebrow && <span className="eyebrow">{eyebrow}</span>}
-        <h1 className="font-display mt-2 text-3xl font-bold leading-tight">{titulo}</h1>
-        {descripcion && <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{descripcion}</p>}
+        <h1 className="font-display mt-1 text-2xl font-bold leading-tight">{titulo}</h1>
+        {descripcion && <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{descripcion}</p>}
       </div>
       {acciones && <div className="flex flex-wrap gap-2">{acciones}</div>}
     </div>
@@ -83,7 +83,7 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        'p-5',
+        'p-4',
         tone === 'good' && 'border-good bg-good/40',
         tone === 'warning' && 'border-warning bg-warning/40',
         tone === 'alert' && 'border-alert bg-alert/40',
@@ -94,7 +94,7 @@ export function StatCard({
         <p className="text-sm font-medium text-muted-foreground">{label}</p>
         {icon && <span className="text-primary [&_svg]:size-5">{icon}</span>}
       </div>
-      <p className="font-display mt-3 text-3xl font-bold">{value}</p>
+      <p className="font-display mt-2 text-2xl font-bold">{value}</p>
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </Card>
   )

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useData } from '@/lib/store'
-import type { Aliado } from '@/lib/mock/data'
+import type { Aliado } from '@/data/tipos'
 
 const ORDEN: Aliado['tipo'][] = ['Habilitante', 'Acceso al mercado', 'Sostenibilidad de la oferta']
 

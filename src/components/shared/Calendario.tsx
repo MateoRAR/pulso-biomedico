@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { fechaCorta } from '@/lib/format'
-import type { Criticidad } from '@/lib/mock/data'
+import type { Criticidad } from '@/data/tipos'
 import { cn } from '@/lib/utils'
 
 export interface EventoCalendario {

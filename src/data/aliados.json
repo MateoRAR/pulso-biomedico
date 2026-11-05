@@ -1,0 +1,42 @@
+[
+  {
+    "id": "ali-1",
+    "tipo": "Habilitante",
+    "nombre": "Lab. Metrológico Andino (acreditado ONAC)",
+    "aporta": "Patrones trazables y certificados con validez ante el ente verificador.",
+    "recibe": "Flujo agregado y programado de trabajo.",
+    "acuerdo": "Convenio marco con tarifas por volumen."
+  },
+  {
+    "id": "ali-2",
+    "tipo": "Habilitante",
+    "nombre": "Firma electrónica Andina",
+    "aporta": "Validez jurídica de los certificados e informes.",
+    "recibe": "Suscripción mensual.",
+    "acuerdo": "Contrato de suministro."
+  },
+  {
+    "id": "ali-3",
+    "tipo": "Acceso al mercado",
+    "nombre": "Asesoría en Habilitación Valle",
+    "aporta": "Consultorios en el momento de máxima urgencia normativa.",
+    "recibe": "Solución a un requisito que su servicio no cubre.",
+    "acuerdo": "Alianza de referenciación cruzada."
+  },
+  {
+    "id": "ali-4",
+    "tipo": "Acceso al mercado",
+    "nombre": "Distribuidora Dental del Pacífico",
+    "aporta": "Acceso comercial y referenciación de prestadores.",
+    "recibe": "Comisión por cliente convertido.",
+    "acuerdo": "Acuerdo de referenciación con comisión sobre el primer ciclo."
+  },
+  {
+    "id": "ali-5",
+    "tipo": "Sostenibilidad de la oferta",
+    "nombre": "Programa de Ingeniería Biomédica — Universidad Icesi",
+    "aporta": "Flujo continuo de talento y respaldo académico a los protocolos.",
+    "recibe": "Escenarios de práctica y vinculación para egresados.",
+    "acuerdo": "Convenio de práctica."
+  }
+]

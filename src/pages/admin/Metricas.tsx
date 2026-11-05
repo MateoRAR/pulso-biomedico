@@ -1,66 +1,76 @@
-import { Activity, BadgeCheck, MapPin, TrendingUp, Users } from 'lucide-react'
+import { BadgeCheck, Boxes, MapPin, Users, Wrench } from 'lucide-react'
 
-import { PageHeader, StatCard } from '@/components/shared/ui'
+import { PageHeader } from '@/components/shared/ui'
+import { TarjetaDato } from '@/components/shared/TarjetaDato'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { cop } from '@/lib/format'
 import { useTiempoEnPagina } from '@/lib/analytics'
+import { semaforoEquipo } from '@/lib/format'
 import { useData } from '@/lib/store'
 
-const CANALES = [
-  { fuente: 'Socios comerciales y aliados', cac: 42000, conversion: 48 },
-  { fuente: 'Buscadores y contenido digital', cac: 78000, conversion: 31 },
-  { fuente: 'Voz a voz de la red', cac: 51000, conversion: 39 },
-  { fuente: 'Directorio público de ingenieros', cac: 63000, conversion: 27 },
-]
-
+/**
+ * Resumen de la operación. Todas las cifras se calculan en este momento a partir de los datos
+ * (consultorios, ingenieros, equipos y servicios); no hay números escritos a mano.
+ */
 export function AdminMetricas() {
-  const { metricas, ingenieros, equipos, servicios, aliados } = useData()
+  const { consultorios, ingenieros, equipos, servicios, aliados, ciudades } = useData()
   useTiempoEnPagina('portal_admin', { rol: 'admin' })
+
+  const activos = consultorios.filter((c) => c.activo)
+  const verificados = ingenieros.filter((i) => i.verificado)
+  const enCurso = servicios.filter((s) => ['Programada', 'Asignada', 'Confirmada', 'En ejecución'].includes(s.estado))
+  const cerrados = servicios.filter((s) => ['Ejecutada', 'Cerrada'].includes(s.estado))
+  const porVencer = equipos.filter((e) => semaforoEquipo(e) !== 'verde').length
+
+  const porCiudad = ciudades.map((ciudad) => ({
+    ciudad,
+    consultorios: activos.filter((c) => c.ciudadId === ciudad.id).length,
+    ingenieros: ingenieros.filter((i) => i.ciudadId === ciudad.id).length,
+    equipos: equipos.filter((e) => activos.some((c) => c.id === e.consultorioId && c.ciudadId === ciudad.id)).length,
+  }))
 
   return (
     <div className="space-y-8">
       <PageHeader
         eyebrow="Administración Pulso"
-        titulo="Métricas de canal y operación"
-        descripcion="Indicadores del modelo multilateral: conversión, costo de adquisición, tiempo de respuesta y renovación."
+        titulo="Resumen de la operación"
+        descripcion="Cifras calculadas con los datos que hay hoy en la plataforma: consultorios, ingenieros, equipos y servicios."
       />
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Conversión registro → contratación" value={`${metricas.conversionRegistroContratacion}%`} icon={<TrendingUp />} tone="good" />
-        <StatCard label="CAC promedio" value={cop(metricas.cacPromedioCOP)} hint="Costo de adquisición" />
-        <StatCard label="Registro → primera visita" value={`${metricas.diasRegistroPrimeraVisita} días`} icon={<Activity />} />
-        <StatCard label="Renovación anual" value={`${metricas.renovacionAnual}%`} tone="good" />
-      </div>
-
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Consultorios activos" value={metricas.consultoriosActivos} icon={<Users />} />
-        <StatCard label="Ingenieros activos" value={ingenieros.length} hint={`${ingenieros.filter((i) => i.verificado).length} verificados`} icon={<BadgeCheck />} />
-        <StatCard label="Servicios del mes" value={metricas.serviciosMes} />
-        <StatCard label="Zonas con cobertura" value={metricas.coberturaZonas} hint="Cali y área metropolitana" icon={<MapPin />} />
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <TarjetaDato etiqueta="Consultorios activos" valor={activos.length} nota={`${consultorios.length - activos.length} desactivados`} icono={<Users />} />
+        <TarjetaDato etiqueta="Ingenieros" valor={ingenieros.length} nota={`${verificados.length} verificados`} icono={<BadgeCheck />} tono="bueno" />
+        <TarjetaDato etiqueta="Equipos registrados" valor={equipos.length} nota={`${porVencer} con algo por atender`} icono={<Boxes />} />
+        <TarjetaDato etiqueta="Servicios" valor={servicios.length} nota={`${enCurso.length} en curso · ${cerrados.length} terminados`} icono={<Wrench />} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle className="font-display text-xl">Eficiencia por canal</CardTitle>
-            <CardDescription>Costo de adquisición y conversión por fuente de origen.</CardDescription>
+            <CardTitle className="font-display text-xl">Presencia por ciudad</CardTitle>
+            <CardDescription>Dónde están los consultorios y los ingenieros registrados.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Fuente</TableHead>
-                  <TableHead>CAC</TableHead>
-                  <TableHead>Conversión</TableHead>
+                  <TableHead>Ciudad</TableHead>
+                  <TableHead>Consultorios</TableHead>
+                  <TableHead>Ingenieros</TableHead>
+                  <TableHead>Equipos</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {CANALES.map((c) => (
-                  <TableRow key={c.fuente}>
-                    <TableCell className="font-medium">{c.fuente}</TableCell>
-                    <TableCell className="text-sm">{cop(c.cac)}</TableCell>
-                    <TableCell className="text-sm">{c.conversion}%</TableCell>
+                {porCiudad.map((fila) => (
+                  <TableRow key={fila.ciudad.id}>
+                    <TableCell className="font-medium">
+                      <span className="flex items-center gap-2">
+                        <MapPin className="size-4 text-primary" /> {fila.ciudad.nombre}
+                      </span>
+                    </TableCell>
+                    <TableCell>{fila.consultorios}</TableCell>
+                    <TableCell>{fila.ingenieros}</TableCell>
+                    <TableCell>{fila.equipos}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -70,29 +80,25 @@ export function AdminMetricas() {
 
         <Card className="border-border/80">
           <CardHeader>
-            <CardTitle className="font-display text-xl">Red y dotación</CardTitle>
+            <CardTitle className="font-display text-xl">Red y aliados</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
             <p className="flex justify-between">
-              <span className="text-muted-foreground">Equipos gestionados</span>
-              <span className="font-semibold">{equipos.length}</span>
+              <span className="text-muted-foreground">Ingenieros por verificar</span>
+              <span className="font-semibold">{ingenieros.length - verificados.length}</span>
             </p>
             <p className="flex justify-between">
-              <span className="text-muted-foreground">Servicios registrados</span>
-              <span className="font-semibold">{servicios.length}</span>
+              <span className="text-muted-foreground">Ingenieros disponibles ahora</span>
+              <span className="font-semibold">{ingenieros.filter((i) => i.disponible && i.activo).length}</span>
             </p>
             <p className="flex justify-between">
-              <span className="text-muted-foreground">Aliados activos</span>
+              <span className="text-muted-foreground">Solicitudes sin ingeniero</span>
+              <span className="font-semibold">{servicios.filter((s) => s.ingenieroId === null && s.estado === 'Programada').length}</span>
+            </p>
+            <p className="flex justify-between">
+              <span className="text-muted-foreground">Aliados</span>
               <span className="font-semibold">{aliados.length}</span>
             </p>
-            <p className="flex justify-between">
-              <span className="text-muted-foreground">Ingenieros por verificar</span>
-              <span className="font-semibold">{ingenieros.filter((i) => !i.verificado).length}</span>
-            </p>
-            <div className="rounded-md border border-border bg-background p-4 text-xs text-muted-foreground">
-              El recurso más difícil de replicar es la red verificada combinada con la base de hojas de vida de equipos:
-              ambas crecen con el uso y generan efectos de red locales.
-            </div>
           </CardContent>
         </Card>
       </div>

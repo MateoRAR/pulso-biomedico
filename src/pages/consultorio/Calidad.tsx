@@ -12,7 +12,7 @@ import { toast } from '@/components/ui/toast'
 import { fechaCorta } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
-import type { Reclamo, Servicio } from '@/lib/mock/data'
+import type { Reclamo, Servicio } from '@/data/tipos'
 import { cn } from '@/lib/utils'
 
 export function ConsultorioCalidad() {

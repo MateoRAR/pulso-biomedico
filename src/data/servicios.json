@@ -1,0 +1,852 @@
+[
+  {
+    "id": "ser-1",
+    "consultorioId": "con-1",
+    "equipoId": "eq-2",
+    "ingenieroId": "ing-1",
+    "tipo": "Calibración",
+    "criticidad": "Alta",
+    "estado": "Confirmada",
+    "fecha": "+4d",
+    "franja": "08:00 - 10:00",
+    "zona": "Sur",
+    "descripcion": "Calibración de ciclo de esterilización y verificación de indicadores biológicos.",
+    "evidencia": [],
+    "creado": "-3d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-3d"
+      },
+      {
+        "estado": "Asignada",
+        "fecha": "-2d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-2",
+    "consultorioId": "con-1",
+    "equipoId": "eq-6",
+    "ingenieroId": "ing-1",
+    "tipo": "Correctivo",
+    "criticidad": "Media",
+    "estado": "En ejecución",
+    "fecha": "+0d",
+    "franja": "14:00 - 16:00",
+    "zona": "Sur",
+    "descripcion": "El compresor dental pierde presión; revisar válvula y acople.",
+    "evidencia": [
+      "Foto del manómetro"
+    ],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      },
+      {
+        "estado": "Asignada",
+        "fecha": "-1d"
+      },
+      {
+        "estado": "En ejecución",
+        "fecha": "+0d"
+      }
+    ]
+  },
+  {
+    "id": "ser-3",
+    "consultorioId": "con-1",
+    "equipoId": "eq-1",
+    "ingenieroId": "ing-4",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Programada",
+    "fecha": "+21d",
+    "franja": "10:00 - 12:00",
+    "zona": "Sur",
+    "descripcion": "Mantenimiento preventivo de unidad odontológica (según cronograma).",
+    "evidencia": [],
+    "creado": "-20d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-20d"
+      }
+    ]
+  },
+  {
+    "id": "ser-4",
+    "consultorioId": "con-1",
+    "equipoId": "eq-3",
+    "ingenieroId": "ing-2",
+    "tipo": "Preventivo",
+    "criticidad": "Alta",
+    "estado": "Ejecutada",
+    "fecha": "-12d",
+    "franja": "08:00 - 10:00",
+    "zona": "Sur",
+    "descripcion": "Mantenimiento preventivo y control de calidad de rayos X periapical.",
+    "evidencia": [
+      "Informe firmado",
+      "Medición de kVp"
+    ],
+    "garantiaHasta": "+78d",
+    "creado": "-30d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-30d"
+      },
+      {
+        "estado": "Ejecutada",
+        "fecha": "-12d"
+      }
+    ]
+  },
+  {
+    "id": "ser-5",
+    "consultorioId": "con-1",
+    "equipoId": "eq-4",
+    "ingenieroId": "ing-3",
+    "tipo": "Calibración",
+    "criticidad": "Media",
+    "estado": "Cerrada",
+    "fecha": "-35d",
+    "franja": "14:00 - 16:00",
+    "zona": "Centro",
+    "descripcion": "Calibración de monitor de signos vitales.",
+    "evidencia": [
+      "Certificado ONAC"
+    ],
+    "garantiaHasta": "+55d",
+    "creado": "-50d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-50d"
+      },
+      {
+        "estado": "Ejecutada",
+        "fecha": "-35d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-34d"
+      }
+    ]
+  },
+  {
+    "id": "ser-6",
+    "consultorioId": "con-1",
+    "equipoId": "eq-5",
+    "ingenieroId": null,
+    "tipo": "Diagnóstico exprés",
+    "criticidad": "Media",
+    "estado": "Programada",
+    "fecha": "+2d",
+    "franja": "16:00 - 17:00",
+    "zona": "Centro",
+    "descripcion": "Visita corta para evaluar si la báscula amerita reparación.",
+    "evidencia": [],
+    "creado": "+0d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "+0d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-2",
+    "consultorioId": "con-2",
+    "equipoId": "eq-2-1",
+    "ingenieroId": "ing-1",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-40d",
+    "franja": "08:00 - 10:00",
+    "zona": "Centro",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+50d",
+    "creado": "-45d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-45d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-42d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-40d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-2",
+    "consultorioId": "con-2",
+    "equipoId": "eq-2-2",
+    "ingenieroId": null,
+    "tipo": "Calibración",
+    "criticidad": "Alta",
+    "estado": "Programada",
+    "fecha": "+4d",
+    "franja": "08:00 - 10:00",
+    "zona": "Centro",
+    "descripcion": "Calibración pendiente; el certificado anterior está por vencer.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-3",
+    "consultorioId": "con-3",
+    "equipoId": "eq-3-1",
+    "ingenieroId": "ing-1",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-43d",
+    "franja": "08:00 - 10:00",
+    "zona": "Norte",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+47d",
+    "creado": "-48d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-48d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-45d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-43d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-3",
+    "consultorioId": "con-3",
+    "equipoId": "eq-3-2",
+    "ingenieroId": null,
+    "tipo": "Correctivo",
+    "criticidad": "Media",
+    "estado": "Programada",
+    "fecha": "+6d",
+    "franja": "14:00 - 16:00",
+    "zona": "Norte",
+    "descripcion": "El equipo presenta una falla intermitente.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-4",
+    "consultorioId": "con-4",
+    "equipoId": "eq-4-1",
+    "ingenieroId": "ing-1",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-46d",
+    "franja": "08:00 - 10:00",
+    "zona": "Sur",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+44d",
+    "creado": "-51d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-51d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-48d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-46d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-4",
+    "consultorioId": "con-4",
+    "equipoId": "eq-4-2",
+    "ingenieroId": null,
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Programada",
+    "fecha": "+14d",
+    "franja": "08:00 - 10:00",
+    "zona": "Sur",
+    "descripcion": "Mantenimiento preventivo del cronograma anual.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-5",
+    "consultorioId": "con-5",
+    "equipoId": "eq-5-1",
+    "ingenieroId": "ing-1",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-49d",
+    "franja": "08:00 - 10:00",
+    "zona": "Oeste",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+41d",
+    "creado": "-54d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-54d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-51d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-49d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-5",
+    "consultorioId": "con-5",
+    "equipoId": "eq-5-2",
+    "ingenieroId": null,
+    "tipo": "Calibración",
+    "criticidad": "Alta",
+    "estado": "Programada",
+    "fecha": "+4d",
+    "franja": "14:00 - 16:00",
+    "zona": "Oeste",
+    "descripcion": "Calibración pendiente; el certificado anterior está por vencer.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-6",
+    "consultorioId": "con-6",
+    "equipoId": "eq-6-1",
+    "ingenieroId": "ing-3",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-52d",
+    "franja": "08:00 - 10:00",
+    "zona": "Centro",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+38d",
+    "creado": "-57d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-57d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-54d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-52d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-6",
+    "consultorioId": "con-6",
+    "equipoId": "eq-6-2",
+    "ingenieroId": null,
+    "tipo": "Correctivo",
+    "criticidad": "Media",
+    "estado": "Programada",
+    "fecha": "+6d",
+    "franja": "08:00 - 10:00",
+    "zona": "Centro",
+    "descripcion": "El equipo presenta una falla intermitente.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-7",
+    "consultorioId": "con-7",
+    "equipoId": "eq-7-1",
+    "ingenieroId": "ing-4",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-55d",
+    "franja": "08:00 - 10:00",
+    "zona": "Centro",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+35d",
+    "creado": "-60d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-60d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-57d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-55d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-7",
+    "consultorioId": "con-7",
+    "equipoId": "eq-7-2",
+    "ingenieroId": null,
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Programada",
+    "fecha": "+14d",
+    "franja": "14:00 - 16:00",
+    "zona": "Centro",
+    "descripcion": "Mantenimiento preventivo del cronograma anual.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-8",
+    "consultorioId": "con-8",
+    "equipoId": "eq-8-1",
+    "ingenieroId": "ing-6",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-58d",
+    "franja": "08:00 - 10:00",
+    "zona": "Oeste",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+32d",
+    "creado": "-63d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-63d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-60d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-58d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-8",
+    "consultorioId": "con-8",
+    "equipoId": "eq-8-2",
+    "ingenieroId": null,
+    "tipo": "Calibración",
+    "criticidad": "Alta",
+    "estado": "Programada",
+    "fecha": "+4d",
+    "franja": "08:00 - 10:00",
+    "zona": "Oeste",
+    "descripcion": "Calibración pendiente; el certificado anterior está por vencer.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-9",
+    "consultorioId": "con-9",
+    "equipoId": "eq-9-1",
+    "ingenieroId": "ing-6",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-61d",
+    "franja": "08:00 - 10:00",
+    "zona": "Norte",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+29d",
+    "creado": "-66d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-66d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-63d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-61d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-9",
+    "consultorioId": "con-9",
+    "equipoId": "eq-9-2",
+    "ingenieroId": null,
+    "tipo": "Correctivo",
+    "criticidad": "Media",
+    "estado": "Programada",
+    "fecha": "+6d",
+    "franja": "14:00 - 16:00",
+    "zona": "Norte",
+    "descripcion": "El equipo presenta una falla intermitente.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-10",
+    "consultorioId": "con-10",
+    "equipoId": "eq-10-1",
+    "ingenieroId": "ing-7",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-64d",
+    "franja": "08:00 - 10:00",
+    "zona": "Norte",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+26d",
+    "creado": "-69d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-69d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-66d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-64d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-10",
+    "consultorioId": "con-10",
+    "equipoId": "eq-10-2",
+    "ingenieroId": null,
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Programada",
+    "fecha": "+14d",
+    "franja": "08:00 - 10:00",
+    "zona": "Norte",
+    "descripcion": "Mantenimiento preventivo del cronograma anual.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-h-11",
+    "consultorioId": "con-11",
+    "equipoId": "eq-11-1",
+    "ingenieroId": "ing-7",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-67d",
+    "franja": "08:00 - 10:00",
+    "zona": "Norte",
+    "descripcion": "Mantenimiento preventivo semestral.",
+    "evidencia": [
+      "Foto antes",
+      "Foto después"
+    ],
+    "garantiaHasta": "+23d",
+    "creado": "-72d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-72d"
+      },
+      {
+        "estado": "Confirmada",
+        "fecha": "-69d"
+      },
+      {
+        "estado": "Cerrada",
+        "fecha": "-67d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-11",
+    "consultorioId": "con-11",
+    "equipoId": "eq-11-2",
+    "ingenieroId": null,
+    "tipo": "Calibración",
+    "criticidad": "Alta",
+    "estado": "Programada",
+    "fecha": "+4d",
+    "franja": "14:00 - 16:00",
+    "zona": "Norte",
+    "descripcion": "Calibración pendiente; el certificado anterior está por vencer.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-a-12",
+    "consultorioId": "con-12",
+    "equipoId": "eq-12-2",
+    "ingenieroId": null,
+    "tipo": "Correctivo",
+    "criticidad": "Media",
+    "estado": "Programada",
+    "fecha": "+6d",
+    "franja": "08:00 - 10:00",
+    "zona": "Sur",
+    "descripcion": "El equipo presenta una falla intermitente.",
+    "evidencia": [],
+    "creado": "-1d",
+    "historial": [
+      {
+        "estado": "Programada",
+        "fecha": "-1d"
+      }
+    ]
+  },
+  {
+    "id": "ser-r-1",
+    "consultorioId": "con-1",
+    "equipoId": "eq-1",
+    "ingenieroId": "ing-1",
+    "tipo": "Calibración",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-40d",
+    "franja": "08:00 - 10:00",
+    "zona": "Sur",
+    "descripcion": "Servicio realizado.",
+    "evidencia": [],
+    "creado": "-40d",
+    "historial": [
+      {
+        "estado": "Cerrada",
+        "fecha": "-40d"
+      }
+    ]
+  },
+  {
+    "id": "ser-r-2",
+    "consultorioId": "con-2",
+    "equipoId": "eq-2-1",
+    "ingenieroId": "ing-1",
+    "tipo": "Calibración",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-72d",
+    "franja": "08:00 - 10:00",
+    "zona": "Centro",
+    "descripcion": "Servicio realizado.",
+    "evidencia": [],
+    "creado": "-72d",
+    "historial": [
+      {
+        "estado": "Cerrada",
+        "fecha": "-72d"
+      }
+    ]
+  },
+  {
+    "id": "ser-r-3",
+    "consultorioId": "con-1",
+    "equipoId": "eq-1",
+    "ingenieroId": "ing-2",
+    "tipo": "Calibración",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-30d",
+    "franja": "08:00 - 10:00",
+    "zona": "Sur",
+    "descripcion": "Servicio realizado.",
+    "evidencia": [],
+    "creado": "-30d",
+    "historial": [
+      {
+        "estado": "Cerrada",
+        "fecha": "-30d"
+      }
+    ]
+  },
+  {
+    "id": "ser-r-4",
+    "consultorioId": "con-7",
+    "equipoId": "eq-7-1",
+    "ingenieroId": "ing-4",
+    "tipo": "Calibración",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-15d",
+    "franja": "08:00 - 10:00",
+    "zona": "Centro",
+    "descripcion": "Servicio realizado.",
+    "evidencia": [],
+    "creado": "-15d",
+    "historial": [
+      {
+        "estado": "Cerrada",
+        "fecha": "-15d"
+      }
+    ]
+  },
+  {
+    "id": "ser-r-5",
+    "consultorioId": "con-8",
+    "equipoId": "eq-8-1",
+    "ingenieroId": "ing-6",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-28d",
+    "franja": "08:00 - 10:00",
+    "zona": "Oeste",
+    "descripcion": "Servicio realizado.",
+    "evidencia": [],
+    "creado": "-28d",
+    "historial": [
+      {
+        "estado": "Cerrada",
+        "fecha": "-28d"
+      }
+    ]
+  },
+  {
+    "id": "ser-r-6",
+    "consultorioId": "con-10",
+    "equipoId": "eq-10-1",
+    "ingenieroId": "ing-7",
+    "tipo": "Preventivo",
+    "criticidad": "Programada",
+    "estado": "Cerrada",
+    "fecha": "-28d",
+    "franja": "08:00 - 10:00",
+    "zona": "Norte",
+    "descripcion": "Servicio realizado.",
+    "evidencia": [],
+    "creado": "-28d",
+    "historial": [
+      {
+        "estado": "Cerrada",
+        "fecha": "-28d"
+      }
+    ]
+  }
+]

@@ -1,4 +1,4 @@
-import type { Criticidad, Equipo, Semaforo } from '@/lib/mock/data'
+import type { Criticidad, Equipo, Semaforo } from '@/data/tipos'
 
 const COP = new Intl.NumberFormat('es-CO', {
   style: 'currency',
@@ -64,4 +64,36 @@ export function valorServicio(tipo: string): number {
 
 export function comisionIngeniero(tipo: string): number {
   return Math.round(valorServicio(tipo) * 0.8)
+}
+
+/** "hace 5 min", "hace 2 h", "ayer"… Acepta fecha ISO con o sin hora. */
+export function haceCuanto(iso: string): string {
+  const fecha = iso.length <= 10 ? new Date(iso + 'T12:00:00') : new Date(iso)
+  const ms = Date.now() - fecha.getTime()
+  if (Number.isNaN(ms)) return ''
+  const min = Math.round(ms / 60_000)
+  if (iso.length > 10) {
+    if (min < 1) return 'ahora mismo'
+    if (min < 60) return `hace ${min} min`
+    const h = Math.round(min / 60)
+    if (h < 24) return `hace ${h} h`
+  }
+  const dias = Math.max(0, Math.round(ms / 86_400_000))
+  if (dias === 0) return 'hoy'
+  if (dias === 1) return 'ayer'
+  return `hace ${dias} días`
+}
+
+export function iniciales(nombre: string): string {
+  return nombre
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((parte) => parte[0]?.toUpperCase() ?? '')
+    .join('')
+}
+
+/** "4.8" o "Sin calificaciones" cuando todavía no hay ninguna (el puntaje se calcula de las reseñas). */
+export function textoCalificacion(ing: { calificacion: number; opiniones: unknown[] }): string {
+  return ing.opiniones.length ? ing.calificacion.toFixed(1) : 'Sin calificaciones'
 }

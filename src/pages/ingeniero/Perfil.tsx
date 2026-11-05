@@ -9,13 +9,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { Switch } from '@/components/ui/misc'
 import { toast } from '@/components/ui/toast'
-import { useSession } from '@/lib/session'
-import { useData } from '@/lib/store'
+import { useData, useIngenieroActual } from '@/lib/store'
 
 export function IngenieroPerfil() {
-  const { sesion } = useSession()
-  const { ingenieros } = useData()
-  const yo = ingenieros.find((i) => i.nombre === sesion?.nombre) ?? ingenieros[0]
+  const yo = useIngenieroActual()
+  const { actualizarIngeniero } = useData()
 
   const [perfil, setPerfil] = useState(yo)
   const [disponible, setDisponible] = useState(yo.disponible)
@@ -29,7 +27,10 @@ export function IngenieroPerfil() {
         acciones={
           <Button
             className="shadow-ocean"
-            onClick={() => toast.success('Perfil actualizado', { description: 'Los cambios se reflejan en el directorio.' })}
+            onClick={() => {
+              actualizarIngeniero(yo.id, { ...perfil, disponible })
+              toast.success('Perfil actualizado', { description: 'Los cambios se reflejan en el directorio.' })
+            }}
           >
             <Save /> Guardar
           </Button>
@@ -56,11 +57,11 @@ export function IngenieroPerfil() {
               <Input id="ciudad" value={perfil.ciudad} onChange={(e) => setPerfil({ ...perfil, ciudad: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="segmento">Segmento</Label>
+              <Label htmlFor="segmento">Tipo de trabajo</Label>
               <Select id="segmento" value={perfil.segmento} onChange={(e) => setPerfil({ ...perfil, segmento: e.target.value as 'B1' | 'B2' | 'B3' })}>
-                <option value="B1">B1 · Independiente consolidado</option>
-                <option value="B2">B2 · En etapa inicial</option>
-                <option value="B3">B3 · Con contrato indefinido</option>
+                <option value="B1">Independiente con experiencia</option>
+                <option value="B2">Empezando</option>
+                <option value="B3">Con contrato fijo</option>
               </Select>
             </div>
             <div className="space-y-2 sm:col-span-2">

@@ -7,13 +7,14 @@ import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input, Label, Select } from '@/components/ui/field'
 import { Switch } from '@/components/ui/misc'
-import { ciudades, especialidades } from '@/lib/mock/data'
+import { ciudades, especialidades } from '@/data/tipos'
+import { textoCalificacion } from '@/lib/format'
 import { useData } from '@/lib/store'
 
 export function DirectorioIngenieros() {
-  const { ingenieros } = useData()
+  const { ingenieros, consultorio } = useData()
   const [texto, setTexto] = useState('')
-  const [ciudad, setCiudad] = useState('todas')
+  const [ciudad, setCiudad] = useState(consultorio.ciudad)
   const [especialidad, setEspecialidad] = useState('todas')
   const [soloVerificados, setSoloVerificados] = useState(true)
 
@@ -44,7 +45,7 @@ export function DirectorioIngenieros() {
               <Input
                 id="buscar"
                 className="pl-9"
-                placeholder="Nombre, equipo o especialidad"
+                placeholder="Nombre o equipo"
                 value={texto}
                 onChange={(event) => setTexto(event.target.value)}
               />
@@ -83,7 +84,7 @@ export function DirectorioIngenieros() {
         {resultados.length} {resultados.length === 1 ? 'profesional' : 'profesionales'} en la red
       </p>
 
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="cascada grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {resultados.map((ing) => (
           <Card key={ing.slug} className="feature-card flex flex-col border-border/80 bg-card/90">
             <CardHeader>
@@ -107,7 +108,7 @@ export function DirectorioIngenieros() {
                   <MapPin className="size-4 text-primary" /> {ing.ciudad} · {ing.zonas.slice(0, 2).join(', ')}
                 </p>
                 <p className="flex items-center gap-2">
-                  <Star className="size-4 text-primary" /> {ing.calificacion.toFixed(1)}
+                  <Star className="size-4 text-primary" /> {textoCalificacion(ing)}
                   <span className="text-muted-foreground">· {ing.servicios} servicios</span>
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -118,7 +119,7 @@ export function DirectorioIngenieros() {
                   ))}
                 </div>
               </div>
-              <Link to={`/ingenieros/${ing.slug}`} className={buttonVariants({ variant: 'outline' })}>
+              <Link to={`/consultorio/ingenieros/${ing.slug}`} className={buttonVariants({ variant: 'outline' })}>
                 Ver perfil <ArrowRight />
               </Link>
             </CardContent>

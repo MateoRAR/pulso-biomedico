@@ -1,31 +1,28 @@
 import { BadgeCheck, X } from 'lucide-react'
-import { useState } from 'react'
 
 import { PageHeader, VerificadoBadge } from '@/components/shared/ui'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
+import type { Ingeniero } from '@/data/tipos'
 import { useData } from '@/lib/store'
-import type { Ingeniero } from '@/lib/mock/data'
 
+/** Revisión rápida de credenciales. Los cambios se guardan en el ingeniero (y se ven en su perfil). */
 export function AdminVerificacion() {
-  const { ingenieros } = useData()
-  const [estados, setEstados] = useState<Record<string, Ingeniero['estadoVerificacion']>>(
-    Object.fromEntries(ingenieros.map((i) => [i.id, i.estadoVerificacion])),
-  )
+  const { ingenieros, actualizarIngeniero } = useData()
 
-  function cambiar(id: string, estado: Ingeniero['estadoVerificacion']) {
-    setEstados((prev) => ({ ...prev, [id]: estado }))
-    toast.success(`Ingeniero ${estado.toLowerCase()}`, { description: 'El sello público se actualiza de inmediato.' })
+  function cambiar(ing: Ingeniero, estado: Ingeniero['estadoVerificacion']) {
+    actualizarIngeniero(ing.id, { estadoVerificacion: estado, verificado: estado === 'Verificado' })
+    toast.success(`${ing.nombre}: ${estado.toLowerCase()}`, { description: 'El sello público se actualiza de inmediato.' })
   }
 
   return (
     <div className="space-y-8">
       <PageHeader
         eyebrow="Administración"
-        titulo="Verificación de ingenieros"
-        descripcion="Revisión de RUT, diploma, tarjeta COPNIA e inscripción INVIMA antes de publicar el sello de verificación."
+        titulo="Verificaciones"
+        descripcion="Revisa los documentos profesionales (tarjeta COPNIA e inscripción INVIMA) antes de dar el sello de verificado."
       />
 
       <Card className="overflow-hidden border-border/80">
@@ -33,51 +30,49 @@ export function AdminVerificacion() {
           <TableHeader>
             <TableRow>
               <TableHead>Ingeniero</TableHead>
-              <TableHead>Ciudad / zonas</TableHead>
+              <TableHead>Ciudad y zonas</TableHead>
               <TableHead>INVIMA</TableHead>
               <TableHead>Estado</TableHead>
-              <TableHead />
+              <TableHead>
+                <span className="sr-only">Acciones</span>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {ingenieros.map((ing) => {
-              const estado = estados[ing.id]
-              return (
-                <TableRow key={ing.id}>
-                  <TableCell>
-                    <p className="font-medium">{ing.nombre}</p>
-                    <p className="text-xs text-muted-foreground">{ing.titulo}</p>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {ing.ciudad}
-                    <span className="block text-xs text-muted-foreground">{ing.zonas.join(', ')}</span>
-                  </TableCell>
-                  <TableCell className="text-sm">{ing.registroInvima}</TableCell>
-                  <TableCell>
-                    <VerificadoBadge verificado={estado === 'Verificado'} />
-                    {estado !== 'Verificado' && <span className="ml-2 text-xs text-muted-foreground">{estado}</span>}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm" onClick={() => cambiar(ing.id, 'Verificado')}>
-                        <BadgeCheck /> Verificar
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => cambiar(ing.id, 'Rechazado')}>
-                        <X /> Rechazar
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+            {ingenieros.map((ing) => (
+              <TableRow key={ing.id}>
+                <TableCell>
+                  <p className="font-medium">{ing.nombre}</p>
+                  <p className="text-sm text-muted-foreground">{ing.titulo}</p>
+                </TableCell>
+                <TableCell>
+                  {ing.ciudad}
+                  <span className="block text-sm text-muted-foreground">{ing.zonas.join(', ')}</span>
+                </TableCell>
+                <TableCell>{ing.registroInvima}</TableCell>
+                <TableCell>
+                  <VerificadoBadge verificado={ing.estadoVerificacion === 'Verificado'} />
+                  {ing.estadoVerificacion !== 'Verificado' && <span className="ml-2 text-sm text-muted-foreground">{ing.estadoVerificacion}</span>}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <Button variant="outline" size="sm" onClick={() => cambiar(ing, 'Verificado')}>
+                      <BadgeCheck /> Verificar
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => cambiar(ing, 'Rechazado')}>
+                      <X /> Rechazar
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </Card>
 
       <Card className="border-dashed bg-card/60">
-        <CardContent className="p-6 text-sm text-muted-foreground">
-          La verificación se renueva periódicamente. Los vencimientos de credenciales generan alertas automáticas para
-          solicitar la actualización antes de suspender el sello.
+        <CardContent className="p-6 text-base text-muted-foreground">
+          Para ver o editar todos los datos de un ingeniero, entra a la sección «Ingenieros».
         </CardContent>
       </Card>
     </div>

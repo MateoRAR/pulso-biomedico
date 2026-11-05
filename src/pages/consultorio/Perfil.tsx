@@ -12,7 +12,7 @@ import { cop } from '@/lib/format'
 import { useData } from '@/lib/store'
 
 export function ConsultorioPerfil() {
-  const { consultorio, planes } = useData()
+  const { consultorio, planes, actualizarConsultorio } = useData()
   const [datos, setDatos] = useState(consultorio)
   const [avisosCorreo, setAvisosCorreo] = useState(true)
   const [avisosVencimiento, setAvisosVencimiento] = useState(true)
@@ -26,7 +26,10 @@ export function ConsultorioPerfil() {
         titulo="Perfil del consultorio"
         descripcion="Datos de la sede, plan contratado y preferencias de notificación."
         acciones={
-          <Button className="shadow-ocean" onClick={() => toast.success('Cambios guardados', { description: 'Datos del consultorio actualizados.' })}>
+          <Button className="shadow-ocean" onClick={() => {
+              actualizarConsultorio(datos)
+              toast.success('Cambios guardados', { description: 'Datos del consultorio actualizados.' })
+            }}>
             <Save /> Guardar cambios
           </Button>
         }
@@ -87,12 +90,14 @@ export function ConsultorioPerfil() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="font-semibold">{plan?.nombre}</span>
-                <Badge variant="good">Activo</Badge>
+                <span className="font-semibold">{plan?.nombre ?? 'Sin plan'}</span>
+                {plan ? <Badge variant="good">Activo</Badge> : <Badge variant="outline">Acuerdo directo</Badge>}
               </div>
-              <p className="text-sm text-muted-foreground">{plan?.rangoEquipos}</p>
+              <p className="text-sm text-muted-foreground">
+                {plan?.rangoEquipos ?? 'Pagas solo la comisión por cada servicio que se ejecute.'}
+              </p>
               <p className="font-display text-2xl font-bold text-primary">
-                {plan ? (plan.precioTexto ?? cop(plan.precioCOP)) : '—'}
+                {plan ? (plan.precioTexto ?? cop(plan.precioCOP)) : '$0'}
               </p>
               <div className="space-y-2">
                 <Label htmlFor="plan">Cambiar de plan</Label>
@@ -101,9 +106,11 @@ export function ConsultorioPerfil() {
                   value={datos.planId}
                   onChange={(e) => {
                     setDatos({ ...datos, planId: e.target.value })
+                    actualizarConsultorio({ planId: e.target.value })
                     toast.info('Plan actualizado', { description: 'El cambio aplica desde el próximo ciclo (simulado).' })
                   }}
                 >
+                  <option value="">Sin plan · solo comisión por servicio</option>
                   {planes.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.nombre} — {p.precioTexto ?? cop(p.precioCOP)}

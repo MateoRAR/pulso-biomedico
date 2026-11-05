@@ -28,7 +28,7 @@ const TAREAS_CALIBRACION = [
 
 export function IngenieroServicioDetalle() {
   const { id } = useParams()
-  const { servicios, equipos, consultorio, actualizarServicio, agregarDocumento } = useData()
+  const { servicios, equipos, consultorios, actualizarServicio, agregarDocumento } = useData()
   const servicio = servicios.find((s) => s.id === id)
 
   const [hechas, setHechas] = useState<string[]>([])
@@ -76,7 +76,7 @@ export function IngenieroServicioDetalle() {
       fecha: hoy,
       vigencia: garantia,
     })
-    toast.success('Servicio cerrado', { description: 'Se generó el documento y quedó en el expediente.' })
+    toast.success('Servicio cerrado', { description: 'Se generó el documento y quedó en los documentos del consultorio.' })
     track(EVENTOS.servicioCerrado, { tipo: servicio.tipo, resultado, evidencias: evidencias.length })
   }
 
@@ -89,7 +89,7 @@ export function IngenieroServicioDetalle() {
       <PageHeader
         eyebrow="Ejecución de servicio"
         titulo={`${servicio.tipo} · ${equipo?.nombre}`}
-        descripcion={`${consultorio.nombre} · Zona ${servicio.zona} · ${fechaCorta(servicio.fecha)} ${servicio.franja}`}
+        descripcion={`${consultorios.find((c) => c.id === servicio.consultorioId)?.nombre} · Zona ${servicio.zona} · ${fechaCorta(servicio.fecha)} ${servicio.franja}`}
         acciones={
           <>
             <TriageBadge criticidad={servicio.criticidad} />

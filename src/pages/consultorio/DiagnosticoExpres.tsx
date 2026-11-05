@@ -10,7 +10,7 @@ import { toast } from '@/components/ui/toast'
 import { cop } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
-import type { Servicio } from '@/lib/mock/data'
+import type { Servicio } from '@/data/tipos'
 
 const PRECIO_EXPRES = 89000
 

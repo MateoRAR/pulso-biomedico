@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/components/ui/toast'
 import { fechaCorta, semaforoEquipo } from '@/lib/format'
 import { useData } from '@/lib/store'
-import type { Criticidad, EstadoEquipo, Equipo } from '@/lib/mock/data'
+import type { Criticidad, EstadoEquipo, Equipo } from '@/data/tipos'
 
 const criticidades: Criticidad[] = ['Crítica', 'Alta', 'Media', 'Programada']
 const estados: EstadoEquipo[] = ['Operativo', 'En mantenimiento', 'Requiere calibración', 'Fuera de servicio']
@@ -81,8 +81,8 @@ export function ConsultorioEquipos() {
     <div className="space-y-8">
       <PageHeader
         eyebrow="Inventario"
-        titulo="Equipos y hojas de vida"
-        descripcion="Cada equipo con su marca, serie, registro sanitario, criticidad y estado de calibración."
+        titulo="Mis equipos"
+        descripcion="Cada equipo con su marca, serie, registro sanitario, importancia y estado de calibración."
         acciones={
           <Button onClick={() => setDialogo(true)} className="shadow-ocean">
             <Plus /> Agregar equipo
@@ -117,7 +117,7 @@ export function ConsultorioEquipos() {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="criticidad">Criticidad</Label>
+            <Label htmlFor="criticidad">Importancia del equipo</Label>
             <Select id="criticidad" value={criticidad} onChange={(event) => setCriticidad(event.target.value)}>
               <option value="todas">Todas</option>
               {criticidades.map((c) => (
@@ -139,9 +139,9 @@ export function ConsultorioEquipos() {
               <TableRow>
                 <TableHead>Equipo</TableHead>
                 <TableHead>Sede</TableHead>
-                <TableHead>Criticidad</TableHead>
+                <TableHead>Importancia</TableHead>
                 <TableHead>Estado</TableHead>
-                <TableHead>Semáforo</TableHead>
+                <TableHead>Estado</TableHead>
                 <TableHead>Próx. calibración</TableHead>
                 <TableHead />
               </TableRow>
@@ -178,7 +178,7 @@ export function ConsultorioEquipos() {
         open={dialogo}
         onClose={() => setDialogo(false)}
         title="Agregar equipo"
-        description="Registra el equipo para incluirlo en el cronograma y el expediente."
+        description="Registra el equipo para incluirlo en el calendario y en los documentos."
         footer={
           <>
             <Button variant="outline" onClick={() => setDialogo(false)}>
@@ -210,7 +210,7 @@ export function ConsultorioEquipos() {
             <Input id="rs" value={nuevo.registroSanitario} onChange={(e) => setNuevo({ ...nuevo, registroSanitario: e.target.value })} placeholder="INVIMA 2020DM-0000000" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="criticidad-nueva">Criticidad</Label>
+            <Label htmlFor="criticidad-nueva">Importancia del equipo</Label>
             <Select id="criticidad-nueva" value={nuevo.criticidad} onChange={(e) => setNuevo({ ...nuevo, criticidad: e.target.value as Criticidad })}>
               {criticidades.map((c) => (
                 <option key={c} value={c}>

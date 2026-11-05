@@ -28,7 +28,7 @@ export function AdminPlanes() {
       <PageHeader
         eyebrow="Administración"
         titulo="Planes y tarifas"
-        descripcion="Parametriza precios, SLA por criticidad, comisión por servicio y reglas de ruteo por zona."
+        descripcion="Define los precios, los plazos de respuesta por urgencia, la comisión por servicio y cómo se reparten las visitas por zona."
         acciones={
           <Button className="shadow-ocean" onClick={() => toast.success('Parámetros guardados', { description: 'Aplican a las nuevas cargas y cotizaciones.' })}>
             <Save /> Guardar
@@ -70,7 +70,7 @@ export function AdminPlanes() {
         <div className="space-y-6">
           <Card className="border-border/80">
             <CardHeader>
-              <CardTitle className="font-display text-xl">SLA por criticidad</CardTitle>
+              <CardTitle className="font-display text-xl">Plazos de respuesta por urgencia</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>

@@ -21,7 +21,7 @@ export function Tabs({ items, className }: { items: TabItem[]; className?: strin
             aria-selected={item.id === current?.id}
             onClick={() => setActive(item.id)}
             className={cn(
-              'rounded-md px-3.5 py-2 text-sm font-semibold transition-colors',
+              'min-h-10 rounded-md px-3.5 py-2 text-sm font-semibold transition-colors',
               item.id === current?.id
                 ? 'bg-primary text-primary-foreground'
                 : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',

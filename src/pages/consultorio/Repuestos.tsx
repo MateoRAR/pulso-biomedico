@@ -12,7 +12,7 @@ import { toast } from '@/components/ui/toast'
 import { cop, fechaCorta } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
-import type { PedidoRepuesto } from '@/lib/mock/data'
+import type { PedidoRepuesto } from '@/data/tipos'
 
 const CATALOGO = [
   { repuesto: 'Kit de válvula reguladora de presión', equipo: 'Compresor dental', distribuidor: 'Dental Supply Colombia', precio: 185000 },

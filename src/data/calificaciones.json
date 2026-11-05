@@ -1,0 +1,65 @@
+[
+  {
+    "id": "cal-1",
+    "servicioId": "ser-5",
+    "ingenieroId": "ing-3",
+    "autor": "Clínica Odontológica Sanare",
+    "estrellas": 5,
+    "comentario": "Calibración impecable y certificado entregado el mismo día.",
+    "fecha": "-34d"
+  },
+  {
+    "id": "cal-r-1",
+    "servicioId": "ser-r-1",
+    "ingenieroId": "ing-1",
+    "autor": "Clínica Odontológica Sanare",
+    "estrellas": 5,
+    "comentario": "Dejó el autoclave calibrado y explicó al personal cómo registrar el ciclo. La documentación llegó lista para la auditoría.",
+    "fecha": "-40d"
+  },
+  {
+    "id": "cal-r-2",
+    "servicioId": "ser-r-2",
+    "ingenieroId": "ing-1",
+    "autor": "Consultorio Dental Alameda",
+    "estrellas": 5,
+    "comentario": "Muy puntual y ordenada. Agrupó tres consultorios de la misma zona en una sola jornada.",
+    "fecha": "-72d"
+  },
+  {
+    "id": "cal-r-3",
+    "servicioId": "ser-r-3",
+    "ingenieroId": "ing-2",
+    "autor": "Centro Radiográfico Tequendama",
+    "estrellas": 5,
+    "comentario": "Control de calidad completo y acta clara para el registro sanitario.",
+    "fecha": "-30d"
+  },
+  {
+    "id": "cal-r-4",
+    "servicioId": "ser-r-4",
+    "ingenieroId": "ing-4",
+    "autor": "Centro de Rehabilitación Vital",
+    "estrellas": 5,
+    "comentario": "Buena explicación al personal sobre el cuidado preventivo de los equipos.",
+    "fecha": "-15d"
+  },
+  {
+    "id": "cal-r-5",
+    "servicioId": "ser-r-5",
+    "ingenieroId": "ing-6",
+    "autor": "Clínica Dermatológica Cuba",
+    "estrellas": 5,
+    "comentario": "Dejó el dermatoscopio y el autoclave en orden y nos explicó cada ajuste.",
+    "fecha": "-27d"
+  },
+  {
+    "id": "cal-r-6",
+    "servicioId": "ser-r-6",
+    "ingenieroId": "ing-7",
+    "autor": "Centro Odontológico Chapinero",
+    "estrellas": 4,
+    "comentario": "Puntual y claro con los certificados; la visita fue rápida.",
+    "fecha": "-27d"
+  }
+]

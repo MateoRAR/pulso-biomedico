@@ -6,14 +6,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
-import { comisionIngeniero, cop, fechaCorta } from '@/lib/format'
-import { useSession } from '@/lib/session'
-import { useData } from '@/lib/store'
+import { comisionIngeniero, cop, fechaCorta, textoCalificacion } from '@/lib/format'
+import { useData, useIngenieroActual } from '@/lib/store'
 
 export function IngenieroHistorial() {
-  const { sesion } = useSession()
-  const { ingenieros, servicios, equipos, consultorio, calificaciones } = useData()
-  const yo = ingenieros.find((i) => i.nombre === sesion?.nombre) ?? ingenieros[0]
+  const { servicios, equipos, consultorios, calificaciones } = useData()
+  const yo = useIngenieroActual()
 
   const mios = servicios.filter((s) => s.ingenieroId === yo.id)
   const completados = mios.filter((s) => ['Ejecutada', 'Cerrada'].includes(s.estado))
@@ -31,7 +29,7 @@ export function IngenieroHistorial() {
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Servicios completados" value={completados.length} tone="good" />
         <StatCard label="Ingresos netos estimados" value={cop(ingresos)} hint="80 % del valor del servicio" />
-        <StatCard label="Calificación promedio" value={yo.calificacion.toFixed(1)} icon={<Star />} />
+        <StatCard label="Calificación promedio" value={textoCalificacion(yo)} icon={<Star />} />
         <StatCard label="Servicios totales" value={yo.servicios} hint="Histórico en la red" />
       </div>
 
@@ -61,7 +59,7 @@ export function IngenieroHistorial() {
                       <p className="font-medium">{s.tipo}</p>
                       <p className="text-xs text-muted-foreground">{equipos.find((e) => e.id === s.equipoId)?.nombre}</p>
                     </TableCell>
-                    <TableCell className="text-sm">{consultorio.nombre}</TableCell>
+                    <TableCell className="text-sm">{consultorios.find((c) => c.id === s.consultorioId)?.nombre}</TableCell>
                     <TableCell className="text-sm">{fechaCorta(s.fecha)}</TableCell>
                     <TableCell>
                       <EstadoBadge estado={s.estado} />

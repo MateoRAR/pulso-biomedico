@@ -26,19 +26,19 @@ export function ConsultorioExpediente() {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Expediente documental"
+        eyebrow="Documentos"
         titulo="Documentación lista para auditoría"
         descripcion="Certificados, informes y hojas de vida consolidados. La generación es automática al cierre de cada servicio."
         acciones={
           <Button
             className="shadow-ocean"
             onClick={() =>
-              toast.success('Expediente exportado', {
+              toast.success('Documentos exportados', {
                 description: `Se generó el paquete documental de ${consultorio.nombre} (simulado).`,
               })
             }
           >
-            <Download /> Descargar expediente completo
+            <Download /> Descargar todos los documentos
           </Button>
         }
       />
@@ -105,7 +105,7 @@ export function ConsultorioExpediente() {
           <CardContent className="p-6">
             <p className="font-display font-bold">Documentación faltante</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Estos equipos no tienen certificado de calibración vigente en el expediente:
+              Estos equipos no tienen certificado de calibración vigente en los documentos:
             </p>
             <ul className="mt-3 space-y-1 text-sm">
               {equiposSinCertificado.map((e) => (

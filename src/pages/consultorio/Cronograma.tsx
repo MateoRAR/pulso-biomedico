@@ -141,7 +141,7 @@ export function ConsultorioCronograma() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <TriageBadge criticidad={s.criticidad} />
                         <Badge variant="secondary">{s.estado}</Badge>
                         <Button
