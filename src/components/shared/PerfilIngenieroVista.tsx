@@ -24,14 +24,15 @@ function Estrellas({ valor, className }: { valor: number; className?: string }) 
   )
 }
 
-/** Dato destacado del encabezado: número grande y qué significa. */
-function Cifra({ icono, valor, etiqueta }: { icono: ReactNode; valor: string; etiqueta: string }) {
+/** Dato destacado de la tarjeta de presentación: icono, número grande y qué significa. */
+function Cifra({ icono, valor, etiqueta, tono }: { icono: ReactNode; valor: string; etiqueta: string; tono: string }) {
   return (
-    <div className="rounded-xl border border-glass-border bg-glass px-4 py-3 backdrop-blur transition-transform duration-300 hover:-translate-y-0.5">
-      <span className="flex items-center gap-2 text-xs font-medium text-hero-muted [&_svg]:size-4 [&_svg]:text-seafoam">
-        {icono} {etiqueta}
-      </span>
-      <p className="font-display mt-1.5 text-2xl font-bold leading-none text-hero-foreground">{valor}</p>
+    <div className="flex flex-col items-center gap-1.5 px-2 text-center sm:flex-row sm:gap-3 sm:px-5 sm:text-left">
+      <span className={cn('grid size-10 shrink-0 place-items-center rounded-xl [&_svg]:size-5', tono)}>{icono}</span>
+      <div className="min-w-0">
+        <p className="font-display text-xl font-bold leading-none sm:text-2xl">{valor}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{etiqueta}</p>
+      </div>
     </div>
   )
 }
@@ -65,71 +66,67 @@ export function PerfilIngenieroVista({ ingeniero, enPortal }: { ingeniero: Ingen
 
   return (
     <>
-      <section className="ocean-band py-10 lg:py-14">
+      {/* Banner con la tarjeta de presentación montada encima. */}
+      <section className="ocean-band pb-24 pt-8 sm:pb-28 lg:pt-10">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          {enPortal && (
+          {enPortal ? (
             <Link to="/consultorio/ingenieros" className="animate-fade-up inline-flex min-h-10 items-center gap-2 text-sm text-hero-muted transition-colors hover:text-hero-foreground">
               <ArrowLeft className="size-4" /> Volver a Encontrar ingeniero
             </Link>
+          ) : (
+            <p className="animate-fade-up text-sm text-hero-muted">Perfil de ingeniero</p>
           )}
-
-          <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-start gap-4 sm:gap-5">
-              <span
-                aria-hidden="true"
-                style={{ '--delay': '60ms' } as CSSProperties }
-                className="animate-fade-up font-display grid size-16 shrink-0 place-items-center rounded-2xl border border-glass-border bg-glass text-2xl font-bold text-hero-foreground shadow-lg backdrop-blur sm:size-20 sm:text-3xl"
-              >
-                {iniciales(ingeniero.nombre)}
-              </span>
-              <div className="min-w-0">
-                <div className="animate-fade-up flex flex-wrap items-center gap-2" style={{ '--delay': '100ms' } as CSSProperties}>
-                  {ingeniero.verificado ? (
-                    <Badge className="border-glass-border bg-glass text-hero-foreground hover:bg-glass">
-                      <BadgeCheck /> Credenciales verificadas
-                    </Badge>
-                  ) : (
-                    <Badge className="border-glass-border bg-glass text-hero-foreground hover:bg-glass">En verificación</Badge>
-                  )}
-                  {ingeniero.disponible && (
-                    <Badge className="border-glass-border bg-glass text-hero-foreground hover:bg-glass">
-                      <span className="relative flex size-2">
-                        <span className="animate-ping-soft absolute inline-flex size-full rounded-full bg-seafoam" />
-                        <span className="relative inline-flex size-2 rounded-full bg-seafoam" />
-                      </span>
-                      Disponible para nuevos servicios
-                    </Badge>
-                  )}
-                </div>
-                <h1 className="font-display animate-fade-up mt-3 text-3xl font-bold text-hero-foreground sm:text-4xl" style={{ '--delay': '150ms' } as CSSProperties}>
-                  {ingeniero.nombre}
-                </h1>
-                <p className="animate-fade-up mt-1.5 text-base text-hero-muted sm:text-lg" style={{ '--delay': '200ms' } as CSSProperties}>
-                  {ingeniero.titulo}
-                </p>
-                <p className="animate-fade-up mt-2 flex items-center gap-2 text-sm text-hero-muted" style={{ '--delay': '250ms' } as CSSProperties}>
-                  <MapPin className="size-4 text-seafoam" /> {ingeniero.ciudad} · {ingeniero.zonas.join(', ')}
-                </p>
-              </div>
-            </div>
-            <Link
-              to={destino}
-              style={{ '--delay': '300ms' } as CSSProperties}
-              className={cn(buttonVariants({ size: 'lg' }), 'animate-fade-up shadow-ocean h-12 shrink-0 px-6 text-base')}
-            >
-              {enPortal ? 'Pedirle un servicio' : 'Solicitar atención'}
-            </Link>
-          </div>
-
-          <div className="cascada mt-7 grid grid-cols-3 gap-3 sm:max-w-2xl">
-            <Cifra icono={<Star />} etiqueta="Calificación" valor={hayOpiniones ? ingeniero.calificacion.toFixed(1) : '—'} />
-            <Cifra icono={<ClipboardCheck />} etiqueta="Servicios" valor={String(ingeniero.servicios)} />
-            <Cifra icono={<CalendarCheck />} etiqueta="Experiencia" valor={`${ingeniero.experiencia} años`} />
-          </div>
         </div>
       </section>
 
-      <section className="py-8 lg:py-12">
+      <div className="relative z-10 mx-auto -mt-16 max-w-6xl px-5 sm:-mt-20 lg:px-8">
+        <div className="animate-fade-up rounded-2xl border border-border/70 bg-card p-5 shadow-xl sm:p-7" style={{ '--delay': '80ms' } as CSSProperties}>
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+            <span
+              aria-hidden="true"
+              className="font-display -mt-14 grid size-24 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary to-seafoam text-3xl font-bold text-primary-foreground shadow-lg ring-4 ring-card sm:-mt-16 sm:size-28 sm:text-4xl"
+            >
+              {iniciales(ingeniero.nombre)}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                {ingeniero.verificado ? (
+                  <Badge variant="good">
+                    <BadgeCheck /> Credenciales verificadas
+                  </Badge>
+                ) : (
+                  <Badge variant="outline">En verificación</Badge>
+                )}
+                {ingeniero.disponible && (
+                  <Badge variant="secondary">
+                    <span className="relative flex size-2">
+                      <span className="animate-ping-soft absolute inline-flex size-full rounded-full bg-emerald-500" />
+                      <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                    </span>
+                    Disponible para servicios
+                  </Badge>
+                )}
+              </div>
+              <h1 className="font-display mt-3 text-3xl font-bold leading-tight sm:text-4xl">{ingeniero.nombre}</h1>
+              <p className="mt-1 text-base text-muted-foreground sm:text-lg">{ingeniero.titulo}</p>
+              <p className="mt-2 flex items-start gap-2 text-sm text-muted-foreground">
+                <MapPin className="mt-0.5 size-4 shrink-0 text-primary" /> {ingeniero.ciudad} · {ingeniero.zonas.join(', ')}
+              </p>
+            </div>
+            <Link to={destino} className={cn(buttonVariants({ size: 'lg' }), 'shadow-ocean h-12 shrink-0 px-6 text-base sm:self-center')}>
+              <Wrench /> {enPortal ? 'Pedirle un servicio' : 'Solicitar atención'}
+            </Link>
+          </div>
+
+          <div className="cascada mt-6 grid grid-cols-3 divide-x divide-border border-t border-border pt-5">
+            <Cifra icono={<Star />} etiqueta="Calificación" valor={hayOpiniones ? ingeniero.calificacion.toFixed(1) : '—'} tono="bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400" />
+            <Cifra icono={<ClipboardCheck />} etiqueta="Servicios" valor={String(ingeniero.servicios)} tono="bg-primary/10 text-primary" />
+            <Cifra icono={<CalendarCheck />} etiqueta="Experiencia" valor={`${ingeniero.experiencia} años`} tono="bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400" />
+          </div>
+        </div>
+      </div>
+
+      <section className="py-8 lg:py-10">
         <div className="cascada mx-auto grid max-w-6xl gap-6 px-5 lg:grid-cols-[1.45fr_1fr] lg:px-8">
           <div className="space-y-6">
             <Seccion titulo="Presentación">

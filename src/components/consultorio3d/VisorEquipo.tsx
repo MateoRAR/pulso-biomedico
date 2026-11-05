@@ -1,18 +1,19 @@
 import { Canvas, invalidate, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type RefObject } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { MODELOS, type TipoModelo } from './catalogo'
 import { EntornoEstudio } from './entorno'
 import { COMPONENTES } from './modelos'
+import { SeguirAncla } from './SeguirAncla'
 
 function Controles({ altura, reinicio }: { altura: number; reinicio: number }) {
   const camara = useThree((s) => s.camera)
   const dom = useThree((s) => s.gl.domElement)
 
   useEffect(() => {
-    const dist = Math.max(1.5, altura * 2.4)
+    const dist = Math.max(1.5, altura * 2.1)
     const objetivo = new THREE.Vector3(0, altura * 0.45, 0)
     camara.position.set(dist * 0.75, altura * 0.75 + 0.3, dist)
     const controles = new OrbitControls(camara, dom)
@@ -115,18 +116,22 @@ export default function VisorEquipo({
   parteActiva,
   onParte,
   reinicio = 0,
+  notaRef,
 }: {
   tipo: TipoModelo
   parteActiva: string | null
   onParte: (id: string | null) => void
   /** Cambiar este número devuelve la cámara a su posición inicial. */
   reinicio?: number
+  /** Elemento HTML de la nota flotante de la parte activa. */
+  notaRef: RefObject<HTMLDivElement | null>
 }) {
   const def = MODELOS[tipo]
   const Modelo = COMPONENTES[tipo]
   const escala = useMemo(() => Math.max(0.6, def.altura), [def.altura])
   const radio = Math.max(0.9, def.altura * 0.95)
   const cobertura = Math.max(1.6, def.altura * 1.6)
+  const parteElegida = def.partes.find((p) => p.id === parteActiva)
 
   return (
     <Canvas
@@ -157,6 +162,7 @@ export default function VisorEquipo({
       />
       <directionalLight position={[-4, 2.5, -3]} intensity={0.6} />
       <Controles altura={def.altura} reinicio={reinicio} />
+      <SeguirAncla pos={parteElegida ? parteElegida.pos : null} notaRef={notaRef} />
       <Plataforma radio={radio} />
       <Modelo />
       {def.partes.map((parte) => (

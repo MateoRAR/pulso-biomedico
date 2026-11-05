@@ -25,7 +25,7 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react'
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
 import { MODELOS, ORDEN_BIBLIOTECA, type TipoModelo } from '@/components/consultorio3d/catalogo'
@@ -170,6 +170,43 @@ export function Home() {
     if (objetivo) window.setTimeout(() => objetivo.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60)
   }, [])
 
+
+  // Las secciones aparecen con suavidad al llegar a ellas (cada grupo entra escalonado).
+  const principal = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const raiz = principal.current
+    if (!raiz) return
+    const objetivos: HTMLElement[] = []
+    const reunir = (padre: Element, nivel: number) => {
+      const hijos = Array.from(padre.children).filter((c): c is HTMLElement => c instanceof HTMLElement && !c.classList.contains('absolute'))
+      hijos.forEach((hijo, i) => {
+        if (nivel < 2 && hijo.matches('.grid, ol')) {
+          reunir(hijo, nivel + 1)
+          return
+        }
+        hijo.style.setProperty('--delay', `${Math.min(i, 5) * 90}ms`)
+        objetivos.push(hijo)
+      })
+    }
+    raiz.querySelectorAll(':scope > section:not(:first-of-type)').forEach((seccion) => {
+      if (seccion.firstElementChild) reunir(seccion.firstElementChild, 0)
+    })
+    const observador = new IntersectionObserver(
+      (entradas) =>
+        entradas.forEach((e) => {
+          if (!e.isIntersecting) return
+          e.target.classList.add('visible')
+          observador.unobserve(e.target)
+        }),
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+    )
+    objetivos.forEach((el) => {
+      el.classList.add('revelar')
+      observador.observe(el)
+    })
+    return () => observador.disconnect()
+  }, [])
+
   const equipos = ORDEN_BIBLIOTECA.filter((id) => id !== 'generico').map((id) => {
     const Icono = ICONO_EQUIPO[id]
     return {
@@ -183,7 +220,7 @@ export function Home() {
   })
 
   return (
-    <main id="inicio" className="overflow-x-clip bg-background text-foreground">
+    <main ref={principal} id="inicio" className="overflow-x-clip bg-background text-foreground">
       <PublicHeader sobreOscuro />
 
       {/* Portada */}
@@ -453,25 +490,6 @@ export function Home() {
               La intervención queda registrada en la hoja de vida del equipo y se incorporan automáticamente los informes y certificados con trazabilidad.
             </AccordionItem>
           </Accordion>
-        </div>
-      </section>
-
-      {/* Cierre */}
-      <section className="px-5 py-20 lg:px-8 lg:py-24">
-        <div className="cta-band relative mx-auto max-w-5xl overflow-hidden px-6 py-14 text-center sm:px-12">
-          <HeartPulse className="mx-auto size-9 text-seafoam" />
-          <h2 className="font-display mx-auto mt-5 max-w-2xl text-3xl font-bold leading-tight text-hero-foreground sm:text-4xl">
-            Que tu próxima visita de verificación no te tome por sorpresa.
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base text-hero-muted sm:text-lg">Empieza registrando tus equipos y descubre una forma más simple de tenerlo todo al día.</p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link to="/registro" onClick={() => track(EVENTOS.ctaDiagnostico, { origen: 'cta_final' })} className={cn(buttonVariants({ size: 'lg' }), 'h-12 px-7 text-base')}>
-              Crear mi cuenta <ArrowRight />
-            </Link>
-            <a href="#planes" onClick={() => track(EVENTOS.ctaVerPlanes, { origen: 'cta_final' })} className="inline-flex h-12 items-center justify-center rounded-md border border-white/20 bg-white/5 px-7 text-base font-semibold text-white transition hover:bg-white/10">
-              Ver planes
-            </a>
-          </div>
         </div>
       </section>
 

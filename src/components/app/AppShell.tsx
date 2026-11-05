@@ -2,7 +2,6 @@ import {
   BadgeCheck,
   Bell,
   Boxes,
-  Box,
   Building2,
   CalendarDays,
   CheckCheck,
@@ -69,7 +68,6 @@ const NAV: Record<Rol, GrupoNav[]> = {
       titulo: 'Mi consultorio',
       items: [
         { to: '/consultorio/equipos', label: 'Mis equipos', corto: 'Equipos', icon: Boxes, principal: true },
-        { to: '/consultorio/mi-consultorio', label: 'Consultorio en 3D', icon: Box },
         { to: '/consultorio/cronograma', label: 'Calendario', icon: CalendarDays },
         { to: '/consultorio/expediente', label: 'Documentos', icon: FolderOpen },
         { to: '/consultorio/repuestos', label: 'Repuestos', icon: Package },
@@ -205,7 +203,7 @@ export function AppShell({ rol, children }: { rol: Rol; children?: ReactNode }) 
   )
 
   return (
-    <div className="min-h-svh bg-background lg:grid lg:grid-cols-[15rem_1fr]">
+    <div className="min-h-svh bg-background lg:grid lg:grid-cols-[15rem_minmax(0,1fr)]">
       <aside className="hidden lg:block">
         <div className="fixed inset-y-0 left-0 w-60">{sidebar}</div>
       </aside>
@@ -227,13 +225,10 @@ export function AppShell({ rol, children }: { rol: Rol; children?: ReactNode }) 
         </div>
       )}
 
-      <div className="lg:col-start-2">
+      <div className="min-w-0 lg:col-start-2">
         <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-2 border-b border-border bg-background/90 px-4 backdrop-blur lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
-            <Button variant="outline" size="icon" className="lg:hidden" aria-label="Abrir menú" onClick={() => setMenuOpen(true)}>
-              <Menu />
-            </Button>
-            <span className="hidden size-8 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary sm:grid">
+            <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/15 text-xs font-bold text-primary">
               {iniciales(sesion.nombre)}
             </span>
             <div className="min-w-0 leading-tight">
@@ -291,7 +286,7 @@ export function AppShell({ rol, children }: { rol: Rol; children?: ReactNode }) 
           </div>
         </header>
 
-        <main className="mx-auto max-w-6xl px-4 pb-24 pt-6 lg:px-8 lg:pb-10 lg:pt-8">
+        <main className="mx-auto w-full max-w-6xl px-4 pb-24 pt-6 lg:px-8 lg:pb-10 lg:pt-8">
           <div key={location.pathname} className="pagina">
             {children ?? <Outlet />}
           </div>

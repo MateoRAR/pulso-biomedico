@@ -72,9 +72,9 @@ export function ConsultorioOnboarding() {
         descripcion="Registramos los equipos que tienes y vemos qué te falta para estar al día con la habilitación."
       />
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {PASOS.map((nombre, index) => (
-          <div key={nombre} className="flex items-center gap-3">
+          <div key={nombre} className="flex items-center gap-2 sm:gap-3">
             <span
               className={cn(
                 'grid size-8 place-items-center rounded-full text-sm font-bold',
@@ -83,10 +83,10 @@ export function ConsultorioOnboarding() {
             >
               {index < paso ? <Check className="size-4" /> : index + 1}
             </span>
-            <span className={cn('text-sm font-semibold', index <= paso ? 'text-foreground' : 'text-muted-foreground')}>
+            <span className={cn('text-sm font-semibold', index <= paso ? 'text-foreground' : 'text-muted-foreground', index !== paso && 'hidden sm:inline')}>
               {nombre}
             </span>
-            {index < PASOS.length - 1 && <span className="h-px w-8 bg-border" />}
+            {index < PASOS.length - 1 && <span className="h-px w-6 bg-border sm:w-8" />}
           </div>
         ))}
       </div>

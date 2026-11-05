@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import { AppShell } from '@/components/app/AppShell'
 import { MotorVivo } from '@/components/app/MotorVivo'
@@ -28,7 +28,6 @@ import { ConsultorioCalidad } from '@/pages/consultorio/Calidad'
 import { ConsultorioPerfil } from '@/pages/consultorio/Perfil'
 import { ConsultorioIngenieros } from '@/pages/consultorio/Ingenieros'
 import { ConsultorioIngenieroPerfil } from '@/pages/consultorio/IngenieroPerfil'
-import { ConsultorioMiConsultorio3D } from '@/pages/consultorio/MiConsultorio3D'
 import { ConsultorioBiblioteca } from '@/pages/consultorio/Biblioteca'
 import { ConsultorioBibliotecaEquipo } from '@/pages/consultorio/BibliotecaEquipo'
 
@@ -73,7 +72,7 @@ export default function App() {
               <Route path="diagnostico-expres" element={<ConsultorioDiagnosticoExpres />} />
               <Route path="ingenieros" element={<ConsultorioIngenieros />} />
               <Route path="ingenieros/:slug" element={<ConsultorioIngenieroPerfil />} />
-              <Route path="mi-consultorio" element={<ConsultorioMiConsultorio3D />} />
+              <Route path="mi-consultorio" element={<Navigate to="/consultorio/equipos" replace />} />
               <Route path="biblioteca" element={<ConsultorioBiblioteca />} />
               <Route path="biblioteca/:tipo" element={<ConsultorioBibliotecaEquipo />} />
               <Route path="repuestos" element={<ConsultorioRepuestos />} />

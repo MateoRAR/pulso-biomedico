@@ -81,7 +81,7 @@ con métodos propios cuando hacen falta (`usuariosService.autenticar`, `consulto
 
 ## Experiencia
 
-- **Consultorio en 3D** (`/consultorio/mi-consultorio`): una sala generada con los equipos reales del inventario,
+- **Mis equipos** (`/consultorio/equipos`, con vista 3D y vista de tabla): una sala generada con los equipos reales del inventario,
   repartidos por zonas. Se recorre tocando lugares marcados o con los botones, se mira alrededor arrastrando y, al
   tocar un equipo, aparece su información. El anillo del piso muestra su estado. Los modelos se generan en código
   (`src/components/consultorio3d/modelos.tsx`) y son **representaciones ilustrativas**, no la marca exacta.
@@ -112,7 +112,7 @@ El landing (`/`) integra las secciones **Cómo funciona** y **Planes y precios**
 `/ingresar`, `/registro`.
 
 **Consultorio:** `/consultorio` (inicio y estado de los equipos), `/onboarding` (revisión inicial,
-cotización y contratación), `/equipos`, `/equipos/:id`, `/mi-consultorio` (3D), `/biblioteca` y
+cotización y contratación), `/equipos` (3D y tabla), `/equipos/:id`, `/biblioteca` y
 `/biblioteca/:tipo` (3D), `/expediente` (documentos), `/cronograma` (lista o calendario), `/solicitudes`,
 `/solicitudes/nueva` (con elección de ingeniero), `/diagnostico-expres`, `/ingenieros` y
 `/ingenieros/:slug` (encontrar ingeniero, sin salir del portal), `/repuestos`, `/calidad`, `/perfil`.

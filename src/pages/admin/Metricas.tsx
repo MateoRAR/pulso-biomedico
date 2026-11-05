@@ -44,7 +44,7 @@ export function AdminMetricas() {
         <TarjetaDato etiqueta="Servicios" valor={servicios.length} nota={`${enCurso.length} en curso · ${cerrados.length} terminados`} icono={<Wrench />} />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+      <div className="grid gap-6 xl:grid-cols-[1.3fr_1fr]">
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="font-display text-xl">Presencia por ciudad</CardTitle>

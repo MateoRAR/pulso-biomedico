@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, Boxes, CalendarDays, Check, CircleCheck, PlusCircle, Users } from 'lucide-react'
+import { AlertTriangle, ArrowRight, Boxes, CalendarDays, Check, CircleCheck, PlusCircle, Rocket, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { saludoHora } from '@/components/shared/efectos'
@@ -77,11 +77,12 @@ export function ConsultorioDashboard() {
 
   const siguiente = proximas[0]
   const pasos = [
-    { hecho: equipos.length > 0, texto: 'Registra tus equipos', ir: '/consultorio/equipos' },
-    { hecho: Boolean(consultorio.planId), texto: 'Haz la revisión inicial', ir: '/consultorio/onboarding' },
-    { hecho: servicios.some((s) => /^ser-\d{13}$/.test(s.id)), texto: 'Pide tu primer servicio', ir: '/consultorio/solicitudes/nueva' },
-    { hecho: Boolean(consultorio.nit && consultorio.codigoHabilitacion), texto: 'Completa tus datos', ir: '/consultorio/perfil' },
+    { hecho: equipos.length > 0, texto: 'Registra tus equipos', ayuda: 'Para tener el calendario y los documentos al día.', ir: '/consultorio/equipos' },
+    { hecho: Boolean(consultorio.planId), texto: 'Haz la revisión inicial', ayuda: 'Vemos qué le falta a tu consultorio.', ir: '/consultorio/onboarding' },
+    { hecho: servicios.some((s) => /^ser-\d{13}$/.test(s.id)), texto: 'Pide tu primer servicio', ayuda: 'Elige un ingeniero verificado.', ir: '/consultorio/solicitudes/nueva' },
+    { hecho: Boolean(consultorio.nit && consultorio.codigoHabilitacion), texto: 'Completa tus datos', ayuda: 'NIT y código de habilitación.', ir: '/consultorio/perfil' },
   ]
+  const siguientePaso = pasos.find((p) => !p.hecho)
   const hechos = pasos.filter((p) => p.hecho).length
 
   return (
@@ -109,7 +110,7 @@ export function ConsultorioDashboard() {
         </div>
       </section>
 
-      <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="space-y-8">
           {/* 2 · Qué atender */}
           <section className="space-y-3">
@@ -190,21 +191,61 @@ export function ConsultorioDashboard() {
           </section>
 
           {hechos < pasos.length && (
-            <section className="space-y-3">
-              <Seccion titulo="Primeros pasos" ayuda={`${hechos} de ${pasos.length} listos`} />
-              <Card className="border-border/80">
-                <CardHeader className="pb-2">
-                  <Progress value={(hechos / pasos.length) * 100} />
+            <section>
+              <Card className="relative overflow-hidden border-primary/25">
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary to-seafoam" aria-hidden="true" />
+                <CardHeader className="pb-3">
+                  <div className="flex items-start gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm">
+                      <Rocket className="size-5" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-base">Primeros pasos</CardTitle>
+                      <CardDescription>Deja tu consultorio listo en {pasos.length} pasos.</CardDescription>
+                    </div>
+                    <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold tabular-nums text-primary">
+                      {hechos}/{pasos.length}
+                    </span>
+                  </div>
+                  <Progress value={(hechos / pasos.length) * 100} className="mt-3 h-2.5" />
                 </CardHeader>
                 <CardContent className="space-y-1 pt-0">
-                  {pasos.map((p) => (
-                    <Link key={p.texto} to={p.ir} className="flex items-center gap-3 rounded-lg px-2 py-2 text-sm transition hover:bg-accent">
-                      <span className={cn('grid size-5 shrink-0 place-items-center rounded-full border', p.hecho ? 'border-primary bg-primary text-primary-foreground' : 'border-border')}>
-                        {p.hecho && <Check className="size-3" />}
-                      </span>
-                      <span className={cn(p.hecho && 'text-muted-foreground line-through')}>{p.texto}</span>
-                    </Link>
-                  ))}
+                  {pasos.map((p, i) => {
+                    const esSiguiente = p === siguientePaso
+                    return (
+                      <Link
+                        key={p.texto}
+                        to={p.ir}
+                        className={cn(
+                          'group flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-all duration-200',
+                          esSiguiente
+                            ? 'border-primary/40 bg-primary/5 hover:-translate-y-0.5 hover:shadow-md'
+                            : 'border-transparent hover:bg-accent',
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            'relative grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold',
+                            p.hecho ? 'bg-primary text-primary-foreground' : esSiguiente ? 'border-2 border-primary text-primary' : 'border border-border text-muted-foreground',
+                          )}
+                        >
+                          {p.hecho ? <Check className="size-4" /> : i + 1}
+                          {esSiguiente && <span className="absolute inset-0 animate-ping-soft rounded-full border border-primary" aria-hidden="true" />}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className={cn('block text-sm font-semibold', p.hecho && 'text-muted-foreground line-through decoration-1')}>{p.texto}</span>
+                          {!p.hecho && <span className="block text-xs text-muted-foreground">{p.ayuda}</span>}
+                        </span>
+                        {esSiguiente ? (
+                          <span className="flex shrink-0 items-center gap-1 text-xs font-semibold text-primary">
+                            Empezar <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                          </span>
+                        ) : (
+                          !p.hecho && <ArrowRight className="size-4 shrink-0 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5" />
+                        )}
+                      </Link>
+                    )
+                  })}
                 </CardContent>
               </Card>
             </section>

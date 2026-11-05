@@ -20,8 +20,8 @@ export function ConsultorioBiblioteca() {
         titulo="Biblioteca de equipos"
         descripcion="Conoce cómo es por dentro y por fuera cada tipo de equipo. Son representaciones ilustrativas: sirven para entender las partes, no para identificar una marca."
         acciones={
-          <Link to="/consultorio/mi-consultorio" className={buttonVariants({ variant: 'outline' })}>
-            <Box /> Mi consultorio en 3D
+          <Link to="/consultorio/equipos" className={buttonVariants({ variant: 'outline' })}>
+            <Box /> Mis equipos en 3D
           </Link>
         }
       />

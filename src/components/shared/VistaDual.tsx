@@ -21,7 +21,7 @@ function hayWebGL(): boolean {
  * Qué vista abrir primero: la última que la persona eligió en esta sesión; si no ha elegido,
  * la tabla en celulares, con "reducir movimiento" o sin WebGL, y el 3D en el resto.
  */
-function vistaInicial(clave: string): Vista {
+function vistaInicial(clave: string, porDefecto: Vista): Vista {
   try {
     const guardada = window.sessionStorage.getItem(PREFIJO + clave)
     if (guardada === '3d' || guardada === 'tabla') return guardada
@@ -30,12 +30,12 @@ function vistaInicial(clave: string): Vista {
   }
   const pequena = window.matchMedia('(max-width: 767px)').matches
   const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  return pequena || reducido ? 'tabla' : '3d'
+  return pequena || reducido ? 'tabla' : porDefecto
 }
 
-export function useVista(clave: string): { vista: Vista; cambiar: (v: Vista) => void; hay3D: boolean } {
+export function useVista(clave: string, porDefecto: Vista = '3d'): { vista: Vista; cambiar: (v: Vista) => void; hay3D: boolean } {
   const [hay3D] = useState(hayWebGL)
-  const [elegida, setElegida] = useState<Vista>(() => vistaInicial(clave))
+  const [elegida, setElegida] = useState<Vista>(() => vistaInicial(clave, porDefecto))
   const cambiar = useCallback(
     (v: Vista) => {
       setElegida(v)
@@ -61,6 +61,7 @@ export function VistaDual({
   tabla,
   etiqueta3D = 'Ver en 3D',
   etiquetaTabla = 'Ver como tabla',
+  porDefecto = '3d',
 }: {
   clave: string
   /** Si la página necesita saber qué vista está activa, crea el control con `useVista` y pásalo aquí. */
@@ -69,8 +70,10 @@ export function VistaDual({
   tabla: ReactNode
   etiqueta3D?: string
   etiquetaTabla?: string
+  /** Vista con la que abre en pantallas grandes cuando la persona aún no ha elegido. */
+  porDefecto?: Vista
 }) {
-  const propio = useVista(clave)
+  const propio = useVista(clave, porDefecto)
   const { vista, cambiar, hay3D } = control ?? propio
 
   return (
