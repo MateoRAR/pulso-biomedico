@@ -2,7 +2,7 @@
   {
     "id": "cal-1",
     "servicioId": "ser-5",
-    "ingenieroId": "ing-3",
+    "ingenieroId": "ing-1",
     "autor": "Clínica Odontológica Sanare",
     "estrellas": 5,
     "comentario": "Calibración impecable y certificado entregado el mismo día.",
@@ -18,6 +18,15 @@
     "fecha": "-40d"
   },
   {
+    "id": "cal-r-3",
+    "servicioId": "ser-r-3",
+    "ingenieroId": "ing-1",
+    "autor": "Clínica Odontológica Sanare",
+    "estrellas": 5,
+    "comentario": "Control de calidad completo y acta clara para el registro sanitario.",
+    "fecha": "-30d"
+  },
+  {
     "id": "cal-r-2",
     "servicioId": "ser-r-2",
     "ingenieroId": "ing-1",
@@ -27,39 +36,48 @@
     "fecha": "-72d"
   },
   {
-    "id": "cal-r-3",
-    "servicioId": "ser-r-3",
-    "ingenieroId": "ing-2",
-    "autor": "Centro Radiográfico Tequendama",
+    "id": "cal-l-1",
+    "servicioId": "ser-h-2",
+    "ingenieroId": "ing-1",
+    "autor": "Consultorio Dental Alameda",
     "estrellas": 5,
-    "comentario": "Control de calidad completo y acta clara para el registro sanitario.",
-    "fecha": "-30d"
+    "comentario": "Revisó la unidad odontológica pieza por pieza y nos dejó el informe firmado antes de irse.",
+    "fecha": "-40d"
   },
   {
-    "id": "cal-r-4",
-    "servicioId": "ser-r-4",
-    "ingenieroId": "ing-4",
-    "autor": "Centro de Rehabilitación Vital",
-    "estrellas": 5,
-    "comentario": "Buena explicación al personal sobre el cuidado preventivo de los equipos.",
-    "fecha": "-15d"
-  },
-  {
-    "id": "cal-r-5",
-    "servicioId": "ser-r-5",
-    "ingenieroId": "ing-6",
-    "autor": "Clínica Dermatológica Cuba",
-    "estrellas": 5,
-    "comentario": "Dejó el dermatoscopio y el autoclave en orden y nos explicó cada ajuste.",
-    "fecha": "-27d"
-  },
-  {
-    "id": "cal-r-6",
-    "servicioId": "ser-r-6",
-    "ingenieroId": "ing-7",
-    "autor": "Centro Odontológico Chapinero",
+    "id": "cal-l-2",
+    "servicioId": "ser-h-3",
+    "ingenieroId": "ing-1",
+    "autor": "Centro de Imágenes Granada",
     "estrellas": 4,
-    "comentario": "Puntual y claro con los certificados; la visita fue rápida.",
-    "fecha": "-27d"
+    "comentario": "Buen trabajo con el ecógrafo portátil. La visita se corrió media hora, pero avisó con tiempo.",
+    "fecha": "-43d"
+  },
+  {
+    "id": "cal-l-3",
+    "servicioId": "ser-h-4",
+    "ingenieroId": "ing-1",
+    "autor": "Laboratorio Clínico Ciudad Jardín",
+    "estrellas": 5,
+    "comentario": "Explicó con paciencia cómo leer los indicadores de la centrífuga. El certificado quedó en el portal ese mismo día.",
+    "fecha": "-46d"
+  },
+  {
+    "id": "cal-l-4",
+    "servicioId": "ser-h-6",
+    "ingenieroId": "ing-1",
+    "autor": "Consultorio Médico Yumbo Centro",
+    "estrellas": 4,
+    "comentario": "Cumplió con el preventivo y dejó recomendaciones claras. Nos hubiera gustado recibir el acta impresa.",
+    "fecha": "-52d"
+  },
+  {
+    "id": "cal-l-5",
+    "servicioId": "ser-h-7",
+    "ingenieroId": "ing-1",
+    "autor": "Odontología Palmira Sonrisa",
+    "estrellas": 5,
+    "comentario": "Vino hasta Palmira sin costo adicional de desplazamiento y dejó todo documentado para la auditoría.",
+    "fecha": "-55d"
   }
 ]

@@ -32,7 +32,7 @@ export function AdminIngenieros() {
   const lista = useMemo(
     () =>
       ingenieros.filter((i) => {
-        const coincide = `${i.nombre} ${i.especialidades.join(' ')} ${i.zonas.join(' ')}`.toLowerCase().includes(texto.trim().toLowerCase())
+        const coincide = `${i.nombre} ${i.ciudad} ${i.especialidades.join(' ')}`.toLowerCase().includes(texto.trim().toLowerCase())
         return coincide && (ciudad === 'todas' || i.ciudadId === ciudad) && (estado === 'todos' || i.estadoVerificacion === estado)
       }),
     [ingenieros, texto, ciudad, estado],
@@ -53,7 +53,7 @@ export function AdminIngenieros() {
             <Label htmlFor="buscar-ing">Buscar</Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
-              <Input id="buscar-ing" className="pl-10" placeholder="Nombre, especialidad o zona" value={texto} onChange={(e) => setTexto(e.target.value)} />
+              <Input id="buscar-ing" className="pl-10" placeholder="Nombre, ciudad o especialidad" value={texto} onChange={(e) => setTexto(e.target.value)} />
             </div>
           </div>
           <div className="space-y-2">
@@ -89,7 +89,7 @@ export function AdminIngenieros() {
             <TableHeader>
               <TableRow>
                 <TableHead>Ingeniero</TableHead>
-                <TableHead>Ciudad y zonas</TableHead>
+                <TableHead>Ciudad</TableHead>
                 <TableHead>Verificación</TableHead>
                 <TableHead>Disponible</TableHead>
                 <TableHead>Calificación</TableHead>
@@ -108,7 +108,6 @@ export function AdminIngenieros() {
                   </TableCell>
                   <TableCell>
                     {i.ciudad}
-                    <span className="block text-sm text-muted-foreground">{i.zonas.join(', ')}</span>
                   </TableCell>
                   <TableCell>
                     <EstadoVerificacion estado={i.estadoVerificacion} />

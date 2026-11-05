@@ -3,8 +3,9 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { NotaFlotante } from '@/components/consultorio3d/NotaFlotante'
-import { PUNTOS, type EquipoSala, type PuntoVista } from '@/components/consultorio3d/salaDatos'
+import { PLANOS, puntosDe, type EquipoSala, type PlanoId, type PuntoVista } from '@/components/consultorio3d/salaDatos'
 import { tipoModeloDe } from '@/components/consultorio3d/catalogo'
+import { SelectorDeslizante } from '@/components/shared/SelectorDeslizante'
 import { SemaforoBadge, TriageBadge } from '@/components/shared/ui'
 import { buttonVariants } from '@/components/ui/button'
 import type { Equipo } from '@/data/tipos'
@@ -24,12 +25,20 @@ const LEYENDA = [
  * El consultorio en 3D con los equipos reales del inventario. Ocupa todo el ancho: los lugares y la
  * leyenda flotan sobre el modelo, y al tocar un equipo se despliega una nota con sus datos justo en él.
  */
-export function VistaSala({ equipos }: { equipos: Equipo[] }) {
+export function VistaSala({ equipos: todos, plano = 'general' }: { equipos: Equipo[]; plano?: PlanoId }) {
   const [seleccionadoId, setSeleccionadoId] = useState<string | null>(null)
   const [punto, setPunto] = useState<PuntoVista>('general')
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
+  /** Sin la API de pantalla completa (iPhone): el visor se fija sobre toda la ventana con CSS. */
+  const [completaSimulada, setCompletaSimulada] = useState(false)
   const contenedor = useRef<HTMLDivElement>(null)
   const notaRef = useRef<HTMLDivElement>(null)
+
+  // Con varias sedes, cada una se recorre por separado (el 3D representa un solo consultorio).
+  const sedes = useMemo(() => [...new Set(todos.map((e) => e.sede).filter(Boolean))], [todos])
+  const [sede, setSede] = useState<string | null>(null)
+  const sedeActiva = sedes.length > 1 ? (sede && sedes.includes(sede) ? sede : sedes[0]) : null
+  const equipos = useMemo(() => (sedeActiva ? todos.filter((e) => e.sede === sedeActiva) : todos), [todos, sedeActiva])
 
   const equiposSala = useMemo<EquipoSala[]>(
     () => equipos.map((e) => ({ id: e.id, nombre: e.nombre, tipo: tipoModeloDe(e), estado: semaforoEquipo(e) })),
@@ -48,63 +57,96 @@ export function VistaSala({ equipos }: { equipos: Equipo[] }) {
     return () => document.removeEventListener('fullscreenchange', cambio)
   }, [])
 
+  // En pantalla completa simulada, Escape la cierra y la página de fondo no se desplaza.
+  useEffect(() => {
+    if (!completaSimulada) return
+    const tecla = (e: KeyboardEvent) => e.key === 'Escape' && setCompletaSimulada(false)
+    const desborde = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', tecla)
+    return () => {
+      document.body.style.overflow = desborde
+      window.removeEventListener('keydown', tecla)
+    }
+  }, [completaSimulada])
+
   function alternarPantallaCompleta() {
-    if (document.fullscreenElement) void document.exitFullscreen()
-    else void contenedor.current?.requestFullscreen?.()
+    if (completaSimulada) return setCompletaSimulada(false)
+    if (document.fullscreenElement) return void document.exitFullscreen()
+    const el = contenedor.current
+    if (el?.requestFullscreen && document.fullscreenEnabled) void el.requestFullscreen().catch(() => setCompletaSimulada(true))
+    else setCompletaSimulada(true)
   }
+  const enCompleta = pantallaCompleta || completaSimulada
+
+  const lugares = useMemo(() => puntosDe(PLANOS[plano]).map((p) => ({ id: p.id, nombre: p.nombre, titulo: p.descripcion })), [plano])
 
   return (
     <div
       ref={contenedor}
+      data-completa={completaSimulada || undefined}
       className={cn(
-        'relative h-[calc(100svh-17.5rem)] min-h-[30rem] max-sm:h-[calc(100svh-24rem)] max-sm:min-h-[26rem] max-h-[58rem] overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-[#e8f2f6] to-[#cfe0e8]',
-        '[&:fullscreen]:h-screen [&:fullscreen]:max-h-none [&:fullscreen]:rounded-none [&:fullscreen]:border-0',
+        'group/vs flex flex-col gap-3 [&:fullscreen]:h-screen [&:fullscreen]:bg-background [&:fullscreen]:p-3',
+        completaSimulada && 'fixed inset-0 z-[60] h-[100dvh] bg-background p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))]',
       )}
     >
-      <Suspense fallback={<p className="grid h-full place-items-center text-base text-muted-foreground">Cargando la vista 3D…</p>}>
-        <SalaConsultorio
-          equipos={equiposSala}
-          seleccionadoId={seleccionadoId}
-          onSeleccionar={setSeleccionadoId}
-          punto={punto}
-          onPunto={(p) => {
+      {/* Sedes: solo si el inventario está repartido en más de una */}
+      {sedeActiva && (
+        <SelectorDeslizante
+          opciones={sedes.map((s) => ({ id: s, nombre: s }))}
+          valor={sedeActiva}
+          etiqueta="Sede"
+          onCambio={(s) => {
             setSeleccionadoId(null)
-            setPunto(p)
+            setPunto('general')
+            setSede(s)
           }}
-          notaRef={notaRef}
         />
-      </Suspense>
+      )}
 
-      {/* Lugares del consultorio */}
-      <div className="absolute inset-x-3 top-3 z-20 flex gap-2 overflow-x-auto pb-1 pr-12" role="group" aria-label="Ir a un lugar del consultorio">
-        {PUNTOS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            aria-pressed={punto === p.id && !seleccionado}
-            onClick={() => {
-              setSeleccionadoId(null)
-              setPunto(p.id)
-            }}
-            title={p.descripcion}
-            className={cn(
-              'min-h-10 shrink-0 rounded-lg border px-4 text-sm font-semibold shadow-sm backdrop-blur transition-colors sm:text-base',
-              punto === p.id && !seleccionado ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card/90 hover:border-primary',
-            )}
-          >
-            {p.nombre}
-          </button>
-        ))}
-      </div>
-      <button
-        type="button"
-        onClick={alternarPantallaCompleta}
-        aria-label={pantallaCompleta ? 'Salir de pantalla completa' : 'Ver en pantalla completa'}
-        title={pantallaCompleta ? 'Salir de pantalla completa' : 'Pantalla completa'}
-        className="absolute right-3 top-3 z-20 grid size-10 place-items-center rounded-lg border border-border bg-card/90 shadow-sm backdrop-blur transition-colors hover:border-primary"
+      {/* Lugares del consultorio: una barra con pastilla que se desliza, encima del modelo */}
+      <SelectorDeslizante
+        opciones={lugares}
+        valor={punto}
+        etiqueta="Ir a un lugar del consultorio"
+        onCambio={(id) => {
+          setSeleccionadoId(null)
+          setPunto(id)
+        }}
+      />
+
+      <div
+        className={cn(
+          'relative h-[calc(100svh-20.5rem)] min-h-[30rem] max-h-[58rem] overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-[#e8f2f6] to-[#cfe0e8]',
+          'max-sm:h-[calc(100svh-27rem)] max-sm:min-h-[24rem]',
+          'group-[:fullscreen]/vs:h-auto group-[:fullscreen]/vs:min-h-0 group-[:fullscreen]/vs:max-h-none group-[:fullscreen]/vs:flex-1',
+          'group-data-[completa]/vs:h-auto group-data-[completa]/vs:min-h-0 group-data-[completa]/vs:max-h-none group-data-[completa]/vs:flex-1',
+        )}
       >
-        {pantallaCompleta ? <Minimize2 className="size-5" /> : <Maximize2 className="size-5" />}
-      </button>
+        <Suspense fallback={<p className="grid h-full place-items-center text-base text-muted-foreground">Cargando la vista 3D…</p>}>
+          <SalaConsultorio
+            equipos={equiposSala}
+            seleccionadoId={seleccionadoId}
+            onSeleccionar={setSeleccionadoId}
+            punto={punto}
+            onPunto={(p) => {
+              setSeleccionadoId(null)
+              setPunto(p)
+            }}
+            notaRef={notaRef}
+            plano={plano}
+          />
+        </Suspense>
+
+        <button
+          type="button"
+          onClick={alternarPantallaCompleta}
+          aria-label={enCompleta ? 'Salir de pantalla completa' : 'Ver en pantalla completa'}
+          title={enCompleta ? 'Salir de pantalla completa' : 'Pantalla completa'}
+          className="absolute right-3 top-3 z-20 grid size-10 place-items-center rounded-lg border border-border bg-card/90 shadow-sm backdrop-blur transition-colors hover:border-primary"
+        >
+          {enCompleta ? <Minimize2 className="size-5" /> : <Maximize2 className="size-5" />}
+        </button>
 
       {/* Leyenda y ayuda */}
       <div className="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex flex-wrap items-end justify-between gap-2">
@@ -115,8 +157,9 @@ export function VistaSala({ equipos }: { equipos: Equipo[] }) {
             </span>
           ))}
         </p>
-        <p className="hidden rounded-lg bg-card/85 px-3 py-1.5 text-xs font-medium shadow-sm backdrop-blur sm:block">
-          Arrastra para mirar · toca un equipo para ver su nota · toca los círculos azules del piso para cambiar de sala
+        <p className="rounded-lg bg-card/85 px-3 py-1.5 text-xs font-medium shadow-sm backdrop-blur max-[380px]:hidden">
+          <span className="sm:hidden">Desliza a los lados para girar · toca un equipo</span>
+          <span className="max-sm:hidden">Arrastra para mirar · toca un equipo para ver su nota</span>
         </p>
       </div>
 
@@ -161,6 +204,7 @@ export function VistaSala({ equipos }: { equipos: Equipo[] }) {
           </div>
         </NotaFlotante>
       )}
+      </div>
     </div>
   )
 }

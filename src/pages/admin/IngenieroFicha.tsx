@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { Switch } from '@/components/ui/misc'
 import { toast } from '@/components/ui/toast'
-import { especialidades, zonasCali, type Ingeniero } from '@/data/tipos'
+import { especialidades, type Ingeniero } from '@/data/tipos'
 import { textoCalificacion } from '@/lib/format'
 import { useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -34,7 +34,7 @@ export function IngenieroFicha({ ingeniero, alTerminar }: { ingeniero: Ingeniero
   const [datos, setDatos] = useState<Ingeniero>(ingeniero)
 
   const cambiar = <K extends keyof Ingeniero>(campo: K, valor: Ingeniero[K]) => setDatos((d) => ({ ...d, [campo]: valor }))
-  const alternar = (campo: 'zonas' | 'especialidades', valor: string) =>
+  const alternar = (campo: 'especialidades', valor: string) =>
     setDatos((d) => ({ ...d, [campo]: d[campo].includes(valor) ? d[campo].filter((x) => x !== valor) : [...d[campo], valor] }))
 
   function guardar(extra: Partial<Ingeniero> = {}) {
@@ -98,16 +98,6 @@ export function IngenieroFicha({ ingeniero, alTerminar }: { ingeniero: Ingeniero
         <div className="space-y-2">
           <Label htmlFor="i-exp">Años de experiencia</Label>
           <Input id="i-exp" type="number" min={0} value={datos.experiencia} onChange={(e) => cambiar('experiencia', Number(e.target.value) || 0)} />
-        </div>
-        <div className="space-y-2 sm:col-span-2">
-          <p className="text-base font-semibold">Zonas donde atiende</p>
-          <div className="flex flex-wrap gap-2">
-            {zonasCali.map((z) => (
-              <Chip key={z} activo={datos.zonas.includes(z)} onClick={() => alternar('zonas', z)}>
-                {z}
-              </Chip>
-            ))}
-          </div>
         </div>
         <div className="space-y-2 sm:col-span-2">
           <p className="text-base font-semibold">Especialidades</p>

@@ -1,3 +1,4 @@
+import tarifas from '@/data/tarifas.json'
 import type { Criticidad, Equipo, Semaforo } from '@/data/tipos'
 
 const COP = new Intl.NumberFormat('es-CO', {
@@ -49,21 +50,21 @@ export function resumenCriticidad(criticidad: Criticidad): string {
   return criticidad
 }
 
-// Valor de referencia del servicio (COP) y comisión neta del ingeniero (80 %).
-export const VALOR_SERVICIO: Record<string, number> = {
-  Preventivo: 220000,
-  Calibración: 260000,
-  Correctivo: 300000,
-  'Diagnóstico exprés': 89000,
-  Capacitación: 120000,
-}
+/**
+ * Valor de referencia de cada servicio (COP, sin IVA) y comisión de Pulso: vienen de
+ * `src/data/tarifas.json`. El consultorio paga el servicio por la plataforma; Pulso retiene su
+ * comisión y gira el resto al ingeniero.
+ */
+export const COMISION_PULSO: number = tarifas.comisionPulso
+
+export const VALOR_SERVICIO: Record<string, number> = tarifas.servicios
 
 export function valorServicio(tipo: string): number {
   return VALOR_SERVICIO[tipo] ?? 200000
 }
 
 export function comisionIngeniero(tipo: string): number {
-  return Math.round(valorServicio(tipo) * 0.8)
+  return Math.round(valorServicio(tipo) * (1 - COMISION_PULSO))
 }
 
 /** "hace 5 min", "hace 2 h", "ayer"… Acepta fecha ISO con o sin hora. */

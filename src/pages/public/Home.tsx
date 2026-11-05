@@ -9,6 +9,7 @@ import {
   Check,
   ClipboardList,
   Cpu,
+  Droplets,
   FileCheck2,
   FlaskConical,
   Handshake,
@@ -18,18 +19,21 @@ import {
   RotateCw,
   Scale,
   ScanLine,
+  ShieldCheck,
+  Snowflake,
   Stethoscope,
   Users,
   Waves,
   Wind,
   Wrench,
+  Zap,
   type LucideIcon,
 } from 'lucide-react'
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
 import { MODELOS, ORDEN_BIBLIOTECA, type TipoModelo } from '@/components/consultorio3d/catalogo'
-import BorderGlow from '@/components/reactbits/BorderGlow'
+import PixelCard from '@/components/reactbits/PixelCard'
 import GradientText from '@/components/reactbits/GradientText'
 import LogoLoop from '@/components/reactbits/LogoLoop'
 import ShinyText from '@/components/reactbits/ShinyText'
@@ -41,8 +45,9 @@ import { PublicFooter, PublicHeader } from '@/components/site/PublicLayout'
 import { Accordion, AccordionItem } from '@/components/ui/accordion'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { EVENTOS, track, useTiempoEnPagina } from '@/lib/analytics'
-import { cop } from '@/lib/format'
+import { cop, valorServicio } from '@/lib/format'
 import { useData } from '@/lib/store'
+import { nombreCorto, pct, planALaMedida, planesConPrecio, resumenPlanes, TARIFAS } from '@/lib/planes'
 import { useTema } from '@/lib/tema'
 import { cn } from '@/lib/utils'
 
@@ -59,6 +64,11 @@ const ICONO_EQUIPO: Record<TipoModelo, LucideIcon> = {
   camilla: BedSingle,
   balanza: Scale,
   generico: Cpu,
+  'bomba-infusion': Droplets,
+  'cabina-bioseguridad': ShieldCheck,
+  refrigerador: Snowflake,
+  desfibrilador: Zap,
+  electrocardiografo: Activity,
 }
 
 const beneficios: { icono: LucideIcon; titulo: string; texto: string }[] = [
@@ -160,6 +170,7 @@ function VistaEjemplo() {
 
 export function Home() {
   const { planes } = useData()
+  const { tema } = useTema()
   const [contactoAbierto, setContactoAbierto] = useState(false)
   useTiempoEnPagina('landing')
 
@@ -346,18 +357,18 @@ export function Home() {
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Cabecera
             etiqueta="Para consultorios y prestadores"
-            titulo="Tú decides cuánto delegar"
-            texto="El mantenimiento normalmente se acuerda entre el ingeniero y el consultorio; Pulso media entre ambos. El plan mensual es opcional y solo cubre la logística y el seguimiento."
+            titulo="Dos cobros claros, sin sorpresas"
+            texto={`Pagas una cuota mensual por la gestión y cada visita del ingeniero por la plataforma. Pulso retiene el ${pct(TARIFAS.comisionPulso)} de la visita y gira el resto al ingeniero.`}
           />
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
             <Tarjeta className="flex flex-col">
               <span className="grid size-12 place-items-center rounded-xl bg-primary/10 text-primary">
                 <Handshake className="size-6" />
               </span>
-              <h3 className="font-display mt-5 text-xl font-bold">Acuerdo directo con el ingeniero</h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Tú y el ingeniero acuerdan el mantenimiento. Pulso conecta, asigna por cercanía y respalda cada intervención con documentación.</p>
+              <h3 className="font-display mt-5 text-xl font-bold">Visitas a tarifa de la red</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Cada visita del ingeniero se paga aparte, por la plataforma. Pulso asigna por cercanía, respalda la intervención con documentación y retiene el {pct(TARIFAS.comisionPulso)}.</p>
               <ul className="mt-5 space-y-2.5 text-sm">
-                {['Comisión por servicio, sin mensualidad', 'Ingenieros verificados (INVIMA y COPNIA)', 'Documentos y certificados en tu portal'].map((t) => (
+                {[`Visita programada de referencia: ${cop(valorServicio('Preventivo'))}`, 'Ingenieros verificados (INVIMA y COPNIA)', 'Garantía de reintervención'].map((t) => (
                   <li key={t} className="flex items-center gap-3">
                     <span className="grid size-5 shrink-0 place-items-center rounded-full bg-primary/15 text-primary">
                       <Check className="size-3" />
@@ -371,10 +382,10 @@ export function Home() {
               <span className="grid size-12 place-items-center rounded-xl bg-primary text-primary-foreground">
                 <ClipboardList className="size-6" />
               </span>
-              <h3 className="font-display mt-5 text-xl font-bold">Plan mensual de logística</h3>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Delegas la organización y el seguimiento. Es la única cuota mensual: no pagas dos veces por el servicio.</p>
+              <h3 className="font-display mt-5 text-xl font-bold">Cuota mensual de gestión</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{planesConPrecio(planes).map((p) => `${nombreCorto(p)} (${cop(p.precioCOP)})`).join(' o ')}, según tus equipos. Cubre la organización y el seguimiento; el diagnóstico inicial lo asume Pulso.</p>
               <ul className="mt-5 space-y-2.5 text-sm">
-                {['Calendario, rutas y recordatorios automáticos', 'Estado de tus equipos y documentos', 'Soporte y gestión de garantías'].map((t) => (
+                {['Cronograma anual y recordatorios', 'Expediente digital y semáforo de habilitación', 'Sin permanencia: cancelas cuando quieras'].map((t) => (
                   <li key={t} className="flex items-center gap-3">
                     <span className="grid size-5 shrink-0 place-items-center rounded-full bg-primary/15 text-primary">
                       <Check className="size-3" />
@@ -418,9 +429,9 @@ export function Home() {
 
       {/* Planes */}
       <section id="planes" className="scroll-mt-16 py-20 lg:py-24">
-        <div className="mx-auto max-w-5xl px-5 lg:px-8">
-          <Cabecera etiqueta="Planes" titulo="Un solo cobro mensual, si decides delegar" texto="El plan cubre la logística y el seguimiento. Los servicios de mantenimiento y calibración se pagan por comisión cuando se ejecutan." centrado />
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+        <div className="mx-auto max-w-6xl px-5 lg:px-8">
+          <Cabecera etiqueta="Planes" titulo="Un plan según el tamaño de tu dotación" texto="Precios mensuales sin IVA. La cuota cubre la gestión; cada visita del ingeniero se paga aparte por la plataforma." centrado />
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {planes.map((plan) => {
               const contenido = (
                 <div className="flex h-full flex-col p-7">
@@ -445,7 +456,7 @@ export function Home() {
                   <div className="mt-7">
                     {plan.id === 'custom' ? (
                       <Button variant="outline" size="lg" className="w-full" onClick={() => setContactoAbierto(true)}>
-                        Acordar con el equipo <ArrowRight />
+                        Cotizar con el equipo <ArrowRight />
                       </Button>
                     ) : (
                       <Link to="/registro" className={cn(buttonVariants({ size: 'lg' }), 'w-full')}>
@@ -455,14 +466,44 @@ export function Home() {
                   </div>
                 </div>
               )
-              return plan.destacado ? (
-                <BorderGlow key={plan.id} backgroundColor="var(--card)" glowColor="188 70 55" colors={['#5ee7d0', '#0f8fa3', '#7dd3e8']} borderRadius={18} glowRadius={26} glowIntensity={0.8} fillOpacity={0.35}>
+              // Cada plan es una PixelCard: al pasar el cursor (o tocarla) se enciende una trama de píxeles
+              // con los colores de la marca; el plan recomendado brilla más y se anima al aparecer.
+              const oscuro = tema === 'oscuro'
+              return (
+                <PixelCard
+                  key={plan.id}
+                  theme={oscuro ? 'dark' : 'light'}
+                  colors={oscuro ? ['#5ee7d0', '#7dd3e8', '#0f8fa3'] : ['#0f8fa3', '#14b8a6', '#7dd3e8']}
+                  glowColor={plan.destacado ? '#14b8a6' : '#7dd3e8'}
+                  glow={plan.destacado ? 0.7 : 0.4}
+                  opacity={plan.destacado ? 0.9 : plan.precioTexto ? 0.5 : 0.7}
+                  gap={plan.destacado ? 7 : 9}
+                  speed={30}
+                  shape="circle"
+                  origin="pointer"
+                  fade={0.55}
+                  intro={Boolean(plan.destacado)}
+                  introDelay={400}
+                  noFocus
+                  radius={18}
+                  className="plan-pixel"
+                  style={
+                    {
+                      width: '100%',
+                      height: '100%',
+                      display: 'block',
+                      '--pixel-card-surface': 'var(--card)',
+                      '--pixel-card-edge': 'var(--border)',
+                      '--pixel-card-edge-active': 'color-mix(in oklab, var(--primary) 55%, transparent)',
+                      ...(plan.destacado && {
+                        '--pixel-card-edge': 'color-mix(in oklab, var(--primary) 70%, transparent)',
+                        '--pixel-card-shadow': '0 24px 48px -22px color-mix(in oklab, var(--primary) 45%, transparent), 0 8px 18px -10px rgb(0 0 0 / 0.25)',
+                      }),
+                    } as CSSProperties
+                  }
+                >
                   {contenido}
-                </BorderGlow>
-              ) : (
-                <div key={plan.id} className="overflow-hidden rounded-[18px] border border-border bg-card shadow-sm">
-                  {contenido}
-                </div>
+                </PixelCard>
               )
             })}
           </div>
@@ -478,10 +519,10 @@ export function Home() {
               Para prestadores pequeños que no justifican un cargo interno, Pulso coordina una red verificada y toda la gestión documental sin el costo fijo de una contratación de planta.
             </AccordionItem>
             <AccordionItem value="dos" title="¿Cómo se paga el mantenimiento?">
-              El servicio se acuerda con el ingeniero y se paga por comisión cuando se ejecuta. El plan mensual es opcional y solo cubre la logística y el seguimiento.
+              {`Pagas dos cosas: la cuota mensual del plan, que cubre la gestión (cronograma, asignación, expediente, semáforo y triage), y cada visita del ingeniero, aparte y por la plataforma. Pulso retiene el ${pct(TARIFAS.comisionPulso)} de la visita y gira el resto al ingeniero. El primer pago es el ${pct(TARIFAS.primerPago)} de la mensualidad, reembolsable y descontado de la primera cuota.`}
             </AccordionItem>
             <AccordionItem value="tres" title="¿Qué planes existen?">
-              El Plan Básico es la única cuota mensual y cubre la logística y el seguimiento para consultorios pequeños. Para organizaciones más grandes, el Plan Custom se acuerda con el equipo.
+              {`${resumenPlanes(planes)}, sin IVA.${planALaMedida(planes) ? ` Con ${planALaMedida(planes)!.rangoEquipos.toLowerCase()}, la cuota se cotiza a la medida.` : ''} No hay permanencia.`}
             </AccordionItem>
             <AccordionItem value="cuatro" title="¿Y la normativa de habilitación?">
               Las reglas de habilitación las define el Ministerio de Salud y pueden cambiar. Pulso mantiene tus documentos ordenados (hojas de vida, certificados, vencimientos) para que estés listo ante la norma que esté vigente, y te recomendamos confirmarla siempre en la fuente oficial.

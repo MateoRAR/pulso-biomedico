@@ -8,6 +8,7 @@ import { diasHasta, fechaCorta, semaforoEquipo } from '@/lib/format'
 import { inventarioEjemplo } from '@/lib/registro'
 import { useSession } from '@/lib/session'
 import { useData, useIngenieroActual } from '@/lib/store'
+import { pct, resumenPlanes, TARIFAS } from '@/lib/planes'
 import { cn } from '@/lib/utils'
 
 interface Accion {
@@ -62,14 +63,13 @@ export function AsistentePulso() {
     const abiertas = datos.servicios.filter(
       (s) =>
         s.ingenieroId === null &&
-        yo.zonas.includes(s.zona) &&
         s.estado === 'Programada' &&
         datos.consultorios.find((c) => c.id === s.consultorioId)?.ciudadId === yo.ciudadId,
     )
     const misProximas = proximas.filter((s) => s.ingenieroId === yo.id)
     const pendientesAdmin = datos.ingenieros.filter((i) => i.estadoVerificacion === 'En revisión' || i.estadoVerificacion === 'Pendiente')
     return { rojos, amarillos, proximas, abiertas, misProximas, pendientesAdmin, total: datos.equipos.length }
-  }, [datos.equipos, datos.servicios, datos.ingenieros, datos.consultorios, yo.id, yo.zonas, yo.ciudadId])
+  }, [datos.equipos, datos.servicios, datos.ingenieros, datos.consultorios, yo.id, yo.ciudadId])
 
   // -- generación de mensajes ----------------------------------------------------------
 
@@ -112,7 +112,7 @@ export function AsistentePulso() {
       }
       if (!plan) {
         lista.push({
-          texto: 'Por ahora trabajas por acuerdo directo: pagas solo la comisión de cada servicio. Si quieres que yo me encargue de la logística, hay un plan para eso.',
+          texto: `Aún no tienes plan. La cuota mensual cubre la gestión (cronograma, expediente, semáforo y asignación); cada visita se paga aparte por la plataforma. Planes: ${resumenPlanes(datos.planes)}.`,
           acciones: [{ etiqueta: 'Ver planes', ir: '/consultorio/perfil' }],
         })
       }
@@ -126,7 +126,7 @@ export function AsistentePulso() {
       if (resumen.abiertas.length) {
         const u = resumen.abiertas[0]
         lista.push({
-          texto: `Hay ${resumen.abiertas.length} ${resumen.abiertas.length === 1 ? 'solicitud abierta' : 'solicitudes abiertas'} en tu zona. La primera: ${u.tipo.toLowerCase()} (${u.criticidad}) el ${fechaCorta(u.fecha)}.`,
+          texto: `Hay ${resumen.abiertas.length} ${resumen.abiertas.length === 1 ? 'solicitud abierta' : 'solicitudes abiertas'} en tu ciudad. La primera: ${u.tipo.toLowerCase()} (${u.criticidad}) el ${fechaCorta(u.fecha)}.`,
           acciones: [{ etiqueta: 'Ver la cola', ir: '/ingeniero/solicitudes' }],
         })
       }
@@ -157,7 +157,7 @@ export function AsistentePulso() {
     }
     if (rol === 'ingeniero') {
       return [
-        { etiqueta: '¿Qué hay en mi zona?', pregunta: 'solicitudes' },
+        { etiqueta: '¿Qué hay en mi ciudad?', pregunta: 'solicitudes' },
         { etiqueta: 'Resumen de mi semana', pregunta: 'resumen' },
         { etiqueta: 'Abrir mi agenda', ir: '/ingeniero/agenda' },
       ]
@@ -207,11 +207,11 @@ export function AsistentePulso() {
         })
         return hablar(`Esto es lo que viene: ${lineas.join(' · ')}.`, [{ etiqueta: 'Pedir un servicio', ir: '/consultorio/solicitudes/nueva' }])
       }
-      if (hay('solicitud', 'zona', 'cola')) {
+      if (hay('solicitud', 'zona', 'ciudad', 'cola')) {
         return hablar(
           resumen.abiertas.length
-            ? `Hay ${resumen.abiertas.length} abiertas en tu zona, ordenadas por criticidad.`
-            : 'No hay solicitudes abiertas en tu zona ahora mismo.',
+            ? `Hay ${resumen.abiertas.length} abiertas en tu ciudad, ordenadas por criticidad.`
+            : 'No hay solicitudes abiertas en tu ciudad ahora mismo.',
           [{ etiqueta: 'Abrir la cola', ir: '/ingeniero/solicitudes' }],
         )
       }
@@ -222,12 +222,12 @@ export function AsistentePulso() {
           )
         }
         if (rol === 'ingeniero') {
-          return hablar(`${resumen.misProximas.length} visitas en tu agenda · ${resumen.abiertas.length} solicitudes abiertas en tu zona.`)
+          return hablar(`${resumen.misProximas.length} visitas en tu agenda · ${resumen.abiertas.length} solicitudes abiertas en tu ciudad.`)
         }
         return hablar(`${datos.ingenieros.length} ingenieros en la red · ${resumen.pendientesAdmin.length} por verificar.`)
       }
       if (hay('plan', 'precio', 'cuesta')) {
-        return hablar('El Plan Básico es la única cuota mensual; el Custom se acuerda con el equipo. Los servicios se pagan por comisión.', [
+        return hablar(`Planes: ${resumenPlanes(datos.planes)}, sin IVA. La cuota cubre la gestión; cada visita del ingeniero se paga aparte por la plataforma y Pulso retiene el ${pct(TARIFAS.comisionPulso)}.`, [
           { etiqueta: 'Ver mi plan', ir: rol === 'consultorio' ? '/consultorio/perfil' : '/' },
         ])
       }

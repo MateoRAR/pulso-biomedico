@@ -52,7 +52,6 @@ export function IngenieroDashboard() {
     (s) =>
       s.ingenieroId === null &&
       s.estado === 'Programada' &&
-      yo.zonas.includes(s.zona) &&
       consultorios.find((c) => c.id === s.consultorioId)?.ciudadId === yo.ciudadId,
   ).length
 
@@ -65,7 +64,7 @@ export function IngenieroDashboard() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-medium text-primary">
-            Zona {yo.zonas.join(' · ')} · {yo.ciudad}
+            {yo.ciudad}
           </p>
           <h1 className="font-display text-2xl font-bold">
             {saludoHora()}, {yo.nombre.split(' ')[0]}
@@ -79,7 +78,7 @@ export function IngenieroDashboard() {
       <section className="space-y-3">
         <Seccion titulo="Tu actividad" />
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <TarjetaDato etiqueta="Abiertos en tu zona" valor={abiertas} nota="Esperando a un ingeniero" icono={<ClipboardList />} tono={abiertas > 0 ? 'aviso' : 'neutro'} />
+          <TarjetaDato etiqueta="Abiertos en tu ciudad" valor={abiertas} nota="Esperando a un ingeniero" icono={<ClipboardList />} tono={abiertas > 0 ? 'aviso' : 'neutro'} />
           <TarjetaDato etiqueta="En tu agenda" valor={enAgenda.length} icono={<CalendarDays />} />
           <TarjetaDato etiqueta="Terminados" valor={terminados.length} icono={<CircleCheck />} tono="bueno" />
           <TarjetaDato

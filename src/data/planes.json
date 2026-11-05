@@ -1,37 +1,59 @@
 [
   {
-    "id": "basico",
-    "nombre": "Plan Básico",
-    "precioCOP": 249000,
+    "id": "esencial",
+    "nombre": "Plan Esencial",
+    "precioCOP": 100000,
     "periodo": "/ mes",
-    "rangoEquipos": "Consultorios y prestadores pequeños",
-    "segmento": "Única cuota mensual",
-    "resumen": "La logística de ordenamiento y las funciones de seguimiento que nos competen: tú acuerdas el mantenimiento con el ingeniero y nosotros coordinamos el resto.",
+    "rangoEquipos": "1 a 6 equipos · una sede",
+    "segmento": "Consultorio unipersonal o de una sede",
+    "resumen": "Para cumplir el mínimo de habilitación sin dedicar tiempo propio. La cuota cubre la gestión; cada visita del ingeniero se paga aparte por la plataforma.",
     "incluye": [
-      "Inventario digital y hoja de vida por equipo",
-      "Cronograma anual y rutas por zona",
-      "Semáforo de habilitación con alertas de vencimiento",
-      "Recordatorios y confirmación de cada visita por correo",
-      "Expediente documental auditable generado automáticamente",
-      "Soporte y gestión de garantías"
+      "Diagnóstico inicial del inventario (lo asume Pulso)",
+      "Cronograma anual con recordatorios",
+      "Ingeniero verificado de tu ciudad",
+      "Expediente digital y semáforo de habilitación",
+      "Garantía de reintervención"
     ],
-    "destacado": true
+    "minEquipos": 1,
+    "maxEquipos": 6,
+    "maxSedes": 1
+  },
+  {
+    "id": "integral",
+    "nombre": "Plan Integral",
+    "precioCOP": 200000,
+    "periodo": "/ mes",
+    "rangoEquipos": "7 a 15 equipos · hasta 3 sedes",
+    "segmento": "Prestador pequeño con dotación intensiva",
+    "resumen": "Cronograma consolidado, documentación auditable y respuesta rápida cuando un equipo falla, para varias sedes bajo un solo contrato.",
+    "incluye": [
+      "Todo lo del Plan Esencial",
+      "Atención prioritaria de fallas con triage",
+      "Franjas horarias fijas para las visitas",
+      "Capacitación básica al personal en cada visita",
+      "Hasta 3 sedes bajo un mismo contrato"
+    ],
+    "destacado": true,
+    "minEquipos": 7,
+    "maxEquipos": 15,
+    "maxSedes": 3
   },
   {
     "id": "custom",
-    "nombre": "Plan Custom",
+    "nombre": "A la medida",
     "precioCOP": 0,
-    "precioTexto": "A convenir",
+    "precioTexto": "Se cotiza",
     "periodo": "",
-    "rangoEquipos": "Organizaciones con varias sedes o mayor dotación",
+    "rangoEquipos": "Más de 15 equipos o más de 3 sedes",
     "segmento": "Condiciones acordadas con el equipo",
-    "resumen": "Para organizaciones más grandes: cobertura de varias sedes, SLA propios y reportes, con condiciones acordadas caso a caso.",
+    "resumen": "Cuando el diagnóstico inicial encuentra más equipos o sedes de los que cubre el Integral, la cuota se cotiza caso a caso.",
     "incluye": [
-      "Todo lo del Plan Básico",
-      "Cobertura para múltiples sedes",
-      "SLA y condiciones a convenir",
-      "Informe de indicadores de cumplimiento",
-      "Acompañamiento dedicado"
-    ]
+      "Todo lo del Plan Integral",
+      "Cobertura para más sedes y equipos",
+      "Condiciones acordadas con el equipo"
+    ],
+    "minEquipos": 16,
+    "maxEquipos": null,
+    "maxSedes": null
   }
 ]

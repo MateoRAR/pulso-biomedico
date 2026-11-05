@@ -7,12 +7,12 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input, Label, Select, Textarea } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
-import { cop } from '@/lib/format'
+import { cop, valorServicio } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
 import { useData } from '@/lib/store'
 import type { Servicio } from '@/data/tipos'
 
-const PRECIO_EXPRES = 89000
+const PRECIO_EXPRES = valorServicio('Diagnóstico exprés')
 
 export function ConsultorioDiagnosticoExpres() {
   const { equipos, consultorio, agregarServicio } = useData()
@@ -130,7 +130,7 @@ export function ConsultorioDiagnosticoExpres() {
               <li>• Revisión del equipo y del entorno de operación.</li>
               <li>• Recomendación clara: reparar, incluir en plan o reemplazar.</li>
               <li>• Registro en la hoja de vida del equipo.</li>
-              <li>• Si contratas un plan, el valor se abona a tu primera cuota.</li>
+              <li>• Se paga por la plataforma, aparte de la cuota del plan.</li>
             </ul>
           </CardContent>
         </Card>

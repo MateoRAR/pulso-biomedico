@@ -16,6 +16,11 @@ export type TipoModelo =
   | 'ecografo'
   | 'camilla'
   | 'balanza'
+  | 'bomba-infusion'
+  | 'cabina-bioseguridad'
+  | 'refrigerador'
+  | 'desfibrilador'
+  | 'electrocardiografo'
   | 'generico'
 
 export interface ParteModelo {
@@ -141,6 +146,52 @@ export const MODELOS: Record<TipoModelo, DefModelo> = {
       { id: 'pantalla', nombre: 'Pantalla', descripcion: 'Muestra el valor medido.', pos: [0, 0.05, 0.15] },
     ],
   },
+  'bomba-infusion': {
+    id: 'bomba-infusion', nombre: 'Bomba de infusión', enMesa: false, altura: 1.95,
+    resumen: 'Administra medicamentos y soluciones al paciente con un flujo controlado y alarmas. En oncología entrega la quimioterapia a la velocidad indicada. ' + AVISO,
+    partes: [
+      { id: 'pantalla', nombre: 'Pantalla y teclado', descripcion: 'Se programa el volumen y la velocidad de la infusión; muestra el avance y las alarmas.', pos: [0, 1.15, 0.22] },
+      { id: 'set', nombre: 'Puerta del set de infusión', descripcion: 'Por aquí pasa la línea del suero. Un set mal puesto o una oclusión disparan la alarma.', pos: [0, 1.0, 0.22] },
+      { id: 'atril', nombre: 'Atril porta sueros', descripcion: 'Sostiene las bolsas de solución y la bomba; las ruedas permiten acompañar al paciente.', pos: [0, 1.75, 0] },
+    ],
+  },
+  'cabina-bioseguridad': {
+    id: 'cabina-bioseguridad', nombre: 'Cabina de seguridad biológica', enMesa: false, altura: 2.15,
+    resumen: 'Protege a quien prepara los medicamentos y al producto con un flujo de aire filtrado. Es donde se preparan las mezclas de quimioterapia. ' + AVISO,
+    partes: [
+      { id: 'trabajo', nombre: 'Zona de trabajo', descripcion: 'Superficie de acero donde se preparan las mezclas. El aire filtrado baja sobre ella y no debe obstruirse.', pos: [0, 0.95, 0.1] },
+      { id: 'ventana', nombre: 'Ventana frontal', descripcion: 'Vidrio que se sube o baja: a la altura correcta mantiene la barrera de aire que protege al operador.', pos: [0, 1.33, 0.42] },
+      { id: 'hepa', nombre: 'Filtros HEPA', descripcion: 'Retienen partículas del aire que entra y sale. Se certifican periódicamente midiendo su integridad y velocidad de flujo.', pos: [0, 1.95, 0.43] },
+      { id: 'panel', nombre: 'Panel de alarmas', descripcion: 'Indica el flujo de aire y avisa si cae por debajo de lo seguro.', pos: [0.36, 1.66, 0.43] },
+    ],
+  },
+  refrigerador: {
+    id: 'refrigerador', nombre: 'Refrigerador de medicamentos', enMesa: false, altura: 1.9,
+    resumen: 'Conserva medicamentos y mezclas entre 2 y 8 °C. Romper la cadena de frío puede inutilizar tratamientos costosos. ' + AVISO,
+    partes: [
+      { id: 'temperatura', nombre: 'Pantalla de temperatura', descripcion: 'Muestra la temperatura interna y alarma si sale del rango; su registro se revisa a diario.', pos: [0, 1.8, 0.34] },
+      { id: 'puerta', nombre: 'Puerta de vidrio', descripcion: 'Permite ver el contenido sin abrir. El empaque debe sellar bien para no perder frío.', pos: [0, 0.95, 0.34] },
+      { id: 'estantes', nombre: 'Estantes', descripcion: 'Separan los medicamentos y dejan circular el aire frío de manera uniforme.', pos: [0, 1.1, 0.05] },
+    ],
+  },
+  desfibrilador: {
+    id: 'desfibrilador', nombre: 'Desfibrilador y carro de paro', enMesa: false, altura: 1.3,
+    resumen: 'Entrega una descarga eléctrica para recuperar el ritmo del corazón en un paro. Va sobre el carro con los insumos de reanimación. ' + AVISO,
+    partes: [
+      { id: 'pantalla', nombre: 'Pantalla y selector de energía', descripcion: 'Muestra el ritmo cardíaco y permite elegir la energía de la descarga. Se prueba a diario.', pos: [-0.05, 1.18, 0.1] },
+      { id: 'paletas', nombre: 'Paletas o parches', descripcion: 'Se colocan sobre el pecho del paciente para leer el ritmo y entregar la descarga.', pos: [0.22, 1.1, 0.15] },
+      { id: 'carro', nombre: 'Carro de paro', descripcion: 'Sus cajones guardan medicamentos e insumos de reanimación, revisados y sellados.', pos: [0, 0.6, 0.27] },
+    ],
+  },
+  electrocardiografo: {
+    id: 'electrocardiografo', nombre: 'Electrocardiógrafo', enMesa: false, altura: 1.1,
+    resumen: 'Registra la actividad eléctrica del corazón. En oncología vigila los efectos de algunos tratamientos sobre el corazón. ' + AVISO,
+    partes: [
+      { id: 'pantalla', nombre: 'Pantalla', descripcion: 'Muestra las derivaciones mientras se toma el registro.', pos: [0, 1.0, -0.09] },
+      { id: 'cables', nombre: 'Cables y electrodos', descripcion: 'Se conectan al paciente; un cable dañado produce trazos con ruido.', pos: [0.27, 0.55, 0.1] },
+      { id: 'impresora', nombre: 'Impresora del registro', descripcion: 'Imprime el trazo en papel milimetrado para la historia clínica.', pos: [0.13, 0.93, -0.04] },
+    ],
+  },
   generico: {
     id: 'generico', nombre: 'Equipo biomédico', enMesa: true, altura: 0.35,
     resumen: 'Representación genérica de un equipo biomédico de consultorio. ' + AVISO,
@@ -153,7 +204,8 @@ export const MODELOS: Record<TipoModelo, DefModelo> = {
 }
 
 export const ORDEN_BIBLIOTECA: TipoModelo[] = [
-  'unidad-odontologica', 'autoclave', 'rayos-x', 'compresor', 'monitor', 'bascula', 'ecografo', 'centrifuga', 'microscopio', 'balanza', 'camilla', 'generico',
+  'unidad-odontologica', 'autoclave', 'rayos-x', 'compresor', 'monitor', 'bascula', 'ecografo', 'centrifuga', 'microscopio', 'balanza', 'camilla',
+  'bomba-infusion', 'cabina-bioseguridad', 'refrigerador', 'desfibrilador', 'electrocardiografo', 'generico',
 ]
 
 function normalizar(t: string): string {
@@ -163,6 +215,11 @@ function normalizar(t: string): string {
 /** Elige el modelo 3D que mejor representa a un equipo, según su nombre. */
 export function tipoModeloDe(equipo: { nombre: string; tipo?: string }): TipoModelo {
   const n = normalizar(`${equipo.nombre} ${equipo.tipo ?? ''}`)
+  if (/bomba de infusion|infusion/.test(n)) return 'bomba-infusion'
+  if (/cabina|flujo laminar|bioseguridad|seguridad biologica/.test(n)) return 'cabina-bioseguridad'
+  if (/refrigerador|nevera|cadena de frio/.test(n)) return 'refrigerador'
+  if (/desfibrilador|carro de paro/.test(n)) return 'desfibrilador'
+  if (/electrocardiograf|\becg\b|\bekg\b/.test(n)) return 'electrocardiografo'
   if (/unidad odontol|sillon/.test(n)) return 'unidad-odontologica'
   if (/autoclave|esteriliz/.test(n)) return 'autoclave'
   if (/rayos/.test(n)) return 'rayos-x'

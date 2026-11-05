@@ -7,7 +7,7 @@ import { Input, Label, Textarea } from '@/components/ui/field'
 import { toast } from '@/components/ui/toast'
 import { track } from '@/lib/analytics'
 
-/** Formulario sencillo para acordar el Plan Custom con el equipo. En este prototipo no se envía a ningún servidor. */
+/** Formulario sencillo para cotizar un plan a la medida con el equipo. En este prototipo no se envía a ningún servidor. */
 export function ContactoCustom({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [nombre, setNombre] = useState('')
   const [correo, setCorreo] = useState('')
@@ -33,7 +33,7 @@ export function ContactoCustom({ open, onClose }: { open: boolean; onClose: () =
     <Dialog
       open={open}
       onClose={onClose}
-      title="Acordar el Plan Custom"
+      title="Cotizar un plan a la medida"
       description="Cuéntanos cómo es tu organización y armamos las condiciones contigo."
     >
       <form onSubmit={enviar} className="space-y-4">

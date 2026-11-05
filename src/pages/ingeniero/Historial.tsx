@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
 import { comisionIngeniero, cop, fechaCorta, textoCalificacion } from '@/lib/format'
+import { pct, TARIFAS } from '@/lib/planes'
 import { useData, useIngenieroActual } from '@/lib/store'
 
 export function IngenieroHistorial() {
@@ -28,7 +29,7 @@ export function IngenieroHistorial() {
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Servicios completados" value={completados.length} tone="good" />
-        <StatCard label="Ingresos netos estimados" value={cop(ingresos)} hint="80 % del valor del servicio" />
+        <StatCard label="Ingresos netos estimados" value={cop(ingresos)} hint={`${pct(1 - TARIFAS.comisionPulso)} del valor del servicio (Pulso retiene el ${pct(TARIFAS.comisionPulso)})`} />
         <StatCard label="Calificación promedio" value={textoCalificacion(yo)} icon={<Star />} />
         <StatCard label="Servicios totales" value={yo.servicios} hint="Histórico en la red" />
       </div>

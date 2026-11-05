@@ -46,5 +46,13 @@
     "lat": 6.2442,
     "lng": -75.5812,
     "zoom": 12
+  },
+  {
+    "id": "popayan",
+    "nombre": "Popayán",
+    "corto": "Popayán",
+    "lat": 2.4448,
+    "lng": -76.6147,
+    "zoom": 13
   }
 ]

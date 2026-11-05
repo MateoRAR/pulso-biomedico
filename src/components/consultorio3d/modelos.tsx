@@ -25,6 +25,9 @@ const MAT = {
   tapiz: new THREE.MeshPhysicalMaterial({ color: '#2b5a8f', roughness: 0.62, metalness: 0, sheen: 0.6, sheenRoughness: 0.5, sheenColor: new THREE.Color('#9db7d4') }),
   teal: new THREE.MeshPhysicalMaterial({ color: '#0f8fa3', roughness: 0.32, metalness: 0.1, clearcoat: 0.8, clearcoatRoughness: 0.2 }),
   vidrio: new THREE.MeshPhysicalMaterial({ color: '#d7eef5', roughness: 0.04, metalness: 0, transparent: true, opacity: 0.28, depthWrite: false }),
+  rojo: new THREE.MeshPhysicalMaterial({ color: '#c0392b', roughness: 0.38, metalness: 0.05, clearcoat: 0.6, clearcoatRoughness: 0.25 }),
+  amarillo: new THREE.MeshPhysicalMaterial({ color: '#f2c94c', roughness: 0.4, metalness: 0, clearcoat: 0.5, clearcoatRoughness: 0.3 }),
+  suero: new THREE.MeshPhysicalMaterial({ color: '#f3fbff', roughness: 0.15, metalness: 0, transparent: true, opacity: 0.6, depthWrite: false }),
 }
 export type Mat = keyof typeof MAT
 
@@ -289,6 +292,146 @@ function Generico() {
   )
 }
 
+/** Ruedas con base en estrella (atriles, carros y monitores rodantes). */
+function BaseEstrella({ r = 0.28, y = 0.03 }: { r?: number; y?: number }) {
+  return (
+    <group>
+      {[0, 1, 2, 3, 4].map((i) => {
+        const a = (i * 2 * Math.PI) / 5
+        return (
+          <group key={i}>
+            <Caja s={[r, 0.025, 0.04]} p={[Math.sin(a) * r * 0.5, y + 0.02, Math.cos(a) * r * 0.5]} m="gris" rot={[0, a + Math.PI / 2, 0]} r={0.01} />
+            <Cil r={0.022} h={0.03} p={[Math.sin(a) * r, 0.022, Math.cos(a) * r]} m="goma" rot={[0, 0, Math.PI / 2]} />
+          </group>
+        )
+      })}
+    </group>
+  )
+}
+
+function BombaInfusion() {
+  return (
+    <group>
+      <BaseEstrella />
+      {/* atril porta sueros */}
+      <Cil r={0.014} h={1.9} p={[0, 1.0, 0]} m="cromo" />
+      <Caja s={[0.3, 0.012, 0.012]} p={[0, 1.94, 0]} m="cromo" r={0.004} />
+      {[-0.14, 0.14].map((x) => (
+        <Cil key={x} r={0.006} h={0.06} p={[x, 1.91, 0]} m="cromo" />
+      ))}
+      {/* bolsas de solución y línea */}
+      <Caja s={[0.11, 0.2, 0.03]} p={[-0.14, 1.75, 0]} m="suero" r={0.012} />
+      <Caja s={[0.09, 0.16, 0.03]} p={[0.14, 1.77, 0]} m="amarillo" r={0.012} />
+      <Cil r={0.004} h={0.55} p={[-0.1, 1.38, 0.08]} m="vidrio" rot={[0.25, 0, 0.18]} />
+      {/* bomba volumétrica sujeta al atril */}
+      <Caja s={[0.05, 0.05, 0.08]} p={[0, 1.1, 0.04]} m="gris" r={0.01} />
+      <Caja s={[0.22, 0.3, 0.17]} p={[0, 1.1, 0.13]} m="blanco" r={0.025} />
+      <Caja s={[0.15, 0.08, 0.01]} p={[0, 1.18, 0.218]} luz="#86efac" r={0.004} />
+      <Caja s={[0.15, 0.08, 0.008]} p={[0, 1.07, 0.218]} m="oscuro" r={0.004} />
+      {[-0.04, 0, 0.04].map((x) => (
+        <Caja key={x} s={[0.025, 0.018, 0.01]} p={[x, 1.0, 0.22]} m={x === 0 ? 'teal' : 'gris'} r={0.004} />
+      ))}
+      <Caja s={[0.2, 0.02, 0.15]} p={[0, 1.255, 0.13]} m="teal" r={0.008} />
+    </group>
+  )
+}
+
+function CabinaBioseguridad() {
+  return (
+    <group>
+      {/* soporte */}
+      {[-0.6, 0.6].flatMap((x) => [-0.32, 0.32].map((z) => <Cil key={`${x}${z}`} r={0.025} h={0.72} p={[x, 0.36, z]} m="acero" />))}
+      <Caja s={[1.32, 0.05, 0.82]} p={[0, 0.745, 0]} m="gris" r={0.015} />
+      {/* cámara de trabajo: fondo, lados y superficie de acero */}
+      <Caja s={[1.28, 0.78, 0.04]} p={[0, 1.16, -0.39]} m="blanco" r={0.01} />
+      {[-0.64, 0.64].map((x) => (
+        <Caja key={x} s={[0.04, 0.78, 0.82]} p={[x, 1.16, 0]} m="blanco" r={0.01} />
+      ))}
+      <Caja s={[1.24, 0.04, 0.76]} p={[0, 0.79, 0]} m="acero" r={0.008} />
+      <Caja s={[1.24, 0.02, 0.06]} p={[0, 0.82, 0.36]} m="oscuro" r={0.006} />
+      {/* ventana frontal de vidrio (guillotina) */}
+      <Caja s={[1.24, 0.5, 0.02]} p={[0, 1.33, 0.4]} m="vidrio" r={0.006} rot={[-0.08, 0, 0]} />
+      <Caja s={[1.24, 0.03, 0.04]} p={[0, 1.08, 0.41]} m="acero" r={0.008} />
+      {/* módulo superior con filtros HEPA y panel */}
+      <Caja s={[1.34, 0.56, 0.84]} p={[0, 1.83, 0]} m="blanco" r={0.025} />
+      <Caja s={[1.2, 0.04, 0.7]} p={[0, 2.13, 0]} m="gris" r={0.01} />
+      <Caja s={[0.34, 0.09, 0.012]} p={[0.36, 1.66, 0.425]} luz="#67e8f9" r={0.004} />
+      <Caja s={[0.6, 0.02, 0.01]} p={[-0.25, 1.66, 0.425]} m="teal" r={0.004} />
+      {[1.76, 1.84, 1.92, 2.0].map((y) => (
+        <Caja key={y} s={[0.8, 0.012, 0.008]} p={[-0.1, y, 0.424]} m="gris" r={0.003} />
+      ))}
+    </group>
+  )
+}
+
+function Refrigerador() {
+  return (
+    <group>
+      <Caja s={[0.62, 0.07, 0.6]} p={[0, 0.035, 0]} m="oscuro" r={0.015} />
+      <Caja s={[0.66, 1.82, 0.64]} p={[0, 0.98, 0]} m="blanco" r={0.03} />
+      {/* puerta de vidrio con estantes y medicamentos */}
+      <Caja s={[0.54, 1.5, 0.02]} p={[0, 0.94, 0.322]} m="vidrio" r={0.008} />
+      {[0.4, 0.75, 1.1, 1.45].map((y) => (
+        <group key={y}>
+          <Caja s={[0.52, 0.012, 0.5]} p={[0, y, 0.02]} m="acero" r={0.003} />
+          {[-0.18, -0.06, 0.06, 0.18].map((x, i) => (
+            <Caja key={x} s={[0.08, 0.13, 0.12]} p={[x, y + 0.075, 0.1]} m={i % 2 ? 'hueso' : 'teal'} r={0.01} />
+          ))}
+        </group>
+      ))}
+      <Caja s={[0.025, 0.6, 0.03]} p={[0.25, 0.95, 0.35]} m="cromo" r={0.01} />
+      {/* pantalla de temperatura */}
+      <Caja s={[0.2, 0.07, 0.012]} p={[0, 1.8, 0.325]} luz="#93c5fd" r={0.004} />
+    </group>
+  )
+}
+
+function Desfibrilador() {
+  return (
+    <group>
+      {/* carro de paro con cajones */}
+      {[-0.24, 0.24].flatMap((x) => [-0.18, 0.18].map((z) => <Cil key={`${x}${z}`} r={0.04} h={0.04} p={[x, 0.04, z]} m="goma" rot={[0, 0, Math.PI / 2]} />))}
+      <Caja s={[0.62, 0.9, 0.5]} p={[0, 0.53, 0]} m="rojo" r={0.03} />
+      {[0.28, 0.48, 0.68, 0.86].map((y) => (
+        <group key={y}>
+          <Caja s={[0.56, 0.16, 0.012]} p={[0, y, 0.252]} m="rojo" r={0.01} />
+          <Caja s={[0.2, 0.02, 0.02]} p={[0, y + 0.04, 0.262]} m="cromo" r={0.006} />
+        </group>
+      ))}
+      <Caja s={[0.66, 0.04, 0.54]} p={[0, 1.0, 0]} m="gris" r={0.015} />
+      {/* desfibrilador sobre el carro */}
+      <Caja s={[0.34, 0.24, 0.26]} p={[0, 1.14, -0.04]} m="amarillo" r={0.03} />
+      <Caja s={[0.17, 0.12, 0.01]} p={[-0.05, 1.18, 0.092]} luz="#86efac" r={0.004} rot={[-0.15, 0, 0]} />
+      <Cil r={0.03} h={0.02} p={[0.11, 1.17, 0.095]} m="oscuro" rot={[Math.PI / 2, 0, 0]} />
+      {[-0.22, 0.22].map((x) => (
+        <Caja key={x} s={[0.07, 0.1, 0.13]} p={[x, 1.08, 0.08]} m="oscuro" r={0.02} />
+      ))}
+      <Cil r={0.007} h={0.3} p={[0.24, 0.92, 0.12]} m="goma" />
+    </group>
+  )
+}
+
+function Electrocardiografo() {
+  return (
+    <group>
+      <BaseEstrella r={0.24} />
+      <Cil r={0.025} h={0.78} p={[0, 0.43, 0]} m="acero" />
+      <Caja s={[0.46, 0.03, 0.36]} p={[0, 0.83, 0]} m="gris" r={0.012} />
+      {/* equipo con pantalla, teclado e impresora */}
+      <Caja s={[0.38, 0.07, 0.3]} p={[0, 0.88, 0]} m="blanco" r={0.02} />
+      <Caja s={[0.3, 0.008, 0.12]} p={[0, 0.918, 0.07]} m="oscuro" r={0.003} />
+      <Caja s={[0.32, 0.2, 0.025]} p={[0, 1.0, -0.12]} m="blanco" r={0.015} rot={[-0.35, 0, 0]} />
+      <Caja s={[0.27, 0.15, 0.008]} p={[0, 1.0, -0.105]} luz="#fde68a" r={0.003} rot={[-0.35, 0, 0]} />
+      <Caja s={[0.12, 0.004, 0.08]} p={[0.13, 0.92, -0.04]} m="hueso" r={0.001} />
+      {/* cable de derivaciones */}
+      <Cil r={0.012} h={0.36} p={[0.22, 0.72, 0.1]} m="goma" rot={[0, 0, 0.2]} />
+      {[-0.03, 0, 0.03].map((x) => (
+        <Cil key={x} r={0.012} h={0.04} p={[0.27 + x, 0.53, 0.1]} m={x === 0 ? 'rojo' : 'amarillo'} />
+      ))}
+    </group>
+  )
+}
+
 export const COMPONENTES: Record<TipoModelo, ComponentType> = {
   autoclave: Autoclave,
   'unidad-odontologica': UnidadOdontologica,
@@ -302,4 +445,9 @@ export const COMPONENTES: Record<TipoModelo, ComponentType> = {
   camilla: Camilla,
   balanza: Balanza,
   generico: Generico,
+  'bomba-infusion': BombaInfusion,
+  'cabina-bioseguridad': CabinaBioseguridad,
+  refrigerador: Refrigerador,
+  desfibrilador: Desfibrilador,
+  electrocardiografo: Electrocardiografo,
 }

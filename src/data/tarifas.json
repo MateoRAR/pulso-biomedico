@@ -1,0 +1,12 @@
+{
+  "comisionPulso": 0.15,
+  "primerPago": 0.2,
+  "ajusteAnual": 0.05,
+  "servicios": {
+    "Preventivo": 240000,
+    "Calibración": 240000,
+    "Correctivo": 300000,
+    "Diagnóstico exprés": 110000,
+    "Capacitación": 120000
+  }
+}

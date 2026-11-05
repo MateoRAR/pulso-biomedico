@@ -1,24 +1,56 @@
-import { Box, Boxes, ClipboardList, Eye, EyeOff, Plus, Search } from 'lucide-react'
+import { Box, Boxes, ChevronRight, ClipboardList, Plus, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { planoPara } from '@/components/consultorio3d/salaDatos'
 import { VistaSala } from '@/components/consultorio3d/VistaSala'
-import { EmptyState, PageHeader, SemaforoBadge, TriageBadge } from '@/components/shared/ui'
+import { EmptyState, PageHeader } from '@/components/shared/ui'
 import { VistaDual } from '@/components/shared/VistaDual'
-import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog } from '@/components/ui/dialog'
 import { Input, Label, Select } from '@/components/ui/field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { toast } from '@/components/ui/toast'
-import { fechaCorta, semaforoEquipo } from '@/lib/format'
+import { diasHasta, ETIQUETA_SEMAFORO, fechaCorta, semaforoEquipo } from '@/lib/format'
 import { inventarioEjemplo } from '@/lib/registro'
 import { useData } from '@/lib/store'
-import type { Criticidad, EstadoEquipo, Equipo } from '@/data/tipos'
+import { cn } from '@/lib/utils'
+import type { Criticidad, EstadoEquipo, Equipo, Semaforo } from '@/data/tipos'
 
 const criticidades: Criticidad[] = ['Crítica', 'Alta', 'Media', 'Programada']
 const estados: EstadoEquipo[] = ['Operativo', 'En mantenimiento', 'Requiere calibración', 'Fuera de servicio']
+
+const PUNTO_SEMAFORO: Record<Semaforo, string> = { verde: 'bg-emerald-500', amarillo: 'bg-amber-500', rojo: 'bg-rose-500' }
+
+const COLOR_IMPORTANCIA: Record<Criticidad, string> = {
+  Crítica: 'font-semibold text-rose-600 dark:text-rose-400',
+  Alta: 'font-semibold text-amber-600 dark:text-amber-400',
+  Media: 'font-medium',
+  Programada: 'text-muted-foreground',
+}
+
+/** "vence en 12 días", "vencida hace 3 días": lo que se entiende sin hacer cuentas con la fecha. */
+function textoPlazo(iso: string): { texto: string; vencido: boolean } | null {
+  const dias = diasHasta(iso)
+  if (dias === null) return null
+  const unidad = (n: number) => (n === 1 ? 'día' : 'días')
+  if (dias < 0) return { texto: `vencida hace ${-dias} ${unidad(-dias)}`, vencido: true }
+  if (dias === 0) return { texto: 'vence hoy', vencido: true }
+  return { texto: `en ${dias} ${unidad(dias)}`, vencido: false }
+}
+
+/** Interruptor sencillo (en vez de un botón que cambia de texto). */
+function Interruptor({ activo, onCambio, texto }: { activo: boolean; onCambio: (v: boolean) => void; texto: string }) {
+  return (
+    <button type="button" role="switch" aria-checked={activo} onClick={() => onCambio(!activo)} className="group flex min-h-10 items-center gap-3 text-sm font-medium">
+      <span className={cn('relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200', activo ? 'bg-primary' : 'bg-muted-foreground/30')}>
+        <span className={cn('absolute left-0.5 top-0.5 size-5 rounded-full bg-white shadow transition-transform duration-200', activo && 'translate-x-5')} />
+      </span>
+      {texto}
+    </button>
+  )
+}
 
 export function ConsultorioEquipos() {
   const { equipos, consultorio, agregarEquipo, agregarEquipos } = useData()
@@ -87,49 +119,57 @@ export function ConsultorioEquipos() {
     toast.success('Equipos de ejemplo cargados', { description: 'Ya puedes recorrerlos en 3D y en la tabla.' })
   }
 
+  const cuenta = (sem: Semaforo) => equipos.filter((e) => semaforoEquipo(e) === sem).length
+
   const tabla = (
     <div className="space-y-4">
-      <Card className="border-border/80">
-        <CardContent className="grid gap-4 p-4 sm:p-5 md:grid-cols-[1.6fr_1fr_1fr]">
-          <div className="space-y-2">
-            <Label htmlFor="buscar">Buscar</Label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="buscar" className="pl-9" placeholder="Nombre, marca o serie" value={texto} onChange={(event) => setTexto(event.target.value)} />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="estado">Estado</Label>
-            <Select id="estado" value={estado} onChange={(event) => setEstado(event.target.value)}>
-              <option value="todos">Todos</option>
-              {estados.map((e) => (
-                <option key={e} value={e}>
-                  {e}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="criticidad">Importancia</Label>
-            <Select id="criticidad" value={criticidad} onChange={(event) => setCriticidad(event.target.value)}>
-              <option value="todas">Todas</option>
-              {criticidades.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Resumen: cuántos hay en cada estado, en una sola línea */}
+      <p className="flex flex-wrap items-center gap-x-6 gap-y-1.5 text-sm">
+        <span className="font-semibold">
+          {equipos.length} {equipos.length === 1 ? 'equipo' : 'equipos'}
+        </span>
+        {(['verde', 'amarillo', 'rojo'] as Semaforo[]).map((sem) => (
+          <span key={sem} className="flex items-center gap-2 text-muted-foreground">
+            <span className={cn('size-2.5 rounded-full', PUNTO_SEMAFORO[sem])} />
+            <span className="font-semibold tabular-nums text-foreground">{cuenta(sem)}</span> {ETIQUETA_SEMAFORO[sem].toLowerCase()}
+          </span>
+        ))}
+      </p>
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-muted-foreground">
-          {resultados.length} de {equipos.length} {equipos.length === 1 ? 'equipo' : 'equipos'}
-        </p>
-        <Button variant="outline" size="sm" aria-pressed={verTodo} onClick={() => setVerTodo((v) => !v)}>
-          {verTodo ? <EyeOff /> : <Eye />} {verTodo ? 'Ver menos datos' : 'Ver todos los datos'}
-        </Button>
+      {/* Búsqueda y filtros en una sola barra */}
+      <div className="grid gap-3 rounded-xl border border-border bg-card p-3 shadow-sm sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_1fr_1fr_auto] lg:items-end">
+        <div className="space-y-1.5 sm:col-span-2 lg:col-span-1">
+          <Label htmlFor="buscar">Buscar</Label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input id="buscar" className="pl-9" placeholder="Nombre, marca o serie" value={texto} onChange={(event) => setTexto(event.target.value)} />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="estado">Estado</Label>
+          <Select id="estado" value={estado} onChange={(event) => setEstado(event.target.value)}>
+            <option value="todos">Todos</option>
+            {estados.map((e) => (
+              <option key={e} value={e}>
+                {e}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="criticidad">Importancia</Label>
+          <Select id="criticidad" value={criticidad} onChange={(event) => setCriticidad(event.target.value)}>
+            <option value="todas">Todas</option>
+            {criticidades.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <div className="sm:col-span-2 lg:col-span-1">
+          <Interruptor activo={verTodo} onCambio={setVerTodo} texto="Todos los datos" />
+        </div>
       </div>
 
       {resultados.length === 0 ? (
@@ -137,7 +177,7 @@ export function ConsultorioEquipos() {
       ) : (
         <Card className="overflow-hidden border-border/80">
           <CardContent className="p-0 max-md:bg-muted/30 max-md:p-3">
-            <Table className={verTodo ? 'md:[&_td]:px-2 md:[&_th]:px-2' : undefined}>
+            <Table className={verTodo ? 'md:[&_td]:px-2.5 md:[&_th]:px-2.5' : undefined}>
               <TableHeader>
                 <TableRow>
                   <TableHead>Equipo</TableHead>
@@ -148,48 +188,47 @@ export function ConsultorioEquipos() {
                   {verTodo && <TableHead>Registro sanitario</TableHead>}
                   {verTodo && <TableHead>Responsable</TableHead>}
                   {verTodo && <TableHead>Próx. mantenimiento</TableHead>}
-                  <TableHead>Próx. calibración</TableHead>
+                  <TableHead>Calibración</TableHead>
                   <TableHead />
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {resultados.map((equipo) => (
-                  <TableRow key={equipo.id}>
-                    <TableCell>
-                      <p className="font-semibold">{equipo.nombre}</p>
-                      <p className="text-xs font-normal text-muted-foreground">
-                        {equipo.marca} {equipo.modelo}
-                      </p>
-                    </TableCell>
-                    <TableCell className="text-sm">{equipo.sede}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap justify-end gap-1.5 md:justify-start">
-                        <SemaforoBadge semaforo={semaforoEquipo(equipo)} />
-                        {equipo.estado !== 'Operativo' && <Badge variant="outline">{equipo.estado}</Badge>}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <TriageBadge criticidad={equipo.criticidad} />
-                    </TableCell>
-                    {verTodo && <TableCell className="text-sm">{equipo.serie}</TableCell>}
-                    {verTodo && <TableCell className="text-sm">{equipo.registroSanitario}</TableCell>}
-                    {verTodo && <TableCell className="text-sm">{equipo.responsable}</TableCell>}
-                    {verTodo && <TableCell className="text-sm">{fechaCorta(equipo.proximoMantenimiento)}</TableCell>}
-                    <TableCell className="text-sm">{fechaCorta(equipo.proximaCalibracion)}</TableCell>
-                    <TableCell className="text-right">
-                      <Link to={`/consultorio/equipos/${equipo.id}`} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
-                        {verTodo ? (
-                          <>
-                            <span className="md:hidden">Ver hoja de vida</span>
-                            <span className="max-md:hidden">Ver</span>
-                          </>
-                        ) : (
-                          'Ver hoja de vida'
-                        )}
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {resultados.map((equipo) => {
+                  const sem = semaforoEquipo(equipo)
+                  const plazo = textoPlazo(equipo.proximaCalibracion)
+                  return (
+                    <TableRow key={equipo.id}>
+                      <TableCell>
+                        <p className="font-semibold">{equipo.nombre}</p>
+                        <p className="text-xs font-normal text-muted-foreground">
+                          {equipo.marca} {equipo.modelo}
+                        </p>
+                      </TableCell>
+                      <TableCell className="text-sm">{equipo.sede}</TableCell>
+                      <TableCell>
+                        <span className="inline-flex items-center gap-2 text-sm font-medium">
+                          <span className={cn('size-2.5 shrink-0 rounded-full', PUNTO_SEMAFORO[sem])} />
+                          {ETIQUETA_SEMAFORO[sem]}
+                        </span>
+                        {equipo.estado !== 'Operativo' && <span className="block text-xs text-muted-foreground">{equipo.estado}</span>}
+                      </TableCell>
+                      <TableCell className={cn('text-sm', COLOR_IMPORTANCIA[equipo.criticidad])}>{equipo.criticidad}</TableCell>
+                      {verTodo && <TableCell className="text-sm">{equipo.serie}</TableCell>}
+                      {verTodo && <TableCell className="text-sm">{equipo.registroSanitario}</TableCell>}
+                      {verTodo && <TableCell className="text-sm">{equipo.responsable}</TableCell>}
+                      {verTodo && <TableCell className="text-sm">{fechaCorta(equipo.proximoMantenimiento)}</TableCell>}
+                      <TableCell className="text-sm">
+                        {fechaCorta(equipo.proximaCalibracion)}
+                        {plazo && <span className={cn('block text-xs', plazo.vencido ? 'font-medium text-rose-600 dark:text-rose-400' : 'text-muted-foreground')}>{plazo.texto}</span>}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Link to={`/consultorio/equipos/${equipo.id}`} className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'text-primary')}>
+                          Abrir <ChevronRight />
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
               </TableBody>
             </Table>
           </CardContent>
@@ -237,7 +276,7 @@ export function ConsultorioEquipos() {
           }
         />
       ) : (
-        <VistaDual clave="consultorio-equipos" vista3D={<VistaSala equipos={equipos} />} tabla={tabla} etiqueta3D="Ver en 3D" etiquetaTabla="Ver como tabla" />
+        <VistaDual clave="consultorio-equipos" vista3D={<VistaSala equipos={equipos} plano={planoPara(consultorio.especialidad)} />} tabla={tabla} etiqueta3D="Ver en 3D" etiquetaTabla="Ver como tabla" />
       )}
 
       <Dialog

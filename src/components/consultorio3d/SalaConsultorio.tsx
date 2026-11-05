@@ -1,19 +1,12 @@
 import { Canvas, invalidate, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, type RefObject } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import * as THREE from 'three'
 
 import { MODELOS } from './catalogo'
 import { EntornoEstudio } from './entorno'
 import { Caja, Cil, COMPONENTES } from './modelos'
-import { SeguirAncla } from './SeguirAncla'
-import { anclaDeEquipo, colocarEquipos, LIMITES, PUNTOS, ZONA_ANCHO, ZONA_FONDO, type Colocado, type DefPunto, type EquipoSala, type EstadoSala, type PuntoVista, type Zona } from './salaDatos'
-
-const COLOR_ZONA: Record<Zona, string> = {
-  atencion: '#e6f0f2',
-  laboratorio: '#e7eef5',
-  imagenes: '#ebe9f3',
-  recepcion: '#f0f2e8',
-}
+import { ANCHO_LATERAL, ANCHO_NOTA, LINEA_NOTA, SeguirAncla } from './SeguirAncla'
+import { anclasDeEquipo, colocarEquipos, esMovil, PLANOS, puntosDe, SILLONES_QUIMIO, ZONA_ANCHO, ZONA_FONDO, type Colocado, type DefPlano, type DefPunto, type EquipoSala, type EstadoSala, type PlanoId, type PuntoVista } from './salaDatos'
 
 const COLOR_ESTADO: Record<EstadoSala, string> = { verde: '#34d399', amarillo: '#fbbf24', rojo: '#fb7185' }
 
@@ -42,32 +35,42 @@ function crearPiso(): THREE.CanvasTexture {
 
 // -- piezas de la sala --------------------------------------------------------------
 
-function Estructura() {
-  const W = ZONA_ANCHO
-  const D = ZONA_FONDO
+/** Piso de porcelanato del plano y un tinte suave por zona. */
+function Piso({ plano }: { plano: DefPlano }) {
+  const { x0, x1, z0, z1 } = plano.piso
+  const ancho = x1 - x0
+  const fondo = z1 - z0
   const piso = useMemo(() => {
     const t = crearPiso()
-    t.repeat.set((2 * W + 0.4) * 1.6, (2 * D + 0.4) * 1.6)
+    t.repeat.set(ancho * 1.6, fondo * 1.6)
     return t
-  }, [W, D])
+  }, [ancho, fondo])
   useEffect(() => () => piso.dispose(), [piso])
 
   return (
     <group>
-      {/* piso */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-        <planeGeometry args={[2 * W + 0.4, 2 * D + 0.4]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[(x0 + x1) / 2, 0, (z0 + z1) / 2]} receiveShadow>
+        <planeGeometry args={[ancho, fondo]} />
         <meshStandardMaterial map={piso} roughness={0.35} metalness={0.05} />
       </mesh>
-      {(Object.keys(LIMITES) as Zona[]).map((z) => {
-        const l = LIMITES[z]
-        return (
-          <mesh key={z} rotation={[-Math.PI / 2, 0, 0]} position={[(l.x0 + l.x1) / 2, 0.003, (l.z0 + l.z1) / 2]} receiveShadow>
-            <planeGeometry args={[l.x1 - l.x0 - 0.2, l.z1 - l.z0 - 0.2]} />
-            <meshStandardMaterial color={COLOR_ZONA[z]} roughness={0.9} transparent opacity={0.55} />
-          </mesh>
-        )
-      })}
+      {plano.zonas.map((l) => (
+        <mesh key={l.id} rotation={[-Math.PI / 2, 0, 0]} position={[(l.x0 + l.x1) / 2, 0.003, (l.z0 + l.z1) / 2]} receiveShadow>
+          <planeGeometry args={[l.x1 - l.x0 - 0.2, l.z1 - l.z0 - 0.2]} />
+          <meshStandardMaterial color={l.color} roughness={0.9} transparent opacity={0.55} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+/** Consultorio de baja complejidad: atención, esterilización y laboratorio, imágenes y recepción. */
+function EstructuraGeneral({ plano }: { plano: DefPlano }) {
+  const W = ZONA_ANCHO
+  const D = ZONA_FONDO
+
+  return (
+    <group>
+      <Piso plano={plano} />
 
       {/* paredes del fondo y del lado izquierdo (las otras quedan abiertas para poder mirar adentro) */}
       <Caja s={[2 * W + 0.4, 2.9, 0.16]} p={[0, 1.45, -D - 0.1]} m="hueso" r={0.02} />
@@ -137,6 +140,262 @@ function Estructura() {
   )
 }
 
+// -- plano de oncología ---------------------------------------------------------------
+
+type P2 = [number, number]
+
+/** Muro bajo con tapa (la cámara lo mira desde arriba y no estorba), de (x0, z0) a (x1, z1), recto. */
+function Muro({ a, b, alto = 0.9 }: { a: P2; b: P2; alto?: number }) {
+  const largo = Math.hypot(b[0] - a[0], b[1] - a[1])
+  const enX = Math.abs(b[0] - a[0]) > Math.abs(b[1] - a[1])
+  const s: [number, number, number] = enX ? [largo, alto, 0.1] : [0.1, alto, largo]
+  const p: [number, number, number] = [(a[0] + b[0]) / 2, alto / 2, (a[1] + b[1]) / 2]
+  return (
+    <group>
+      <Caja s={s} p={p} m="blanco" r={0.02} />
+      <Caja s={[s[0] + 0.03, 0.04, s[2] + 0.03]} p={[p[0], alto + 0.02, p[2]]} m="teal" r={0.015} />
+    </group>
+  )
+}
+
+/** Muro de vidrio alto con marco (sala limpia de la central de mezclas). */
+function MuroVidrio({ x, z0, z1 }: { x: number; z0: number; z1: number }) {
+  const largo = z1 - z0
+  const cz = (z0 + z1) / 2
+  return (
+    <group>
+      <Caja s={[0.04, 2.3, largo]} p={[x, 1.15, cz]} m="vidrio" r={0.005} />
+      <Caja s={[0.08, 0.08, largo]} p={[x, 2.3, cz]} m="acero" r={0.01} />
+      <Caja s={[0.08, 0.1, largo]} p={[x, 0.05, cz]} m="acero" r={0.01} />
+      {[z0, z1].map((z) => (
+        <Caja key={z} s={[0.08, 2.3, 0.08]} p={[x, 1.15, z]} m="acero" r={0.01} />
+      ))}
+    </group>
+  )
+}
+
+/** Sillón reclinable de quimioterapia con apoyabrazos y mesa auxiliar. */
+function SillonQuimio({ x, z, rot }: { x: number; z: number; rot: number }) {
+  return (
+    <group position={[x, 0, z]} rotation={[0, rot, 0]}>
+      <Caja s={[0.66, 0.1, 0.9]} p={[0, 0.05, 0]} m="oscuro" r={0.03} />
+      <Caja s={[0.2, 0.3, 0.3]} p={[0, 0.25, 0]} m="gris" r={0.03} />
+      <Caja s={[0.6, 0.15, 0.58]} p={[0, 0.48, 0.05]} m="tapiz" r={0.05} />
+      <Caja s={[0.6, 0.78, 0.13]} p={[0, 0.86, -0.34]} m="tapiz" r={0.05} rot={[-0.32, 0, 0]} />
+      <Caja s={[0.36, 0.2, 0.12]} p={[0, 1.32, -0.5]} m="tapiz" r={0.05} rot={[-0.32, 0, 0]} />
+      <Caja s={[0.52, 0.08, 0.46]} p={[0, 0.36, 0.55]} m="tapiz" r={0.03} rot={[0.5, 0, 0]} />
+      {[-0.35, 0.35].map((dx) => (
+        <Caja key={dx} s={[0.09, 0.07, 0.56]} p={[dx, 0.66, 0]} m="blanco" r={0.03} />
+      ))}
+      {/* mesa auxiliar */}
+      <Cil r={0.02} h={0.68} p={[0.66, 0.34, 0.05]} m="acero" />
+      <Caja s={[0.36, 0.04, 0.36]} p={[0.66, 0.7, 0.05]} m="blanco" r={0.015} />
+      <Cil r={0.035} h={0.1} p={[0.6, 0.77, 0.08]} m="teal" />
+    </group>
+  )
+}
+
+/** Silla de espera o de consultorio (mirando a +z antes de girarla). */
+function Silla({ x, z, rot = 0 }: { x: number; z: number; rot?: number }) {
+  return (
+    <group position={[x, 0, z]} rotation={[0, rot, 0]}>
+      <Caja s={[0.48, 0.07, 0.46]} p={[0, 0.45, 0]} m="tapiz" r={0.03} />
+      <Caja s={[0.48, 0.46, 0.07]} p={[0, 0.72, -0.21]} m="tapiz" r={0.03} />
+      {[-0.19, 0.19].flatMap((dx) => [-0.18, 0.18].map((dz) => <Cil key={`${dx}${dz}`} r={0.014} h={0.42} p={[dx, 0.21, dz]} m="acero" />))}
+    </group>
+  )
+}
+
+/** Escritorio con computador. */
+function Escritorio({ x, z, rot = 0 }: { x: number; z: number; rot?: number }) {
+  return (
+    <group position={[x, 0, z]} rotation={[0, rot, 0]}>
+      <Caja s={[1.4, 0.05, 0.7]} p={[0, 0.75, 0]} m="hueso" r={0.015} />
+      <Caja s={[0.05, 0.73, 0.66]} p={[-0.66, 0.365, 0]} m="blanco" r={0.01} />
+      <Caja s={[0.45, 0.73, 0.66]} p={[0.46, 0.365, 0]} m="blanco" r={0.01} />
+      <Caja s={[0.48, 0.3, 0.03]} p={[-0.2, 1.0, -0.22]} m="oscuro" r={0.01} />
+      <Caja s={[0.44, 0.26, 0.01]} p={[-0.2, 1.0, -0.2]} luz="#7dd3fc" r={0.004} />
+      <Caja s={[0.06, 0.12, 0.06]} p={[-0.2, 0.83, -0.22]} m="gris" r={0.01} />
+    </group>
+  )
+}
+
+/** Camilla fija de examen (mobiliario del consultorio, no es un equipo del inventario). */
+function CamillaExamen({ x, z, rot = 0 }: { x: number; z: number; rot?: number }) {
+  return (
+    <group position={[x, 0, z]} rotation={[0, rot, 0]}>
+      <Caja s={[0.64, 0.62, 1.8]} p={[0, 0.31, 0]} m="blanco" r={0.03} />
+      <Caja s={[0.66, 0.1, 1.82]} p={[0, 0.67, 0]} m="tapiz" r={0.04} />
+      <Caja s={[0.66, 0.1, 0.5]} p={[0, 0.8, -0.72]} m="tapiz" r={0.04} rot={[-0.35, 0, 0]} />
+      <Caja s={[0.5, 0.02, 1.2]} p={[0, 0.73, 0.15]} m="hueso" r={0.005} />
+    </group>
+  )
+}
+
+function Planta({ x, z }: { x: number; z: number }) {
+  return (
+    <group>
+      <Cil r={0.2} h={0.4} p={[x, 0.2, z]} m="blanco" r2={0.16} />
+      {[0, 1, 2, 3, 4].map((i) => (
+        <mesh key={i} position={[x + Math.sin(i * 1.3) * 0.12, 0.7 + i * 0.1, z + Math.cos(i * 1.3) * 0.12]} castShadow>
+          <sphereGeometry args={[0.2 - i * 0.018, 20, 16]} />
+          <meshStandardMaterial color="#3f8f5a" roughness={0.8} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+function Ventana({ x, z }: { x: number; z: number }) {
+  return (
+    <group>
+      <Caja s={[3, 1.3, 0.05]} p={[x, 1.7, z]} luz="#d7efff" r={0.01} />
+      {[-1.5, -0.5, 0.5, 1.5].map((dx) => (
+        <Caja key={dx} s={[0.05, 1.4, 0.07]} p={[x + dx, 1.7, z + 0.02]} m="blanco" r={0.01} />
+      ))}
+      <Caja s={[3.1, 0.05, 0.08]} p={[x, 1.05, z + 0.03]} m="blanco" r={0.01} />
+      <Caja s={[3.1, 0.05, 0.08]} p={[x, 2.35, z + 0.03]} m="blanco" r={0.01} />
+    </group>
+  )
+}
+
+function EstructuraOncologia({ plano }: { plano: DefPlano }) {
+  const { x0, x1, z0, z1 } = plano.piso
+  const ancho = x1 - x0
+  const fondo = z1 - z0
+  return (
+    <group>
+      <Piso plano={plano} />
+      {/* línea guía del pasillo de circulación */}
+      <Caja s={[ancho - 1, 0.006, 0.08]} p={[0, 0.006, 0.2]} m="teal" r={0.002} />
+
+      {/* paredes del fondo y del lado izquierdo, con ventanas sobre la sala de quimioterapia */}
+      <Caja s={[ancho, 2.9, 0.16]} p={[0, 1.45, z0 + 0.1]} m="hueso" r={0.02} />
+      <Caja s={[0.16, 2.9, fondo]} p={[x0 + 0.1, 1.45, 0]} m="hueso" r={0.02} />
+      {[-9, -5.2, -1.4].map((x) => (
+        <Ventana key={x} x={x} z={z0 + 0.2} />
+      ))}
+
+      {/* --- sala de quimioterapia --- */}
+      <Muro a={[-11, -0.6]} b={[-7, -0.6]} />
+      <Muro a={[-4, -0.6]} b={[1, -0.6]} />
+      <Muro a={[1, -7]} b={[1, -0.6]} />
+      {SILLONES_QUIMIO.map((s) => (
+        <SillonQuimio key={`${s.x}${s.z}`} {...s} />
+      ))}
+      {/* cortinas de privacidad entre los sillones del fondo */}
+      {SILLONES_QUIMIO.filter((s) => s.rot === 0)
+        .slice(0, -1)
+        .map((s) => (
+          <group key={`c${s.x}`}>
+            <Caja s={[0.03, 1.5, 1.2]} p={[s.x + 0.95, 1.05, -6.2]} m="hueso" r={0.01} />
+            <Caja s={[0.04, 0.04, 1.3]} p={[s.x + 0.95, 1.82, -6.2]} m="acero" r={0.01} />
+          </group>
+        ))}
+      {/* estación de enfermería, con vista a todos los sillones */}
+      <group>
+        <Caja s={[3, 1.05, 0.6]} p={[-5.5, 0.525, -3.0]} m="hueso" r={0.03} />
+        <Caja s={[3.1, 0.05, 0.7]} p={[-5.5, 1.07, -3.0]} m="teal" r={0.02} />
+        <Caja s={[0.6, 1.05, 1.1]} p={[-7.2, 0.525, -3.25]} m="hueso" r={0.03} />
+        <Caja s={[0.7, 0.05, 1.2]} p={[-7.2, 1.07, -3.25]} m="teal" r={0.02} />
+        {[-6.2, -4.8].map((x) => (
+          <group key={x}>
+            <Caja s={[0.5, 0.32, 0.03]} p={[x, 1.28, -3.1]} m="oscuro" r={0.008} />
+            <Caja s={[0.46, 0.28, 0.01]} p={[x, 1.28, -3.08]} luz="#7dd3fc" r={0.004} />
+          </group>
+        ))}
+        <Silla x={-6.2} z={-2.4} rot={Math.PI} />
+        <Silla x={-4.8} z={-2.4} rot={Math.PI} />
+      </group>
+      {/* lavamanos clínico */}
+      <Caja s={[0.6, 0.85, 0.45]} p={[-10.6, 0.425, -3.2]} m="blanco" r={0.03} />
+      <Caja s={[0.5, 0.08, 0.35]} p={[-10.6, 0.89, -3.2]} m="acero" r={0.03} />
+
+      {/* --- servicio farmacéutico --- */}
+      <Muro a={[1, -0.6]} b={[1.6, -0.6]} />
+      <Muro a={[2.8, -0.6]} b={[3.4, -0.6]} />
+      <Muro a={[4.8, -0.6]} b={[11, -0.6]} />
+      {/* ventanilla de dispensación */}
+      <Caja s={[1.4, 1.0, 0.3]} p={[4.1, 0.5, -0.6]} m="blanco" r={0.02} />
+      <Caja s={[1.5, 0.05, 0.5]} p={[4.1, 1.02, -0.6]} m="teal" r={0.015} />
+      {/* sala limpia de la central de mezclas: muro de vidrio con esclusa y pass-box */}
+      <MuroVidrio x={5.2} z0={-7} z1={-2.3} />
+      <MuroVidrio x={5.2} z0={-1.3} z1={-0.6} />
+      <Caja s={[0.5, 0.5, 0.55]} p={[5.2, 1.15, -4.4]} m="acero" r={0.02} />
+      <Caja s={[0.52, 0.04, 0.6]} p={[5.2, 0.88, -4.4]} m="gris" r={0.01} />
+      {/* mesón de acero y banco en la sala limpia */}
+      <Caja s={[1.8, 0.05, 0.75]} p={[8.2, 0.9, -3.3]} m="acero" r={0.01} />
+      {[-0.82, 0.82].flatMap((dx) => [-0.3, 0.3].map((dz) => <Cil key={`${dx}${dz}`} r={0.02} h={0.88} p={[8.2 + dx, 0.44, -3.3 + dz]} m="acero" />))}
+      <Caja s={[1.7, 0.03, 0.65]} p={[8.2, 0.25, -3.3]} m="acero" r={0.008} />
+      <Cil r={0.2} h={0.05} p={[8.2, 0.62, -2.6]} m="oscuro" />
+      <Cil r={0.03} h={0.6} p={[8.2, 0.3, -2.6]} m="acero" />
+      {/* estantería del almacenamiento */}
+      <group>
+        <Caja s={[0.45, 1.9, 1.8]} p={[1.35, 0.95, -4.2]} m="blanco" r={0.02} />
+        {[0.4, 0.8, 1.2, 1.6].map((y) => (
+          <Caja key={y} s={[0.47, 0.03, 1.82]} p={[1.37, y, -4.2]} m="gris" r={0.008} />
+        ))}
+        {[-0.6, -0.2, 0.2, 0.6].map((dz) => (
+          <Caja key={dz} s={[0.3, 0.22, 0.28]} p={[1.4, 1.0, -4.2 + dz]} m="hueso" r={0.02} />
+        ))}
+      </group>
+
+      {/* --- recepción y sala de espera --- */}
+      <Caja s={[3.2, 1.05, 0.7]} p={[-5.4, 0.525, 2.2]} m="hueso" r={0.03} />
+      <Caja s={[3.3, 0.06, 0.8]} p={[-5.4, 1.08, 2.2]} m="teal" r={0.02} />
+      {[-6.2, -4.6].map((x) => (
+        <group key={x}>
+          <Caja s={[0.5, 0.32, 0.03]} p={[x, 1.3, 2.05]} m="oscuro" r={0.008} />
+          <Caja s={[0.46, 0.28, 0.01]} p={[x, 1.3, 2.03]} luz="#38bdf8" r={0.004} />
+          <Silla x={x} z={1.45} />
+        </group>
+      ))}
+      {[4.3, 5.6].flatMap((z) => [-10.2, -9.5, -8.8, -8.1, -7.4].map((x) => <Silla key={`${x}${z}`} x={x} z={z} rot={Math.PI} />))}
+      {/* televisor informativo en la pared */}
+      <Caja s={[0.06, 0.75, 1.3]} p={[x0 + 0.22, 1.8, 4.9]} m="oscuro" r={0.01} />
+      <Caja s={[0.01, 0.68, 1.22]} p={[x0 + 0.26, 1.8, 4.9]} luz="#0ea5e9" r={0.004} />
+      <Planta x={-10.4} z={1.7} />
+      <Planta x={-3.6} z={6.5} />
+
+      {/* --- consultorios de consulta externa --- */}
+      <Muro a={[-3, 1]} b={[-1.6, 1]} />
+      <Muro a={[-0.6, 1]} b={[2.4, 1]} />
+      <Muro a={[3.4, 1]} b={[5, 1]} />
+      <Muro a={[-3, 1]} b={[-3, 7]} />
+      <Muro a={[1, 1]} b={[1, 7]} />
+      {[-1, 3].map((cx) => (
+        <group key={cx}>
+          <Escritorio x={cx + 0.3} z={5.7} rot={Math.PI} />
+          <Silla x={cx + 0.3} z={6.4} rot={Math.PI} />
+          <Silla x={cx - 0.1} z={4.9} />
+          <Silla x={cx + 0.7} z={4.9} />
+          <CamillaExamen x={cx - 1.3} z={4.4} />
+        </group>
+      ))}
+
+      {/* --- sala de procedimientos --- */}
+      <Muro a={[5, 1]} b={[6, 1]} />
+      <Muro a={[7.4, 1]} b={[11, 1]} />
+      <Muro a={[5, 1]} b={[5, 7]} />
+      {/* lámpara de procedimientos rodante */}
+      <group>
+        <Cil r={0.25} h={0.05} p={[9.4, 0.03, 6.5]} m="oscuro" />
+        <Cil r={0.025} h={1.8} p={[9.4, 0.95, 6.5]} m="blanco" />
+        <Caja s={[1.84, 0.04, 0.04]} p={[9.05, 1.85, 5.65]} m="blanco" r={0.015} rot={[0, 1.96, 0]} />
+        <Cil r={0.24} h={0.1} p={[8.7, 1.8, 4.8]} m="blanco" r2={0.18} />
+        <Cil r={0.2} h={0.012} p={[8.7, 1.745, 4.8]} m="vidrio" />
+      </group>
+      {/* mesón con lavamanos y mesa de instrumental */}
+      <Caja s={[0.6, 0.88, 2.2]} p={[10.65, 0.44, 4.6]} m="blanco" r={0.02} />
+      <Caja s={[0.64, 0.05, 2.24]} p={[10.65, 0.9, 4.6]} m="gris" r={0.015} />
+      <Caja s={[0.4, 0.06, 0.4]} p={[10.6, 0.94, 5.3]} m="acero" r={0.02} />
+      <Caja s={[0.7, 0.03, 0.45]} p={[7.0, 0.85, 4.4]} m="acero" r={0.01} />
+      <Cil r={0.02} h={0.84} p={[7.0, 0.42, 4.4]} m="acero" />
+      <Cil r={0.2} h={0.03} p={[7.0, 0.02, 4.4]} m="oscuro" />
+    </group>
+  )
+}
+
 function Mesa({ x, z }: { x: number; z: number }) {
   return (
     <group position={[x, 0, z]}>
@@ -163,7 +422,7 @@ function EquipoEnSala({
   seleccionado: boolean
   onSeleccionar: (id: string) => void
 }) {
-  const { equipo, pos } = colocado
+  const { equipo, pos, rot } = colocado
   const def = MODELOS[equipo.tipo]
   const Modelo = COMPONENTES[equipo.tipo]
   const color = COLOR_ESTADO[equipo.estado]
@@ -183,9 +442,11 @@ function EquipoEnSala({
         document.body.style.cursor = ''
       }}
     >
-      {def.enMesa && <Mesa x={0} z={0} />}
-      <group position={[0, def.enMesa ? 0.8 : 0, 0]}>
-        <Modelo />
+      <group rotation={[0, rot, 0]}>
+        {def.enMesa && <Mesa x={0} z={0} />}
+        <group position={[0, def.enMesa ? 0.8 : 0, 0]}>
+          <Modelo />
+        </group>
       </group>
       {/* placa en el piso: el color es el estado del equipo */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, 0]}>
@@ -233,28 +494,39 @@ function Marcador({ punto, onIr }: { punto: DefPunto; onIr: (id: PuntoVista) => 
 
 // -- cámara -----------------------------------------------------------------------
 
-function Camara({ punto, enfoque }: { punto: PuntoVista; enfoque: { pos: [number, number, number]; y: number } | null }) {
+function Camara({ punto, enfoque, puntos }: { punto: PuntoVista; enfoque: { pos: [number, number, number]; y: number; alto: number } | null; puntos: DefPunto[] }) {
   const camara = useThree((s) => s.camera)
   const dom = useThree((s) => s.gl.domElement)
   const size = useThree((s) => s.size)
-  const objetivo = useRef({ ojo: new THREE.Vector3(...PUNTOS[0].ojo), mira: new THREE.Vector3(...PUNTOS[0].mira), aereo: true })
-  const actual = useRef({ ojo: new THREE.Vector3(...PUNTOS[0].ojo), mira: new THREE.Vector3(...PUNTOS[0].mira) })
+  const objetivo = useRef({ ojo: new THREE.Vector3(...puntos[0].ojo), mira: new THREE.Vector3(...puntos[0].mira), aereo: true })
+  const actual = useRef({ ojo: new THREE.Vector3(...puntos[0].ojo), mira: new THREE.Vector3(...puntos[0].mira) })
   const giro = useRef({ yaw: 0, pitch: 0, arrastrando: false, x: 0, y: 0 })
   const aspecto = size.width / Math.max(1, size.height)
 
   // Hacia dónde mirar cuando cambia el punto o se selecciona un equipo.
   useEffect(() => {
-    const def = PUNTOS.find((p) => p.id === punto) ?? PUNTOS[0]
+    const def = puntos.find((p) => p.id === punto) ?? puntos[0]
     const o = objetivo.current
     if (enfoque) {
-      // Se aleja lo justo para ver el equipo con su nota arriba: el punto de la nota queda a una altura que deja espacio al cuadro.
       const [px, , pz] = enfoque.pos
-      const fraccion = THREE.MathUtils.clamp(400 / size.height, 0.5, 0.78)
-      const d = Math.max(3.9, ((enfoque.y / (1 - fraccion)) / (2 * Math.tan(THREE.MathUtils.degToRad(22.5)))) * 0.92)
-      const alto = 2 * d * Math.tan(THREE.MathUtils.degToRad(22.5))
-      const yMira = enfoque.y + (fraccion - 0.5) * alto
-      o.ojo.set(px, yMira + 0.45, pz + d)
-      o.mira.set(px, yMira, pz)
+      if (size.width >= ANCHO_LATERAL) {
+        // Pantalla ancha: acercamiento fuerte al equipo, desplazado a la izquierda para que su nota quepa al lado.
+        const d = Math.max(2.4, enfoque.alto * 1.75)
+        const altoVista = 2 * d * Math.tan(THREE.MathUtils.degToRad(22.5))
+        const fx = THREE.MathUtils.clamp(0.5 - (ANCHO_NOTA + LINEA_NOTA) / (2 * size.width), 0.28, 0.5)
+        const desplazamiento = (0.5 - fx) * altoVista * aspecto
+        const yMira = enfoque.alto * 0.5
+        o.ojo.set(px + desplazamiento, yMira + 0.4, pz + d)
+        o.mira.set(px + desplazamiento, yMira, pz)
+      } else {
+        // Celular: se aleja lo justo para ver el equipo con su nota arriba.
+        const fraccion = THREE.MathUtils.clamp(400 / size.height, 0.5, 0.78)
+        const d = Math.max(3.9, ((enfoque.y / (1 - fraccion)) / (2 * Math.tan(THREE.MathUtils.degToRad(22.5)))) * 0.92)
+        const alto = 2 * d * Math.tan(THREE.MathUtils.degToRad(22.5))
+        const yMira = enfoque.y + (fraccion - 0.5) * alto
+        o.ojo.set(px, yMira + 0.45, pz + d)
+        o.mira.set(px, yMira, pz)
+      }
       o.aereo = false
     } else {
       // En pantallas angostas (celular vertical) la cámara se aleja para que quepa todo el ancho de la sala.
@@ -267,7 +539,7 @@ function Camara({ punto, enfoque }: { punto: PuntoVista; enfoque: { pos: [number
     giro.current.yaw = 0
     giro.current.pitch = 0
     invalidate()
-  }, [punto, enfoque, aspecto, size.height])
+  }, [punto, enfoque, aspecto, size.height, size.width, puntos])
 
   // Arrastrar: en la vista aérea gira alrededor del consultorio; a nivel del piso, mira alrededor.
   useEffect(() => {
@@ -288,13 +560,16 @@ function Camara({ punto, enfoque }: { punto: PuntoVista; enfoque: { pos: [number
     const arriba = () => {
       g.arrastrando = false
     }
+    // Si el navegador toma el gesto para desplazar la página (touch-action: pan-y), llega pointercancel.
     dom.addEventListener('pointerdown', abajo)
     window.addEventListener('pointermove', mover)
     window.addEventListener('pointerup', arriba)
+    window.addEventListener('pointercancel', arriba)
     return () => {
       dom.removeEventListener('pointerdown', abajo)
       window.removeEventListener('pointermove', mover)
       window.removeEventListener('pointerup', arriba)
+      window.removeEventListener('pointercancel', arriba)
     }
   }, [dom])
 
@@ -346,7 +621,10 @@ export default function SalaConsultorio({
   punto,
   onPunto,
   notaRef,
+  plano: idPlano = 'general',
 }: {
+  /** Distribución del consultorio (odontología y baja complejidad, u oncología). */
+  plano?: PlanoId
   equipos: EquipoSala[]
   seleccionadoId: string | null
   onSeleccionar: (id: string | null) => void
@@ -355,19 +633,25 @@ export default function SalaConsultorio({
   /** Elemento HTML de la nota flotante: se mueve hasta el equipo seleccionado. */
   notaRef: RefObject<HTMLDivElement | null>
 }) {
-  const colocados = useMemo(() => colocarEquipos(equipos), [equipos])
+  const plano = PLANOS[idPlano]
+  const puntos = useMemo(() => puntosDe(plano), [plano])
+  const colocados = useMemo(() => colocarEquipos(equipos, plano), [equipos, plano])
   const seleccionado = colocados.find((c) => c.equipo.id === seleccionadoId)
-  const ancla = useMemo(() => (seleccionado ? anclaDeEquipo(seleccionado) : null), [seleccionado])
-  const enfoque = useMemo(() => (seleccionado && ancla ? { pos: seleccionado.pos, y: ancla[1] } : null), [seleccionado, ancla])
+  const anclas = useMemo(() => (seleccionado ? anclasDeEquipo(seleccionado) : null), [seleccionado])
+  const enfoque = useMemo(() => (seleccionado && anclas ? { pos: seleccionado.pos, y: anclas.arriba[1], alto: anclas.alto } : null), [seleccionado, anclas])
+
+  const [movil] = useState(esMovil)
 
   return (
     <Canvas
       shadows
       frameloop="demand"
-      dpr={[1, 1.75]}
-      camera={{ fov: 45, near: 0.1, far: 90, position: PUNTOS[0].ojo }}
+      dpr={movil ? [1, 1.5] : [1, 1.75]}
+      camera={{ fov: 45, near: 0.1, far: 90, position: puntos[0].ojo }}
       gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.85 }}
       onPointerMissed={() => onSeleccionar(null)}
+      // En celulares el gesto horizontal gira la vista y el vertical desplaza la página: el visor no "atrapa" el scroll.
+      style={{ touchAction: 'pan-y' }}
       role="img"
       aria-label="Modelo 3D del consultorio. Arrastra para mirar alrededor y toca un equipo para ver sus datos en una nota."
     >
@@ -378,20 +662,20 @@ export default function SalaConsultorio({
         position={[7, 13, 9]}
         intensity={2.0}
         castShadow
-        shadow-mapSize={[3072, 3072]}
+        shadow-mapSize={movil ? [1536, 1536] : [3072, 3072]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.03}
-        shadow-camera-left={-12}
-        shadow-camera-right={12}
-        shadow-camera-top={9}
-        shadow-camera-bottom={-9}
+        shadow-camera-left={-15}
+        shadow-camera-right={15}
+        shadow-camera-top={11}
+        shadow-camera-bottom={-11}
         shadow-camera-near={1}
-        shadow-camera-far={36}
+        shadow-camera-far={42}
       />
-      <Camara punto={punto} enfoque={enfoque} />
-      <SeguirAncla pos={ancla} notaRef={notaRef} />
-      <Estructura />
-      {PUNTOS.filter((p) => p.id !== 'general' && p.id !== punto).map((p) => (
+      <Camara punto={punto} enfoque={enfoque} puntos={puntos} />
+      <SeguirAncla pos={anclas ? anclas.lateral : null} posVertical={anclas ? anclas.arriba : null} notaRef={notaRef} />
+      {plano.id === 'oncologia' ? <EstructuraOncologia plano={plano} /> : <EstructuraGeneral plano={plano} />}
+      {puntos.filter((p) => p.id !== 'general' && p.id !== punto).map((p) => (
         <Marcador key={p.id} punto={p} onIr={onPunto} />
       ))}
       {colocados.map((c) => (

@@ -43,5 +43,50 @@
     "fecha": "-5d",
     "leida": true,
     "refId": "ing-1"
+  },
+  {
+    "id": "not-inoos-1",
+    "para": "consultorio",
+    "refId": "con-inoos",
+    "tipo": "Vencimiento",
+    "mensaje": "La calibración de una bomba de infusión de la sede Cali venció hace 6 días. Ya hay una visita programada.",
+    "fecha": "-1d",
+    "leida": false
+  },
+  {
+    "id": "not-inoos-2",
+    "para": "consultorio",
+    "refId": "con-inoos",
+    "tipo": "Sistema",
+    "mensaje": "Bienvenida a Pulso, Adriana. El Plan Integral cubre los 14 equipos de las sedes Cali y Popayán.",
+    "fecha": "-21d",
+    "leida": true
+  },
+  {
+    "id": "not-ing-karol",
+    "para": "ingeniero",
+    "refId": "ing-karol",
+    "tipo": "Sistema",
+    "mensaje": "Completa tu perfil y carga tu tarjeta COPNIA e inscripción INVIMA para recibir el sello de verificado.",
+    "fecha": "-1d",
+    "leida": false
+  },
+  {
+    "id": "not-ing-juan-pablo",
+    "para": "ingeniero",
+    "refId": "ing-juan-pablo",
+    "tipo": "Sistema",
+    "mensaje": "Completa tu perfil y carga tu tarjeta COPNIA e inscripción INVIMA para recibir el sello de verificado.",
+    "fecha": "-1d",
+    "leida": false
+  },
+  {
+    "id": "not-ing-farid",
+    "para": "ingeniero",
+    "refId": "ing-farid",
+    "tipo": "Sistema",
+    "mensaje": "Completa tu perfil y carga tu tarjeta COPNIA e inscripción INVIMA para recibir el sello de verificado.",
+    "fecha": "-1d",
+    "leida": false
   }
 ]

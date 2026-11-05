@@ -34,17 +34,38 @@ npm run lint
 
 ## Cuentas de demostración
 
-El correo define a qué portal entras. Contraseña para todas: `pulso123`.
+El correo define a qué portal entras.
+
+**Cuentas de prueba** (contraseña `pulso123`), para recorrer la plataforma con datos de ejemplo:
 
 | Correo | Portal |
 |---|---|
-| `consultorio@pulso.co` | Portal del consultorio (Clínica Odontológica Sanare, Cali) |
-| `ingeniero@pulso.co` | Portal del ingeniero (Laura Medina, Cali) |
+| `consultorio@pulso.co` | Portal del consultorio (Clínica Odontológica Sanare, Cali; ficticio) |
+| `ingeniero@pulso.co` | Portal del ingeniero (Laura Medina, Cali; ficticia) |
 | `admin@pulso.co` | Administración Pulso |
 
-También hay botones de acceso rápido en `/ingresar`. Además, cada consultorio e ingeniero de los datos de ejemplo
-tiene su propio usuario (ver `src/data/usuarios.json`; contraseña `pulso123`). Todas las cuentas leen y escriben en
-la misma "base de datos" de la sesión, así que lo que hace una se ve en las otras.
+**Cuentas reales** (contraseña `1212`):
+
+| Correo | Portal |
+|---|---|
+| `adriana.molina@pulso.co` | Inoos · Instituto Oncológico Ospedale (REPS 7600115412), sedes Cali y Popayán, 14 equipos |
+| `karol.restrepo@pulso.co` | Ingeniero: Karol Restrepo Maldonado |
+| `juanpablo.durango@pulso.co` | Ingeniero: Juan Pablo Durango |
+| `farid.gallego@pulso.co` | Ingeniero: Farid Gallego |
+
+Los perfiles de los tres ingenieros reales quedan **En revisión** y sin números de COPNIA/INVIMA: no se inventaron
+credenciales. Cada uno completa su verificación y el administrador los aprueba en `/admin/verificacion`. Los perfiles
+de Karol y Juan Pablo usan su propia presentación y trayectoria; el de Farid es **ilustrativo** (trabajo independiente)
+hasta que envíe sus datos. Solo Laura Medina (demo) tiene reseñas de ejemplo.
+El inventario de Inoos sigue la ficha de usuario construida por el equipo (Adriana Molina es una persona de ejemplo);
+series y registros sanitarios quedan "Por registrar".
+
+El mapa del administrador muestra además **10 consultorios ficticios** (Cali, Yumbo, Palmira, Pereira, Bogotá y Medellín)
+con sus equipos, solo para ver el mapa poblado: no tienen cuenta ni solicitudes, así que no aparecen en los portales
+de consultorio ni de ingeniero.
+
+También hay botones de acceso rápido en `/ingresar`. Todas las cuentas leen y escriben en la misma "base de datos"
+de la sesión, así que lo que hace una se ve en las otras.
 
 ### Crear tu propia cuenta (solo dura la sesión)
 
@@ -209,12 +230,15 @@ links como `/consultorio` sirven `index.html`) sin tocar `/_vercel/*`.
 
 ## Modelo de cobro
 
-- **Acuerdo directo con el ingeniero:** el mantenimiento se acuerda entre el
-  consultorio y el ingeniero; Pulso media y cobra una **comisión por servicio**.
-- **Plan mensual (opcional):** toda la logística de ordenamiento y las
-  esquemáticas de seguimiento. Es la **única cuota mensual**. Dos planes:
-  **Plan Básico** (consultorios pequeños) y **Plan Custom** (organizaciones más
-  grandes, condiciones **a convenir** con el equipo).
+Según `docs/Pulso_Biomedico_modelo_de_ingresos_precios_y_proyecciones_V5.md`:
+
+- **Cuota mensual por plan** (gestión: cronograma, asignación, expediente, semáforo, triage), sin IVA:
+  **Esencial** $100.000 (1 a 6 equipos) e **Integral** $200.000 (7 a 15 equipos y hasta 3 sedes). Más de 15 equipos
+  o más de 3 sedes se cotiza **a la medida**.
+- **Comisión del 15 %** sobre cada visita, que el consultorio paga aparte por la plataforma; el 85 % va al ingeniero.
+  Valores de referencia: visita programada $240.000, correctivo $300.000, diagnóstico exprés $110.000.
+- Primer pago: 20 % de la mensualidad, reembolsable y descontado de la primera cuota. Sin permanencia. Ajuste anual
+  de 5 %. El diagnóstico inicial lo asume Pulso.
 
 ## Aterrizaje al contexto colombiano
 

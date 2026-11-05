@@ -10,7 +10,7 @@
  * demostración siempre tenga vencimientos cercanos.
  */
 
-const PREFIJO = 'pulso.db.v4.'
+const PREFIJO = 'pulso.db.v7.'
 
 const RELATIVA = /^([+-]\d+)d$/
 

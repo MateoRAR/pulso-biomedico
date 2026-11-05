@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from '@/components/ui/toast'
 import { cop } from '@/lib/format'
 import { useData } from '@/lib/store'
+import { TARIFAS } from '@/lib/planes'
 
 const SLA = [
   { nivel: 'Crítica', horas: 8 },
@@ -20,7 +21,7 @@ const SLA = [
 export function AdminPlanes() {
   const { planes } = useData()
   const [precios, setPrecios] = useState<Record<string, number>>(Object.fromEntries(planes.map((p) => [p.id, p.precioCOP])))
-  const [comision, setComision] = useState(15)
+  const [comision, setComision] = useState(Math.round(TARIFAS.comisionPulso * 100))
   const [zonaDefecto, setZonaDefecto] = useState('Sur')
 
   return (
@@ -40,7 +41,7 @@ export function AdminPlanes() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="font-display text-xl">Planes</CardTitle>
-            <CardDescription>Precio mensual de referencia en COP.</CardDescription>
+            <CardDescription>Precio mensual de lista en COP, sin IVA. Ajuste anual de 5 %.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {planes.map((plan) => (

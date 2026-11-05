@@ -8,6 +8,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/misc'
 import { diasHasta, fechaCorta, semaforoEquipo } from '@/lib/format'
+import { nombreCorto, planesConPrecio, precioPlan, rangoPlan } from '@/lib/planes'
 import { useTiempoEnPagina } from '@/lib/analytics'
 import { useSession } from '@/lib/session'
 import { useData } from '@/lib/store'
@@ -256,7 +257,7 @@ export function ConsultorioDashboard() {
             <Card className="border-border/80">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">{plan?.nombre ?? 'Sin plan'}</CardTitle>
-                <CardDescription>{plan ? plan.rangoEquipos : 'Pagas solo la comisión de cada servicio.'}</CardDescription>
+                <CardDescription>{plan ? `${precioPlan(plan)} · ${plan.rangoEquipos}` : `Elige el plan según tus equipos: ${planesConPrecio(planes).map((p) => `${nombreCorto(p)} (${rangoPlan(p)})`).join(' o ')}.`}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Link to="/consultorio/perfil" className="text-sm font-semibold text-primary hover:underline">

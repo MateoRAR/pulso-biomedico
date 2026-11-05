@@ -33,9 +33,9 @@ export function ConsultorioSolicitudNueva() {
     const verificados = ingenieros.filter((i) => i.verificado && i.disponible)
     const enCiudad = verificados.filter((i) => i.ciudadId === consultorio.ciudadId)
     const lista = enCiudad.length ? enCiudad : verificados
-    // los de su zona primero
-    return [...lista].sort((a, b) => Number(b.zonas.includes(consultorio.zona)) - Number(a.zonas.includes(consultorio.zona)))
-  }, [ingenieros, consultorio.ciudadId, consultorio.zona])
+    // los mejor calificados primero
+    return [...lista].sort((a, b) => b.calificacion - a.calificacion)
+  }, [ingenieros, consultorio.ciudadId])
 
   const elegido = candidatos.find((i) => i.id === ingenieroElegido) ?? null
 
@@ -183,7 +183,8 @@ export function ConsultorioSolicitudNueva() {
                   <span>
                     <span className="block text-sm font-semibold">{ing.nombre}</span>
                     <span className="text-xs text-muted-foreground">
-                      {ing.zonas.join(', ')} · {ing.opiniones.length ? `★ ${ing.calificacion.toFixed(1)}` : 'Sin calificaciones'}
+                      {ing.ciudad}
+                      {ing.equipos.length > 0 && ` · ${ing.equipos.join(', ')}`} · {ing.opiniones.length ? `★ ${ing.calificacion.toFixed(1)}` : 'Sin calificaciones'}
                     </span>
                   </span>
                 </label>

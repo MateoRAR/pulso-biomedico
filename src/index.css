@@ -814,7 +814,7 @@
 }
 .nota-card {
   position: absolute;
-  bottom: var(--nota-linea);
+  bottom: calc(var(--nota-linea) - var(--ny, 0px));
   left: var(--cx, -28px);
   width: min(17.5rem, 78vw);
   padding: 0.9rem 0.95rem 0.85rem;
@@ -845,7 +845,7 @@
 }
 .nota-ancla[data-lado='abajo'] .nota-card {
   bottom: auto;
-  top: var(--nota-linea);
+  top: calc(var(--nota-linea) - var(--ny, 0px));
   transform-origin: top left;
   animation-name: nota-despliegue-abajo;
 }
@@ -894,5 +894,89 @@
     opacity: 1;
     clip-path: inset(0 0 0 0 round 0.9rem);
     transform: none;
+  }
+}
+
+/* Nota al lado del modelo (pantallas anchas): línea horizontal y cuadro que se despliega hacia el lado. */
+.nota-ancla[data-lado='derecha'] .nota-linea,
+.nota-ancla[data-lado='izquierda'] .nota-linea {
+  bottom: auto;
+  top: -1px;
+  width: var(--nota-linea);
+  height: 2px;
+  animation-name: nota-linea-x;
+}
+.nota-ancla[data-lado='derecha'] .nota-linea {
+  left: 0;
+  transform-origin: left;
+  background: linear-gradient(to right, var(--primary), color-mix(in oklab, var(--primary) 30%, transparent));
+}
+.nota-ancla[data-lado='izquierda'] .nota-linea {
+  left: auto;
+  right: 0;
+  transform-origin: right;
+  background: linear-gradient(to left, var(--primary), color-mix(in oklab, var(--primary) 30%, transparent));
+}
+.nota-ancla[data-lado='derecha'] .nota-card,
+.nota-ancla[data-lado='izquierda'] .nota-card {
+  bottom: auto;
+  top: var(--cy, -2rem);
+}
+.nota-ancla[data-lado='derecha'] .nota-card {
+  left: var(--nota-linea);
+  transform-origin: left center;
+  animation-name: nota-despliegue-der;
+}
+.nota-ancla[data-lado='izquierda'] .nota-card {
+  left: auto;
+  right: var(--nota-linea);
+  transform-origin: right center;
+  animation-name: nota-despliegue-izq;
+}
+@keyframes nota-linea-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes nota-despliegue-der {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0 round 0.9rem);
+    transform: translateX(-10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 0.9rem);
+    transform: none;
+  }
+}
+@keyframes nota-despliegue-izq {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 0 100% round 0.9rem);
+    transform: translateX(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 0.9rem);
+    transform: none;
+  }
+}
+
+/* Barra de progreso del punto activo de un carrusel: al terminar, el carrusel avanza. */
+.carrusel-progreso {
+  animation-name: carrusel-progreso;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes carrusel-progreso {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }

@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/misc'
 import { toast } from '@/components/ui/toast'
 import { cop } from '@/lib/format'
 import { useData } from '@/lib/store'
+import { pct, TARIFAS } from '@/lib/planes'
 
 export function ConsultorioPerfil() {
   const { consultorio, planes, actualizarConsultorio } = useData()
@@ -91,13 +92,17 @@ export function ConsultorioPerfil() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="font-semibold">{plan?.nombre ?? 'Sin plan'}</span>
-                {plan ? <Badge variant="good">Activo</Badge> : <Badge variant="outline">Acuerdo directo</Badge>}
+                {plan ? <Badge variant="good">Activo</Badge> : <Badge variant="outline">Pendiente</Badge>}
               </div>
               <p className="text-sm text-muted-foreground">
-                {plan?.rangoEquipos ?? 'Pagas solo la comisión por cada servicio que se ejecute.'}
+                {plan?.rangoEquipos ?? 'Aún no tienes plan: se define con el diagnóstico inicial de tus equipos.'}
               </p>
               <p className="font-display text-2xl font-bold text-primary">
-                {plan ? (plan.precioTexto ?? cop(plan.precioCOP)) : '$0'}
+                {plan ? (plan.precioTexto ?? cop(plan.precioCOP)) : '—'}
+                {plan && !plan.precioTexto && <span className="ml-1 text-sm font-normal text-muted-foreground">/ mes, sin IVA</span>}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                La cuota cubre la gestión. Cada visita del ingeniero se paga aparte por la plataforma, a tarifa de la red; Pulso retiene el {pct(TARIFAS.comisionPulso)}.
               </p>
               <div className="space-y-2">
                 <Label htmlFor="plan">Cambiar de plan</Label>
@@ -110,7 +115,7 @@ export function ConsultorioPerfil() {
                     toast.info('Plan actualizado', { description: 'El cambio aplica desde el próximo ciclo (simulado).' })
                   }}
                 >
-                  <option value="">Sin plan · solo comisión por servicio</option>
+                  <option value="">Sin plan (pendiente del diagnóstico inicial)</option>
                   {planes.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.nombre} — {p.precioTexto ?? cop(p.precioCOP)}

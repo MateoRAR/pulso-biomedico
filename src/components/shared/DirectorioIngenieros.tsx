@@ -105,7 +105,7 @@ export function DirectorioIngenieros() {
             <CardContent className="flex flex-1 flex-col justify-between gap-5">
               <div className="space-y-3 text-sm">
                 <p className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="size-4 text-primary" /> {ing.ciudad} · {ing.zonas.slice(0, 2).join(', ')}
+                  <MapPin className="size-4 text-primary" /> {ing.ciudad}
                 </p>
                 <p className="flex items-center gap-2">
                   <Star className="size-4 text-primary" /> {textoCalificacion(ing)}

@@ -25,7 +25,7 @@ export function IngenieroSolicitudes() {
   const [detalle, setDetalle] = useState<Servicio | null>(null)
 
   const lista = servicios
-    .filter((s) => s.ingenieroId === yo.id || (s.ingenieroId === null && yo.zonas.includes(s.zona) && consultorios.find((c) => c.id === s.consultorioId)?.ciudadId === yo.ciudadId))
+    .filter((s) => s.ingenieroId === yo.id || (s.ingenieroId === null && consultorios.find((c) => c.id === s.consultorioId)?.ciudadId === yo.ciudadId))
     .filter((s) => {
       if (filtro === 'pendientes') return ['Asignada', 'Programada'].includes(s.estado)
       if (filtro === 'activos') return ['Confirmada', 'En ejecución'].includes(s.estado)
@@ -47,7 +47,7 @@ export function IngenieroSolicitudes() {
   function rechazar(s: Servicio) {
     actualizarServicio(s.id, { ingenieroId: null, estado: 'Programada' })
     track(EVENTOS.servicioRechazado, { tipo: s.tipo, criticidad: s.criticidad })
-    toast.info('Asignación rechazada', { description: 'La plataforma reasignará a otro ingeniero de la zona.' })
+    toast.info('Asignación rechazada', { description: 'La plataforma reasignará a otro ingeniero de la ciudad.' })
     setDetalle(null)
   }
 

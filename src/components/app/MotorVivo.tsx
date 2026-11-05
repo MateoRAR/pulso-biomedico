@@ -60,8 +60,7 @@ export function MotorVivo() {
           const cliente = d.consultorios.find((c) => c.id === s.consultorioId)
           const delaCiudad = d.ingenieros.filter((i) => i.verificado && i.disponible && (!cliente || i.ciudadId === cliente.ciudadId))
           const verificados = delaCiudad.length ? delaCiudad : d.ingenieros.filter((i) => i.verificado && i.disponible)
-          const cercanos = verificados.filter((i) => i.zonas.includes(s.zona))
-          const elegido = [...(cercanos.length ? cercanos : verificados)].sort((a, b) => b.calificacion - a.calificacion)[0]
+          const elegido = [...verificados].sort((a, b) => b.calificacion - a.calificacion)[0]
           if (!elegido) continue
           enCurso.add(llave)
           d.actualizarServicio(s.id, {
@@ -136,11 +135,11 @@ export function MotorVivo() {
         const total = entrantes()
         if (total >= MAX_ENTRANTES) return
         const yo = yoRef.current
-        // Un consultorio activo de su ciudad (de su zona, si lo hay) con equipos registrados.
+        // Un consultorio activo de su ciudad con equipos registrados.
         const candidatos = d.consultorios.filter(
           (c) => c.activo && c.ciudadId === yo.ciudadId && d.equipos.some((e) => e.consultorioId === c.id),
         )
-        const cliente = candidatos.find((c) => yo.zonas.includes(c.zona)) ?? candidatos[0]
+        const cliente = candidatos[Math.floor(Math.random() * candidatos.length)]
         if (!cliente) return
         const zona = cliente.zona
         const nueva = solicitudEntrante(

@@ -319,8 +319,9 @@ export function useAutenticacion() {
     async (email: string, password: string): Promise<ResultadoIngreso> => {
       const { usuario, motivo } = await usuariosService.autenticar(email, password)
       if (!usuario) {
-        const demo = motivo === 'clave' ? (await usuariosService.porEmail(email))?.origen === 'demo' : false
-        return { ok: false, motivo: motivo ?? 'no-existe', pista: demo ? 'pulso123' : undefined }
+        // Solo las cuentas de demostración publicadas dan la pista de su contraseña.
+        const cuenta = motivo === 'clave' ? await usuariosService.porEmail(email) : undefined
+        return { ok: false, motivo: motivo ?? 'no-existe', pista: cuenta?.publica ? cuenta.password : undefined }
       }
       const sesion = sesionDeUsuario(usuario)
       abrirSesion(sesion)

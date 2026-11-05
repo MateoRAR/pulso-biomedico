@@ -4,6 +4,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { MODELOS, type TipoModelo } from '@/components/consultorio3d/catalogo'
 import { NotaFlotante } from '@/components/consultorio3d/NotaFlotante'
+import { SelectorDeslizante } from '@/components/shared/SelectorDeslizante'
 import { PageHeader, SemaforoBadge } from '@/components/shared/ui'
 import { VistaDual } from '@/components/shared/VistaDual'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -76,29 +77,19 @@ export function ConsultorioBibliotecaEquipo() {
   )
 
   const vista3D = (
-    <div className="space-y-5">
-      <div className="relative h-[calc(100svh-17.5rem)] min-h-[28rem] max-sm:h-[calc(100svh-24rem)] max-sm:min-h-[26rem] max-h-[52rem] overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-[#eef5f8] to-[#d3e2ea]">
+    <div className="space-y-4">
+      {/* Partes del equipo: una barra con pastilla que se desliza; tocar una despliega su nota junto al modelo */}
+      <SelectorDeslizante
+        opciones={def.partes.map((p) => ({ id: p.id, nombre: p.nombre }))}
+        valor={parteActiva}
+        etiqueta="Partes principales"
+        onCambio={(id) => setParteActiva(parteActiva === id ? null : id)}
+      />
+      <div className="relative h-[calc(100svh-22rem)] min-h-[28rem] max-sm:h-[calc(100svh-28rem)] max-sm:min-h-[24rem] max-h-[52rem] overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-[#eef5f8] to-[#d3e2ea]">
         <Suspense fallback={<p className="grid h-full place-items-center text-base text-muted-foreground">Cargando la vista 3D…</p>}>
           <VisorEquipo tipo={def.id} parteActiva={parteActiva} onParte={setParteActiva} reinicio={reinicio} notaRef={notaRef} />
         </Suspense>
 
-        {/* Partes del equipo: tocar una despliega su nota sobre el modelo */}
-        <div className="absolute inset-x-3 top-3 z-20 flex gap-2 overflow-x-auto pb-1 pr-12" role="group" aria-label="Partes principales">
-          {def.partes.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              aria-pressed={parteActiva === p.id}
-              onClick={() => setParteActiva(parteActiva === p.id ? null : p.id)}
-              className={cn(
-                'min-h-10 shrink-0 rounded-lg border px-4 text-sm font-semibold shadow-sm backdrop-blur transition-colors sm:text-base',
-                parteActiva === p.id ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-card/90 hover:border-primary',
-              )}
-            >
-              {p.nombre}
-            </button>
-          ))}
-        </div>
         <Button
           variant="outline"
           size="icon"
@@ -113,7 +104,8 @@ export function ConsultorioBibliotecaEquipo() {
           <RotateCcw />
         </Button>
         <p className="pointer-events-none absolute inset-x-3 bottom-3 z-20 w-fit rounded-lg bg-card/85 px-3 py-1.5 text-xs font-medium shadow-sm backdrop-blur">
-          Arrastra para girar · pellizca o usa la rueda para acercar · toca un punto blanco o una parte
+          <span className="sm:hidden">Arrastra para girar · pellizca para acercar · toca un punto</span>
+          <span className="max-sm:hidden">Arrastra para girar · pellizca o usa la rueda para acercar · toca un punto blanco o una parte</span>
         </p>
 
         {parte && (

@@ -10,7 +10,8 @@ import { EVENTOS, track, useTiempoEnPagina } from '@/lib/analytics'
 import { ciudades, especialidades, zonasCali } from '@/data/tipos'
 import type { Rol } from '@/data/tipos'
 import { etiquetaRol, rutaInicioPorRol } from '@/lib/session'
-import { useAutenticacion } from '@/lib/store'
+import { planRecomendado, precioPlan, rangoPlan } from '@/lib/planes'
+import { useAutenticacion, useData } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
 type RolRegistro = Exclude<Rol, 'admin'>
@@ -36,6 +37,7 @@ const roles: { rol: RolRegistro; icon: typeof Stethoscope; titulo: string; texto
 const EMAIL_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 export function Registro() {
+  const { planes } = useData()
   const { registrar } = useAutenticacion()
   const navigate = useNavigate()
   useTiempoEnPagina('registro')
@@ -84,7 +86,7 @@ export function Registro() {
       lugar:
         rol === 'consultorio'
           ? [`${primerNombre ? `${primerNombre}, ` : ''}¿dónde atienden?`, 'La zona nos permite asignarte al ingeniero más cercano, no al primero que aparezca.']
-          : [`${primerNombre ? `${primerNombre}, ` : ''}¿por dónde te mueves?`, 'Agrupamos servicios por zona para que pases más tiempo trabajando y menos en el tráfico.'],
+          : [`${primerNombre ? `${primerNombre}, ` : ''}¿en qué ciudad trabajas?`, 'Te mostramos las solicitudes de los consultorios de tu ciudad.'],
       perfil:
         rol === 'consultorio'
           ? ['Ya casi conocemos tu consultorio.', 'Con esto dimensionamos el diagnóstico de tu dotación y el plan que mejor te queda.']
@@ -153,7 +155,7 @@ export function Registro() {
   const pasosCreacion =
     rol === 'consultorio'
       ? ['Creando la carpeta de documentos de tu consultorio', 'Preparando el estado de tus equipos', 'Avisando a la red de ingenieros de tu zona']
-      : ['Creando tu perfil profesional', 'Abriendo tu agenda y tu cola de solicitudes', 'Buscando servicios cerca de tu zona']
+      : ['Creando tu perfil profesional', 'Abriendo tu agenda y tu cola de solicitudes', 'Buscando servicios en tu ciudad']
 
   // ---------- pantalla de creación ----------
   if (creando !== null) {
@@ -259,7 +261,7 @@ export function Registro() {
         {paso === 'lugar' && (
           <>
             <h1 className="font-display text-3xl font-bold leading-tight">
-              {rol === 'consultorio' ? `${primerNombre}, ¿cómo se llama tu consultorio y dónde está?` : `${primerNombre}, ¿en qué ciudad y zona trabajas?`}
+              {rol === 'consultorio' ? `${primerNombre}, ¿cómo se llama tu consultorio y dónde está?` : `${primerNombre}, ¿en qué ciudad trabajas?`}
             </h1>
             <div className="space-y-5">
               {rol === 'consultorio' && (
@@ -270,7 +272,7 @@ export function Registro() {
                     ref={primerCampo}
                     value={organizacion}
                     onChange={(e) => setOrganizacion(e.target.value)}
-                    placeholder="Clínica Odontológica Sanare"
+                    placeholder="Nombre de tu consultorio"
                     className="h-12 text-base"
                   />
                 </div>
@@ -284,6 +286,7 @@ export function Registro() {
                     ))}
                   </Select>
                 </div>
+                {rol === 'consultorio' && (
                 <div className="space-y-2">
                   <Label htmlFor="zona">Zona</Label>
                   <Select id="zona" value={zona} onChange={(e) => setZona(e.target.value)} className="h-12">
@@ -292,6 +295,7 @@ export function Registro() {
                     ))}
                   </Select>
                 </div>
+                )}
               </div>
             </div>
           </>
@@ -354,7 +358,13 @@ export function Registro() {
                 </div>
                 {rol === 'consultorio' && (
                   <p className="text-base text-muted-foreground">
-                    {cifra <= 15 ? 'Con esta cantidad de equipos, el Plan Básico suele alcanzar.' : 'Con esta cantidad de equipos, conviene hablar de un Plan Custom.'}
+                    {(() => {
+                      const plan = planRecomendado(planes, cifra)
+                      if (!plan) return null
+                      return plan.precioTexto
+                        ? `Con ${rangoPlan(plan)}, la cuota se cotiza a la medida.`
+                        : `Con esta cantidad de equipos te corresponde el ${plan.nombre} (${precioPlan(plan)}).`
+                    })()}
                   </p>
                 )}
               </div>

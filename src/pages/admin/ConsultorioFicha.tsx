@@ -9,7 +9,7 @@ import { useData } from '@/lib/store'
 
 /**
  * Ficha para ver y editar un consultorio (o crear uno nuevo). El mismo formulario se usa
- * al lado del mapa y en la ventana de la vista de tabla.
+ * en el cuadro que flota sobre el mapa y en la ventana de la vista de tabla.
  */
 export function ConsultorioFicha({
   consultorio,
@@ -118,7 +118,7 @@ export function ConsultorioFicha({
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="f-plan">Plan</Label>
           <Select id="f-plan" value={datos.planId} onChange={(e) => cambiar('planId', e.target.value)}>
-            <option value="">Sin plan (solo comisión por servicio)</option>
+            <option value="">Sin plan (pendiente del diagnóstico inicial)</option>
             {planes.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.nombre}
@@ -135,7 +135,7 @@ export function ConsultorioFicha({
           <Input id="f-lng" type="number" step="0.0001" value={datos.lng} onChange={(e) => cambiar('lng', Number(e.target.value))} />
         </div>
         <p className="text-sm text-muted-foreground sm:col-span-2">
-          También puedes mover el pin en el mapa arrastrándolo: la ubicación se guarda sola.
+          También puedes arrastrar su punto en el mapa 2D: la ubicación se guarda sola.
         </p>
       </div>
 

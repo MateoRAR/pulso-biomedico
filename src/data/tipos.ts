@@ -2,6 +2,7 @@
 // mediante los servicios de `src/services` (INVIMA/COPNIA, red en Cali y otras ciudades).
 
 import ciudadesJson from './ciudades.json'
+import especialidadesJson from './especialidades.json'
 
 export type Rol = 'consultorio' | 'ingeniero' | 'admin'
 
@@ -64,6 +65,8 @@ export interface Usuario {
   activo: boolean
   /** `demo` = viene de los JSON; `registro` = creada en esta sesión. */
   origen: 'demo' | 'registro'
+  /** Cuenta de demostración publicada en la pantalla de ingreso (acceso rápido). */
+  publica?: boolean
   creado: string
 }
 
@@ -97,7 +100,6 @@ export interface Ingeniero {
   nombre: string
   titulo: string
   ciudad: string
-  zonas: string[]
   especialidades: string[]
   equipos: string[]
   /** Calculados desde las calificaciones y servicios registrados (no se guardan). */
@@ -116,6 +118,12 @@ export interface Ingeniero {
   disponible: boolean
   ciudadId: string
   activo: boolean
+  /** Perfil profesional público (opcional). */
+  linkedin?: string
+  /** Estudios (opcional). */
+  formacion?: { titulo: string; institucion: string }[]
+  /** Experiencia laboral, de la más reciente a la más antigua (opcional). */
+  trayectoria?: { cargo: string; organizacion: string; periodo: string; lugar?: string; descripcion?: string }[]
 }
 
 /** Ingeniero tal como se guarda: puntaje, servicios y opiniones se calculan al leerlo. */
@@ -213,6 +221,10 @@ export interface Plan {
   resumen: string
   incluye: string[]
   destacado?: boolean
+  /** Rango de equipos y sedes que cubre (null = sin tope). */
+  minEquipos: number
+  maxEquipos: number | null
+  maxSedes: number | null
 }
 
 // -- catálogos -----------------------------------------------------------------
@@ -221,14 +233,7 @@ export const ciudades: string[] = ciudadesJson.map((c) => c.nombre)
 
 export const zonasCali = ['Sur', 'Norte', 'Centro', 'Oeste', 'Este']
 
-export const especialidades = [
-  'Odontología',
-  'Laboratorio clínico',
-  'Imágenes diagnósticas',
-  'Consulta externa',
-  'Rehabilitación',
-  'Estética y dermatología',
-]
+export const especialidades: string[] = especialidadesJson
 
 export const SLA: Record<Criticidad, string> = {
   Crítica: 'Respuesta en 8 horas',

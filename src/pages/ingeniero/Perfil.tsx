@@ -41,7 +41,7 @@ export function IngenieroPerfil() {
         <Card className="border-border/80">
           <CardHeader>
             <CardTitle className="font-display text-xl">Datos profesionales</CardTitle>
-            <CardDescription>Ciudad, zonas de atención y especialidades.</CardDescription>
+            <CardDescription>Ciudad, especialidades y presentación.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-5 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
@@ -98,19 +98,6 @@ export function IngenieroPerfil() {
               <Link to={`/ingenieros/${perfil.slug}`} className={`${buttonVariants({ variant: 'outline', size: 'sm' })} w-full`}>
                 <ExternalLink /> Ver en el directorio
               </Link>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/80">
-            <CardHeader>
-              <CardTitle className="font-display text-xl">Zonas de atención</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-wrap gap-2">
-              {perfil.zonas.map((zona) => (
-                <Badge key={zona} variant="outline">
-                  {zona}
-                </Badge>
-              ))}
             </CardContent>
           </Card>
 

@@ -144,7 +144,6 @@ export function construirRegistro(datos: DatosRegistro): {
     titulo: `Ingeniero(a) biomédico(a) · ${datos.especialidades.join(', ') || 'Equipos de consultorio'}`,
     ciudad: ciudad.nombre,
     ciudadId: ciudad.id,
-    zonas: [datos.zona],
     especialidades: datos.especialidades,
     equipos: [],
     experiencia: datos.cifra,

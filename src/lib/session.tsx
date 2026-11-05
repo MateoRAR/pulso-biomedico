@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import type { Rol, Usuario } from '@/data/tipos'
+import usuariosJson from '@/data/usuarios.json'
 
 /**
  * La sesión guarda quién entró. Las cuentas viven en el service de usuarios (la "base de
@@ -26,12 +27,8 @@ export interface CuentaDemo {
   password: string
 }
 
-// Cuentas de demostración publicadas en la pantalla de ingreso (existen también en usuarios.json).
-export const CUENTAS_DEMO: CuentaDemo[] = [
-  { rol: 'consultorio', email: 'consultorio@pulso.co', password: 'pulso123' },
-  { rol: 'ingeniero', email: 'ingeniero@pulso.co', password: 'pulso123' },
-  { rol: 'admin', email: 'admin@pulso.co', password: 'pulso123' },
-]
+// Cuentas de demostración publicadas en la pantalla de ingreso: las marcadas `publica` en usuarios.json.
+export const CUENTAS_DEMO: CuentaDemo[] = (usuariosJson as Usuario[]).filter((u) => u.publica).map((u) => ({ rol: u.rol, email: u.email, password: u.password }))
 
 export const etiquetaRol: Record<Rol, string> = {
   consultorio: 'Consultorio',

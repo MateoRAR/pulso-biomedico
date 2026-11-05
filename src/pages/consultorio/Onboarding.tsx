@@ -12,6 +12,7 @@ import { cop, semaforoEquipo } from '@/lib/format'
 import { EVENTOS, track } from '@/lib/analytics'
 import { inventarioEjemplo } from '@/lib/registro'
 import { useData } from '@/lib/store'
+import { planRecomendado as recomendarPlan } from '@/lib/planes'
 import { cn } from '@/lib/utils'
 
 const PASOS = ['Sede', 'Dotación', 'Resultado']
@@ -34,10 +35,8 @@ export function ConsultorioOnboarding() {
     }
   }, [equipos, documentos])
 
-  const planRecomendado = useMemo(() => {
-    if (equipos.length > 15) return planes.find((p) => p.id === 'custom')
-    return planes.find((p) => p.id === 'basico')
-  }, [equipos.length, planes])
+  // El rango de equipos y sedes de cada plan viene de planes.json.
+  const planRecomendado = useMemo(() => recomendarPlan(planes, equipos.length, consultorio.sedes), [equipos.length, consultorio.sedes, planes])
 
   function contratar() {
     if (planRecomendado) actualizarConsultorio({ planId: planRecomendado.id })

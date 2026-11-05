@@ -5,20 +5,13 @@
     "nombre": "Laura Medina",
     "titulo": "Ingeniera biomédica · Equipos odontológicos y esterilización",
     "ciudad": "Santiago de Cali",
-    "zonas": [
-      "Sur",
-      "Centro",
-      "Oeste"
-    ],
     "especialidades": [
       "Odontología",
       "Esterilización"
     ],
     "equipos": [
-      "Unidad odontológica",
-      "Autoclave",
-      "Compresor dental",
-      "Lámpara de fotocurado"
+      "Equipos odontológicos",
+      "Esterilización"
     ],
     "experiencia": 7,
     "verificado": true,
@@ -44,262 +37,140 @@
     "activo": true
   },
   {
-    "id": "ing-2",
-    "slug": "andres-bueno",
-    "nombre": "Andrés Bueno",
-    "titulo": "Ingeniero biomédico · Imágenes diagnósticas",
+    "id": "ing-karol",
+    "slug": "karol-restrepo-maldonado",
+    "nombre": "Karol Restrepo Maldonado",
+    "titulo": "Ingeniera biomédica · Líder de gestión biomédica y directora técnica",
     "ciudad": "Santiago de Cali",
-    "zonas": [
-      "Sur",
-      "Este"
+    "especialidades": [
+      "Gestión biomédica",
+      "Equipos quirúrgicos y respiratorios"
     ],
+    "equipos": [
+      "Soporte respiratorio",
+      "Equipos quirúrgicos"
+    ],
+    "experiencia": 2,
+    "verificado": false,
+    "estadoVerificacion": "En revisión",
+    "registroInvima": "",
+    "tarjetaCopnia": "",
+    "resena": "Ingeniera Biomédica, Líder de Gestión Biomédica y Directora Técnica de CCAA, con experiencia en ingeniería clínica y soporte técnico biomédico. Coordino la gestión y operación de equipos médicos, garantizando su uso seguro y eficiente en entornos asistenciales. Mi trabajo está orientado a la seguridad del paciente y al cumplimiento de estándares técnicos y normativos. Ejerzo un liderazgo operativo enfocado en la mejora continua y la toma de decisiones técnicas. Me destaco por una comunicación efectiva con equipos clínicos, técnicos y administrativos. Mi propósito es fortalecer la calidad de la atención en salud desde la ingeniería biomédica.",
+    "certificaciones": [],
+    "segmento": "B1",
+    "disponible": true,
+    "ciudadId": "cali",
+    "activo": true,
+    "linkedin": "https://www.linkedin.com/in/karol-restrepo-maldonado-soportetecnico-ingenieriaclinica/",
+    "formacion": [
+      {
+        "titulo": "Ingeniería Biomédica",
+        "institucion": "Pontificia Universidad Javeriana Cali"
+      }
+    ],
+    "trayectoria": [
+      {
+        "cargo": "Coordinadora de gestión biomédica nacional",
+        "organizacion": "Fundación Prevrenal",
+        "periodo": "sept. 2025 – actualidad",
+        "lugar": "Colombia · Jornada completa"
+      },
+      {
+        "cargo": "Estudiante en prácticas",
+        "organizacion": "Medtronic",
+        "periodo": "jul. 2024 – ene. 2025",
+        "lugar": "Cali, Valle del Cauca",
+        "descripcion": "Acompañó al ingeniero de la región en el servicio técnico biomédico: mantenimientos preventivos y correctivos en equipos de respiratoria, electrocirugía, motores y torres de laparoscopia de distintas referencias Medtronic. Gestionó y actualizó la documentación técnica y de servicio en SAP."
+      },
+      {
+        "cargo": "Monitora de laboratorio de electrónica",
+        "organizacion": "Pontificia Universidad Javeriana Cali",
+        "periodo": "ene. 2024 – nov. 2024",
+        "lugar": "Cali, Valle del Cauca",
+        "descripcion": "Preparó los laboratorios académicos en un entorno de alta rotación de clases, organizó los componentes electrónicos y dio soporte operativo a docentes junto con otros monitores."
+      }
+    ]
+  },
+  {
+    "id": "ing-juan-pablo",
+    "slug": "juan-pablo-durango",
+    "nombre": "Juan Pablo Durango",
+    "titulo": "Ingeniero biomédico · Imágenes diagnósticas de alta complejidad",
+    "ciudad": "Santiago de Cali",
     "especialidades": [
       "Imágenes diagnósticas"
     ],
     "equipos": [
-      "Rayos X",
-      "Ecógrafo",
-      "Reveladora",
-      "Densitómetro"
+      "Imágenes diagnósticas",
+      "Medicina nuclear"
     ],
-    "experiencia": 5,
-    "verificado": true,
-    "estadoVerificacion": "Verificado",
-    "registroInvima": "INVIMA-ING-2026-03982",
-    "tarjetaCopnia": "COPNIA 05123-274102 CAL",
-    "resena": "Especialista en rayos X odontológico y control de calidad de imagen. Trabaja con laboratorios acreditados ONAC para las calibraciones que lo requieren.",
-    "certificaciones": [
-      {
-        "nombre": "Protección radiológica",
-        "entidad": "Secretaría de Salud del Valle",
-        "vigencia": "2027-01"
-      },
-      {
-        "nombre": "Control de calidad en radiología",
-        "entidad": "ACIB",
-        "vigencia": "2026-12"
-      }
-    ],
+    "experiencia": 0,
+    "verificado": false,
+    "estadoVerificacion": "En revisión",
+    "registroInvima": "",
+    "tarjetaCopnia": "",
+    "resena": "Soy Ingeniero Biomédico graduado de la Universidad EIA, con experiencia enfocada en la gestión, mantenimiento, calibración y optimización de tecnología biomédica en entornos clínicos. Mi desarrollo académico y profesional ha estado orientado al soporte técnico especializado y al aseguramiento del funcionamiento seguro y eficiente de equipos médicos.\n\nCuento con conocimientos en equipos de Resonancia Magnética (RM), Tomografía Computarizada (TAC) y sistemas de Medicina Nuclear, PET y gammacámaras, así como en otras modalidades como rayos X, ecografía y mamografía. Tengo bases en principios de funcionamiento, análisis de fallas, mantenimiento preventivo y correctivo, acompañamiento técnico a proveedores y cumplimiento de la normatividad aplicable en entornos hospitalarios. Cuento con un segundo idioma, el inglés, respaldado por estudios realizados en Canadá y en diferentes universidades a nivel nacional, y tengo interés en continuar mi desarrollo profesional aportando al fortalecimiento del sistema de salud a través de la innovación, la seguridad tecnológica y la eficiencia operativa.",
+    "certificaciones": [],
     "segmento": "B1",
     "disponible": true,
     "ciudadId": "cali",
-    "activo": true
+    "activo": true,
+    "linkedin": "https://www.linkedin.com/in/juan-pablo-durango/",
+    "formacion": [
+      {
+        "titulo": "Ingeniería Biomédica",
+        "institucion": "Universidad EIA – Escuela de Ingeniería de Antioquia"
+      },
+      {
+        "titulo": "Inglés (segundo idioma)",
+        "institucion": "Estudios en Canadá y en universidades nacionales"
+      }
+    ],
+    "trayectoria": []
   },
   {
-    "id": "ing-3",
-    "slug": "carolina-restrepo",
-    "nombre": "Carolina Restrepo",
-    "titulo": "Ingeniera biomédica · Laboratorio clínico",
-    "ciudad": "Yumbo",
-    "zonas": [
-      "Norte",
-      "Centro",
-      "Yumbo"
-    ],
+    "id": "ing-farid",
+    "slug": "farid-gallego",
+    "nombre": "Farid Gallego",
+    "titulo": "Ingeniería biomédica independiente · Mantenimiento y calibración",
+    "ciudad": "Santiago de Cali",
     "especialidades": [
+      "Consulta externa",
+      "Odontología",
       "Laboratorio clínico"
     ],
     "equipos": [
-      "Centrífuga",
-      "Incubadora",
-      "Microscopio",
-      "Analizador de química"
-    ],
-    "experiencia": 4,
-    "verificado": true,
-    "estadoVerificacion": "Verificado",
-    "registroInvima": "INVIMA-ING-2026-04551",
-    "tarjetaCopnia": "COPNIA 05123-275033 VAL",
-    "resena": "Enfocada en laboratorios de toma de muestras y centros de diagnóstico básico. Organiza hojas de vida de equipos y verifica patrones trazables.",
-    "certificaciones": [
-      {
-        "nombre": "Metrología aplicada a laboratorios",
-        "entidad": "ONAC · curso avalado",
-        "vigencia": "2027-06"
-      }
-    ],
-    "segmento": "B1",
-    "disponible": true,
-    "ciudadId": "yumbo",
-    "activo": true
-  },
-  {
-    "id": "ing-4",
-    "slug": "juan-camilo-melo",
-    "nombre": "Juan Camilo Melo",
-    "titulo": "Ingeniero biomédico · Rehabilitación y consulta externa",
-    "ciudad": "Palmira",
-    "zonas": [
-      "Sur",
-      "Palmira"
-    ],
-    "especialidades": [
-      "Rehabilitación",
-      "Consulta externa"
-    ],
-    "equipos": [
-      "Equipo de terapia física",
-      "Monitor de signos vitales",
-      "Electroestimulador",
-      "Báscula"
+      "Monitoreo y soporte vital",
+      "Equipos de consulta",
+      "Equipos odontológicos",
+      "Esterilización"
     ],
     "experiencia": 3,
-    "verificado": true,
-    "estadoVerificacion": "Verificado",
-    "registroInvima": "INVIMA-ING-2026-04710",
-    "tarjetaCopnia": "COPNIA 05123-275998 VAL",
-    "resena": "Acompaña unidades de rehabilitación y consulta externa. Ofrece capacitación breve al personal administrativo en cada visita.",
-    "certificaciones": [
-      {
-        "nombre": "Seguridad eléctrica en equipos médicos",
-        "entidad": "ACIB",
-        "vigencia": "2027-02"
-      }
-    ],
-    "segmento": "B1",
-    "disponible": true,
-    "ciudadId": "palmira",
-    "activo": true
-  },
-  {
-    "id": "ing-5",
-    "slug": "sofia-ortiz",
-    "nombre": "Sofía Ortiz",
-    "titulo": "Ingeniera biomédica en etapa inicial",
-    "ciudad": "Santiago de Cali",
-    "zonas": [
-      "Norte",
-      "Centro"
-    ],
-    "especialidades": [
-      "Odontología"
-    ],
-    "equipos": [
-      "Unidad odontológica",
-      "Lámpara de fotocurado"
-    ],
-    "experiencia": 1,
     "verificado": false,
     "estadoVerificacion": "En revisión",
-    "registroInvima": "En trámite",
-    "tarjetaCopnia": "COPNIA 05123-276441 CAL",
-    "resena": "Profesional en etapa inicial que realiza diagnósticos de dotación e inventarios bajo supervisión, y acompaña visitas de capacitación.",
-    "certificaciones": [
-      {
-        "nombre": "Inventario y hoja de vida de equipos",
-        "entidad": "Programa universitario",
-        "vigencia": "2026-12"
-      }
-    ],
-    "segmento": "B2",
-    "disponible": true,
-    "ciudadId": "cali",
-    "activo": true
-  },
-  {
-    "id": "ing-6",
-    "slug": "camilo-arango",
-    "nombre": "Camilo Arango",
-    "titulo": "Ingeniero biomédico · Consulta externa y dermatología",
-    "ciudad": "Pereira",
-    "zonas": [
-      "Centro",
-      "Norte",
-      "Oeste"
-    ],
-    "especialidades": [
-      "Consulta externa",
-      "Estética y dermatología"
-    ],
-    "equipos": [
-      "Monitor de signos vitales",
-      "Dermatoscopio",
-      "Equipos de luz pulsada"
-    ],
-    "experiencia": 6,
-    "verificado": true,
-    "estadoVerificacion": "Verificado",
-    "registroInvima": "INVIMA-ING-2026-05108",
-    "tarjetaCopnia": "COPNIA 05123-281530 CAL",
-    "resena": "Ingeniero biomédico que acompaña consultorios de Pereira y Dosquebradas con mantenimiento preventivo y calibración de equipos de consulta externa.",
-    "certificaciones": [
-      {
-        "nombre": "Gestión de tecnología biomédica",
-        "entidad": "ACIB · Asoc. Colombiana de Ing. Biomédica",
-        "vigencia": "2027-06"
-      }
-    ],
-    "segmento": "B2",
-    "disponible": true,
-    "ciudadId": "pereira",
-    "activo": true
-  },
-  {
-    "id": "ing-7",
-    "slug": "natalia-pardo",
-    "nombre": "Natalia Pardo",
-    "titulo": "Ingeniera biomédica · Odontología e imágenes diagnósticas",
-    "ciudad": "Bogotá D.C.",
-    "zonas": [
-      "Norte",
-      "Centro"
-    ],
-    "especialidades": [
-      "Odontología",
-      "Imágenes diagnósticas"
-    ],
-    "equipos": [
-      "Unidad odontológica",
-      "Rayos X periapical",
-      "Autoclave"
-    ],
-    "experiencia": 9,
-    "verificado": true,
-    "estadoVerificacion": "Verificado",
-    "registroInvima": "INVIMA-ING-2026-05221",
-    "tarjetaCopnia": "COPNIA 05123-263377 CAL",
-    "resena": "Ingeniera biomédica con experiencia en consultorios odontológicos y de imágenes del norte de Bogotá.",
-    "certificaciones": [
-      {
-        "nombre": "Protección radiológica",
-        "entidad": "Entidad acreditada",
-        "vigencia": "2027-02"
-      }
-    ],
+    "registroInvima": "",
+    "tarjetaCopnia": "",
+    "resena": "Trabajo de manera independiente con consultorios, centros odontológicos e IPS pequeñas del Valle del Cauca. Hago mantenimiento preventivo y correctivo, coordino las calibraciones con laboratorios acreditados y dejo al día las hojas de vida y el cronograma de cada equipo, para que la visita de habilitación no tome a nadie por sorpresa. Me gusta explicar al personal cómo cuidar los equipos entre una visita y otra.",
+    "certificaciones": [],
     "segmento": "B1",
     "disponible": true,
-    "ciudadId": "bogota",
-    "activo": true
-  },
-  {
-    "id": "ing-8",
-    "slug": "sergio-londono",
-    "nombre": "Sergio Londoño",
-    "titulo": "Ingeniero biomédico · Laboratorio clínico",
-    "ciudad": "Medellín",
-    "zonas": [
-      "Sur",
-      "Centro"
+    "ciudadId": "cali",
+    "activo": true,
+    "linkedin": "https://www.linkedin.com/in/farid-gallego-b8a98a248/",
+    "formacion": [
+      {
+        "titulo": "Ingeniería Biomédica",
+        "institucion": "Por registrar"
+      }
     ],
-    "especialidades": [
-      "Laboratorio clínico",
-      "Consulta externa"
-    ],
-    "equipos": [
-      "Centrífuga",
-      "Microscopio",
-      "Balanza analítica"
-    ],
-    "experiencia": 3,
-    "verificado": false,
-    "estadoVerificacion": "Pendiente",
-    "registroInvima": "Pendiente de carga",
-    "tarjetaCopnia": "COPNIA en trámite",
-    "resena": "",
-    "certificaciones": [],
-    "segmento": "B2",
-    "disponible": true,
-    "ciudadId": "medellin",
-    "activo": true
+    "trayectoria": [
+      {
+        "cargo": "Ingeniería biomédica independiente",
+        "organizacion": "Servicios propios",
+        "periodo": "2023 – actualidad",
+        "lugar": "Cali y Valle del Cauca",
+        "descripcion": "Mantenimiento preventivo y correctivo para prestadores de baja complejidad, organización de hojas de vida y acompañamiento en la preparación de visitas de habilitación."
+      }
+    ]
   }
 ]

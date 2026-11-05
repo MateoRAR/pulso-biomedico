@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 export type Vista = '3d' | 'tabla'
 
-const PREFIJO = 'pulso.vista.v4.'
+const PREFIJO = 'pulso.vista.v5.'
 
 /** WebGL disponible (si no, solo se ofrece la tabla). */
 function hayWebGL(): boolean {
@@ -18,8 +18,8 @@ function hayWebGL(): boolean {
 }
 
 /**
- * Qué vista abrir primero: la última que la persona eligió en esta sesión; si no ha elegido,
- * la tabla en celulares, con "reducir movimiento" o sin WebGL, y el 3D en el resto.
+ * Qué vista abrir primero: la última que la persona eligió en esta sesión; si no ha elegido, la de
+ * la página (el 3D también en celulares) salvo con "reducir movimiento", que abre la tabla.
  */
 function vistaInicial(clave: string, porDefecto: Vista): Vista {
   try {
@@ -28,9 +28,8 @@ function vistaInicial(clave: string, porDefecto: Vista): Vista {
   } catch {
     // sin almacenamiento
   }
-  const pequena = window.matchMedia('(max-width: 767px)').matches
   const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  return pequena || reducido ? 'tabla' : porDefecto
+  return reducido ? 'tabla' : porDefecto
 }
 
 export function useVista(clave: string, porDefecto: Vista = '3d'): { vista: Vista; cambiar: (v: Vista) => void; hay3D: boolean } {
@@ -79,7 +78,7 @@ export function VistaDual({
   return (
     <div className="space-y-4">
       {hay3D ? (
-        <div role="group" aria-label="Forma de ver la información" className="inline-flex rounded-xl border border-border bg-card p-1">
+        <div role="group" aria-label="Forma de ver la información" className="inline-flex rounded-xl border border-border bg-card p-1 max-sm:flex max-sm:w-full">
           {(
             [
               ['3d', etiqueta3D, Box],
@@ -92,7 +91,7 @@ export function VistaDual({
               aria-pressed={vista === id}
               onClick={() => cambiar(id)}
               className={cn(
-                'flex min-h-10 items-center gap-2 rounded-lg px-4 text-base font-semibold transition-colors',
+                'flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 text-base font-semibold transition-colors max-sm:flex-1 max-sm:px-2 max-sm:text-sm',
                 vista === id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
               )}
             >

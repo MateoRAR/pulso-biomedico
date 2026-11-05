@@ -30,7 +30,7 @@ export function AdminVerificacion() {
           <TableHeader>
             <TableRow>
               <TableHead>Ingeniero</TableHead>
-              <TableHead>Ciudad y zonas</TableHead>
+              <TableHead>Ciudad</TableHead>
               <TableHead>INVIMA</TableHead>
               <TableHead>Estado</TableHead>
               <TableHead>
@@ -47,7 +47,6 @@ export function AdminVerificacion() {
                 </TableCell>
                 <TableCell>
                   {ing.ciudad}
-                  <span className="block text-sm text-muted-foreground">{ing.zonas.join(', ')}</span>
                 </TableCell>
                 <TableCell>{ing.registroInvima}</TableCell>
                 <TableCell>

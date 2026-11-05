@@ -1,19 +1,23 @@
-import { Canvas, invalidate, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useState, type RefObject } from 'react'
+import { Canvas, invalidate, useFrame, useThree } from '@react-three/fiber'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { MODELOS, type TipoModelo } from './catalogo'
 import { EntornoEstudio } from './entorno'
 import { COMPONENTES } from './modelos'
-import { SeguirAncla } from './SeguirAncla'
+import { ANCHO_LATERAL, ANCHO_NOTA, LINEA_NOTA, SeguirAncla } from './SeguirAncla'
+import { esMovil } from './salaDatos'
 
 function Controles({ altura, reinicio }: { altura: number; reinicio: number }) {
   const camara = useThree((s) => s.camera)
   const dom = useThree((s) => s.gl.domElement)
+  const size = useThree((s) => s.size)
+  // En un celular vertical el visor es más alto que ancho: la cámara se aleja para que el equipo quepa a lo ancho.
+  const holgura = size.width < size.height ? Math.min(1.55, Math.sqrt(size.height / Math.max(1, size.width))) : 1
 
   useEffect(() => {
-    const dist = Math.max(1.5, altura * 2.1)
+    const dist = Math.max(1.5, altura * 2.1) * holgura
     const objetivo = new THREE.Vector3(0, altura * 0.45, 0)
     camara.position.set(dist * 0.75, altura * 0.75 + 0.3, dist)
     const controles = new OrbitControls(camara, dom)
@@ -51,8 +55,33 @@ function Controles({ altura, reinicio }: { altura: number; reinicio: number }) {
       controles.removeEventListener('change', pedirDibujo)
       controles.dispose()
     }
-  }, [camara, dom, altura, reinicio])
+  }, [camara, dom, altura, reinicio, holgura])
 
+  return null
+}
+
+/**
+ * Cuando hay una nota abierta (pantalla ancha), corre la imagen hacia la izquierda con suavidad para
+ * que la nota quede al lado del equipo y no encima. Es un desplazamiento de la vista: el equipo sigue
+ * girando sobre su propio centro.
+ */
+function DesplazarVista({ activo }: { activo: boolean }) {
+  const camara = useThree((s) => s.camera) as THREE.PerspectiveCamera
+  const size = useThree((s) => s.size)
+  const actual = useRef(0)
+  const objetivo = activo && size.width >= ANCHO_LATERAL ? (ANCHO_NOTA + LINEA_NOTA) / 2 : 0
+
+  useFrame((_, delta) => {
+    actual.current += (objetivo - actual.current) * (1 - Math.exp(-delta * 7))
+    if (Math.abs(objetivo - actual.current) < 0.4) actual.current = objetivo
+    if (actual.current === 0) camara.clearViewOffset()
+    else camara.setViewOffset(size.width, size.height, actual.current, 0, size.width, size.height)
+    if (actual.current !== objetivo) invalidate()
+  })
+  useEffect(() => {
+    invalidate()
+  }, [objetivo])
+  useEffect(() => () => camara.clearViewOffset(), [camara])
   return null
 }
 
@@ -133,11 +162,13 @@ export default function VisorEquipo({
   const cobertura = Math.max(1.6, def.altura * 1.6)
   const parteElegida = def.partes.find((p) => p.id === parteActiva)
 
+  const [movil] = useState(esMovil)
+
   return (
     <Canvas
       shadows
       frameloop="demand"
-      dpr={[1, 1.75]}
+      dpr={movil ? [1, 1.5] : [1, 1.75]}
       camera={{ fov: 38, near: 0.05, far: 50 }}
       gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
       onPointerMissed={() => onParte(null)}
@@ -150,7 +181,7 @@ export default function VisorEquipo({
         position={[3, 5.5, 4]}
         intensity={2.4}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={movil ? [1024, 1024] : [2048, 2048]}
         shadow-bias={-0.0004}
         shadow-normalBias={0.02}
         shadow-camera-left={-cobertura}
@@ -162,6 +193,7 @@ export default function VisorEquipo({
       />
       <directionalLight position={[-4, 2.5, -3]} intensity={0.6} />
       <Controles altura={def.altura} reinicio={reinicio} />
+      <DesplazarVista activo={Boolean(parteElegida)} />
       <SeguirAncla pos={parteElegida ? parteElegida.pos : null} notaRef={notaRef} />
       <Plataforma radio={radio} />
       <Modelo />
